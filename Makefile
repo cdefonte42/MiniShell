@@ -6,7 +6,7 @@ LIBFT		=	libft/libft.a
 
 CC			=	gcc
 
-CFLAGS		=	-Werror -Wall -Wextra -g -I$(HEADER) -Llibft -lft
+CFLAGS		=	-Werror -Wall -Wextra -g -I$(HEADER) -Llibft -lft -lreadline
 
 SRCS		=	srcs/minishell.c
 
