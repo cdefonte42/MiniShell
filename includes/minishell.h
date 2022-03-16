@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/16 10:41:47 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/16 11:33:01 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define MINISHELL_H
 
 
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -28,6 +26,8 @@
 # include <dirent.h>
 # include <string.h>
 # include <errno.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 /*
 readline(3), rl_clear_history, rl_on_new_line,
 rl_replace_line, rl_redisplay, add_history,
