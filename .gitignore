@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.o
 a.out
 M
@@ -5,3 +6,7 @@ minishell
 .DS*
 *.a
 
+=======
+minishell
+test_env
+>>>>>>> hoppy-master
