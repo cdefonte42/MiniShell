@@ -2,47 +2,47 @@ NAME 	= libft.a
 SRCS 	= ft_atoi.c \
 ft_bzero.c \
 ft_calloc.c \
-ft_isalnum.c \
-ft_isalpha.c \
-ft_isascii.c \
-ft_isdigit.c \
-ft_isprint.c \
 ft_itoa.c \
-ft_memchr.c \
-ft_memcmp.c \
-ft_memcpy.c \
-ft_memmove.c \
-ft_memset.c \
-ft_putchar_fd.c \
-ft_putendl_fd.c \
-ft_putnbr_fd.c \
-ft_putstr_fd.c \
 ft_split.c \
-ft_strchr.c \
-ft_strdup.c \
-ft_striteri.c \
-ft_strjoin.c \
-ft_strlcat.c \
-ft_strlcpy.c \
-ft_strlen.c \
-ft_strmapi.c \
-ft_strncmp.c \
-ft_strnstr.c \
-ft_strrchr.c \
-ft_strtrim.c \
 ft_substr.c \
-ft_tolower.c \
-ft_toupper.c \
-ft_strcmp.c 
-SRCS_B 	= ft_lstadd_back.c \
-ft_lstadd_front.c \
-ft_lstclear.c \
-ft_lstdelone.c \
-ft_lstiter.c \
-ft_lstlast.c \
-ft_lstmap.c \
-ft_lstnew.c \
-ft_lstsize.c 
+char/ft_isalnum.c \
+char/ft_isalpha.c \
+char/ft_isascii.c \
+char/ft_isdigit.c \
+char/ft_isprint.c \
+mem/ft_memchr.c \
+mem/ft_memcmp.c \
+mem/ft_memcpy.c \
+mem/ft_memmove.c \
+mem/ft_memset.c \
+put/ft_putchar_fd.c \
+put/ft_putendl_fd.c \
+put/ft_putnbr_fd.c \
+put/ft_putstr_fd.c \
+str/ft_strchr.c \
+str/ft_strdup.c \
+str/ft_striteri.c \
+str/ft_strjoin.c \
+str/ft_strlcat.c \
+str/ft_strlcpy.c \
+str/ft_strlen.c \
+str/ft_strmapi.c \
+str/ft_strncmp.c \
+str/ft_strnstr.c \
+str/ft_strrchr.c \
+str/ft_strtrim.c \
+str/ft_strcmp.c \
+char/ft_tolower.c \
+char/ft_toupper.c
+SRCS_B 	= list/ft_lstadd_back.c \
+list/ft_lstadd_front.c \
+list/ft_lstclear.c \
+list/ft_lstdelone.c \
+list/ft_lstiter.c \
+list/ft_lstlast.c \
+list/ft_lstmap.c \
+list/ft_lstnew.c \
+list/ft_lstsize.c 
 
 GNL 	= gnl/get_next_line.c \
 gnl/get_next_line_utils.c 
