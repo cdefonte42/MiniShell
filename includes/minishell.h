@@ -6,13 +6,14 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/16 11:33:01 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/17 11:16:40 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h" 
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -26,6 +27,7 @@
 # include <dirent.h>
 # include <string.h>
 # include <errno.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 /*
@@ -40,5 +42,16 @@ strerror, perror, isatty, ttyname, ttyslot, ioctl,
 getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
+
+typedef struct s_args {
+	char	**av;
+	int		ac;
+	char	**env;
+}	t_args;
+
+typedef struct s_minishell {
+	char	**path;
+	t_args	a;
+} t_minishell; 
 
 #endif
