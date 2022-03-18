@@ -6,8 +6,8 @@ LIBFT		=	libft/libft.a
 
 CC			=	gcc
 
-CFLAGS		=	-Werror -Wall -Wextra -g -I$(HEADER) -Ilibft -Llibft -lft -lreadline
-LFLAGS		=	-Werror -Wall -Wextra -g
+CFLAGS		=	-Werror -Wall -Wextra -g3 -I$(HEADER) -Ilibft -Llibft -lft -lreadline
+LFLAGS		=	-Werror -Wall -Wextra -g3
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/minishell.c
@@ -30,4 +30,8 @@ fclean		:	clean
 				rm $(NAME)
 				make fclean -C ./libft
 
+run			:	all
+				valgrind --suppressions=.ignore_leaks --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./minishell
+
 re			:	fclean all
+.PHONY: all clean run fclean
