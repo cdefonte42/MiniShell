@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 void	ft_execve(char **cmde_args, char **paths, t_cmde *cmde, char **env)
 {

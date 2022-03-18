@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 /* Print la string s until le char c si trouve, dans fd */
 void	ft_putstr_until_fd(char *s, char c, int fd)
