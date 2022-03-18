@@ -3,109 +3,111 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cdefonte <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/26 12:23:39 by mbraets           #+#    #+#             */
-/*   Updated: 2021/12/02 18:41:56 by mbraets          ###   ########.fr       */
+/*   Created: 2021/11/24 15:15:31 by cdefonte          #+#    #+#             */
+/*   Updated: 2022/03/18 18:49:51 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	ft_countword(char const *s, char c)
+//Alloue et retourne un tableau de chaines de caracteres obtenu en
+//seprarent 's' a l'aide du caractere 'c'. 
+//Le tableau doit etre termine par NULL.
+static char	*ft_strndup(char const *s, size_t size)
 {
-	size_t	len;
+	char	*ptr;
 	int		i;
 
-	len = 0;
 	i = 0;
-	if (!*s)
-		return (0);
-	while (s[i] && s[i] == c)
-		i++;
-	while (s[i] != '\0')
+	ptr = malloc(sizeof(char) * size);
+	if (!ptr)
+		return (NULL);
+	while (s[i] && i < (int)size - 1)
 	{
-		if (s[i] == c)
-		{
-			len++;
-			while (s[i] && s[i] == c)
-				i++;
-			continue ;
-		}
+		ptr[i] = ((char *)s)[i];
 		i++;
 	}
-	if (s[i - 1] != c)
-		len++;
-	return (len);
+	ptr[i] = '\0';
+	return (ptr);
 }
 
-static char	**ft_freetab(char **str)
+static void	ft_fail(char **tab, int n)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (i < n)
 	{
-		free(str[i]);
+		free(tab[i]);
+		tab[i] = NULL;
 		i++;
 	}
-	free(str);
-	return (NULL);
+	free(tab);
+	tab[i] = NULL;
 }
 
-static char	**ft_allocword(char const *s, char c)
+static int	ft_nbstr(char *s, char c)
 {
-	size_t	len;
-	int		i;
-	int		j;
-	char	**strs;
+	int	i;
+	int	n;
 
-	len = 0;
 	i = 0;
-	strs = malloc(sizeof(char *) * (ft_countword(s, c) + 1));
-	if (!strs)
-		return (NULL);
-	while (s[i] != '\0')
+	n = 0;
+	while (s[i])
 	{
-		if (s[i] && s[i] == c)
+		while (s[i] && s[i] == c)
+			i++;
+		if (s[i] != c && s[i])
+			n++;
+		while (s[i] && s[i] != c)
+			i++;
+	}
+	return (n);
+}
+
+static char	**lines(char const *s, char c, char **split)
+{
+	int	k;
+	int	j;
+	int	i;
+
+	k = 0;
+	i = 0;
+	while (s[i] && k <= ft_nbstr((char *)s, c))
+	{
+		while (s[i] && s[i] == c)
 			i++;
 		j = 0;
-		while (s[i] && s[i++] != c)
+		while (s[i + j] && s[i + j] != c)
 			j++;
-		if (j)
+		split[k] = ft_strndup(s + i, j + 1);
+		if (!split[k])
 		{
-			strs[len] = malloc((j + 1) * sizeof(char));
-			if (!strs[len++])
-				return (ft_freetab(strs));
+			ft_fail(split, k);
+			return (NULL);
 		}
+		i = i + j;
+		k++;
 	}
-	return (strs);
+	split[k] = '\0';
+	return (split);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**strs;
-	size_t	len;
-	int		i;
-	int		j;
+	char	**split;
 
-	if (!s)
+	if (s == NULL)
 		return (NULL);
-	strs = ft_allocword(s, c);
-	if (strs == NULL)
+	split = malloc((ft_nbstr((char *)s, c) + 1) * sizeof(char *));
+	if (!split)
 		return (NULL);
-	i = 0;
-	len = 0;
-	while (s[i])
-	{
-		if (s[i] && s[i] == c)
-			i++;
-		j = 0;
-		while (s[i] && s[i] != c)
-			strs[len][j++] = s[i++];
-		if (j)
-			strs[len++][j] = '\0';
-	}
-	strs[len] = NULL;
-	return (strs);
+	if (ft_nbstr((char *)s, c) == 0)
+		split[0] = NULL;
+	split = lines(s, c, split);
+	if (!split)
+		return (NULL);
+	return (split);
 }
