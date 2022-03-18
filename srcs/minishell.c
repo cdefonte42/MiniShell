@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/18 11:42:12 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/18 12:38:09 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,6 @@ int	main(int ac, char *av[], char *env[])
 	signal(SIGTSTP, &signal_handler);
 	printf("%p\n", __builtin_frame_address(0));
 	minishell_loop();
-	printf("Welcome to my shell\n");
+	printf("Welcome to my minishell\n");
 	return (0);
 }
