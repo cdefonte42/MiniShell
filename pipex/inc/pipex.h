@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 21:22:34 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/17 09:44:26 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:09:46 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef PIPEX_H
+# define PIPEX_H
 
 # include <unistd.h>
 # include <stdlib.h>

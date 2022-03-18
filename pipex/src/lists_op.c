@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 t_cmde	*ft_newcmde(int num, pid_t pid, char *argvi, char *filename)
 {

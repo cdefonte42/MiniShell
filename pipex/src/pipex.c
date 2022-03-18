@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 int	ft_pipex_first(char **environ, t_cmde **list)
 {

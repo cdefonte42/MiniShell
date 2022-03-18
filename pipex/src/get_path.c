@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 /* Retourne le char **tab de tous les paths indique dans la var env PATH 
 Return NULL si malloc error ou si PATH=vide;*/

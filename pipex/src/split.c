@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "pipex.h"
 
 //Alloue et retourne un tableau de chaines de caracteres obtenu en
 //seprarent 's' a l'aide du caractere 'c'. 
