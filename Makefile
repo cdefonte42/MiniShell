@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+         #
+#    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/03/18 12:15:21 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/03/18 15:36:20 by mbraets          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,10 +39,13 @@ clean		:
 				make clean -C ./libft
 
 fclean		:	clean
-				rm $(NAME)
+				rm -rf $(NAME)
 				make fclean -C ./libft
 
-run			:	all
+debug		:
+				$(eval CFLAGS+=-DDEBUG)
+
+run			:	debug all
 				valgrind --suppressions=.ignore_leaks --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./minishell
 
 re			:	fclean all

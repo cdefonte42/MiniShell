@@ -6,12 +6,19 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/17 11:16:40 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/18 16:17:16 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define C_RESET "\033[0m"
+# define C_BLUE "\033[0;34m"
+# define VERSION "0.1"
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
 
 # include "libft.h" 
 
@@ -51,7 +58,9 @@ typedef struct s_args {
 
 typedef struct s_minishell {
 	char	**path;
+	char	***env;
 	t_args	a;
+	unsigned int	status;
 } t_minishell; 
 
 #endif
