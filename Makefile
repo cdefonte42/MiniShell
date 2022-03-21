@@ -6,30 +6,33 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/03/18 15:36:20 by mbraets          ###   ########.fr        #
+#    Updated: 2022/03/21 16:45:13 by mbraets          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	minishell
 
-HEADER		=	includes/
+HEADER		=	includes/minishell.h
+DHEADER		=	-Iincludes/ -Ilibft/
 
 LIBFT		=	libft/libft.a
 
-CC			=	gcc
+CC			=	cc
 
-CFLAGS		=	-Werror -Wall -Wextra -g3 -I$(HEADER) -Ilibft -Llibft -lft -lreadline
-LFLAGS		=	-Werror -Wall -Wextra -g3
+CFLAGS		=	-Werror -Wall -Wextra -g3
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/minishell.c
 
 OBJS		=	$(SRCS:.c=.o)
 
+%.o : %.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@ $(DHEADER)
+
 all			:	$(NAME)
 
 $(NAME)		:	$(OBJS) $(LIBFT) $(HEADER)
-				$(CC) $(LFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(LIBFLAGS)
+				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(LIBFLAGS)
 
 $(LIBFT)	:
 				make gnl -C ./libft
@@ -39,7 +42,7 @@ clean		:
 				make clean -C ./libft
 
 fclean		:	clean
-				rm -rf $(NAME)
+				rm -f $(NAME)
 				make fclean -C ./libft
 
 debug		:
