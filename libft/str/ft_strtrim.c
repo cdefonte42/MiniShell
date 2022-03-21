@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:13:03 by mbraets           #+#    #+#             */
-/*   Updated: 2021/11/29 12:35:49 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/21 19:14:39 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,15 @@ static int	ft_strlchr(char c, const char *set)
 			return (1);
 	return (0);
 }
-
+/**
+ * strtrim strips all second argument characters from the beginning and end of the first string.
+ * @param s1 The string to strips
+de la liste.
+ * @param set List of character
+à la liste.
+ * @return New character
+ */
+// strtrim removes all whitespace characters from the beginning and the end of a string. As whitespace is counted everything for which isspace(3) returns true. 
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	start;
