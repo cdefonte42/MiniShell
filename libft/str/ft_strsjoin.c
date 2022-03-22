@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 14:49:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/22 11:23:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/22 16:06:08 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*ft_strcpy(char *dst, const char *src)
  * @param s3 The suffix string.
  * @return char* The new string.NULL if the allocation fails.
  */
-char	*ft_strsjoin(char const *s1, char *s2, char const *s3)
+char	*ft_strsjoin(char const *s1, char const *s2, char const *s3)
 {
 	size_t	s1_size;
 	size_t	s2_size;
