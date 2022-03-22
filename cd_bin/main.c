@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/22 10:44:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/22 15:51:22 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,49 +17,62 @@
 #include "stdio.h"
 #include <fcntl.h>
 
-int	ft_isadir(char *path)
+char***    minishell_get_env(char **envp)
 {
-	if (access(path, F_OK) == 0 && access(path, R_OK) == 0)
-		return (1);
-	else
-		return (perror("isadir nope"), 0);
+    int    i;
+    char ***env;
+    i = 0;
+    while (envp && envp[i])
+        i++;
+    env = malloc(sizeof(char **) * (i + 1));
+    env[i] = NULL;
+    while (i--)
+        env[i] = ft_split(envp[i], '=');
+    return (env);
 }
 
-/*________ STEPS 1 and 2 __________*/
-char	*ft_cd_home(void)
+/* Return la str (non allouee) apres le signe '=' de la variable 
+d'env 'var_name' passee en param. 
+Si apres le '=', le char est '\0', on return une str = "" */
+// TEUBEE LA FONCION EXISTE ET EST AUTORISEE CEST GETENV() 
+char	*ft_varenv_str(char ***env, char *var_name)
 {
-	char	*home;
-	char	*curpath;
+	int		i;
 
-	home = getenv("HOME"); //getenv() donne la str apres le '=' de "HOME"
-	if (home == NULL) // => HOME undefined
-		return (ft_putstr_fd("HOME not set",2), NULL); //A FAIRE par error handler (return statusest de 1)
-	else if (*home == 0) // HOME empty
+	i = 0;
+	if (!env || !*env || !var_name)
 		return (NULL);
-	curpath = ft_strdup(home);
-	if (!curpath)
-		return (NULL);
-	return (curpath);
+	while (env[i])
+	{
+		if (ft_strcmp(env[i][0], var_name) == 0)
+			return (env[i][1]);
+		i++;
+	}
+	return (NULL);
+}
+
+/* Test si le dossier 'path' a les droits d'acces en read et execute. 
+Retourne 1 si oui, 0 si NON */
+int	ft_isadir(char *path)
+{
+	if (access(path, R_OK | X_OK) != 0)
+		return (0);
+	return (1);
 }
 
 /* Check si le dernier charactere de la string str est egal a c. 
-Retourne son index, sinon -1. Ne MARCHE PAS avec '\0' */
+Retourne 1 si oui, 0 sinon */
 int	ft_islast_chstr_ch(char *str, char c)
 {
 	int		i;
 
 	i = 0;
 	if (!str)
-		return (-1);
+		return (0);
 	i = ft_strlen(str) - 1;
-	while (i >= 0)
-	{
-		if (str[i] == c)
-			return (i);
-		i--;
-	}
-	printf("CREDIIIIII str = %s, c = %c, result = %d\n", str, c, i);
-	return (-1);
+	if (str[i] && str[i] == c)
+		return (1);
+	return (0);
 }
 
 /*______________ STEP 7 _________*/
@@ -72,9 +85,8 @@ char	*ft_try_pwd(char *curpath)
 	pwdstr = getenv("PWD");
 	if (!pwdstr)
 		return (free(curpath), NULL);
-	if (ft_islast_chstr_ch(pwdstr, '/') == -1) // si pwdstr se termine PAS par un slash
+	if (!ft_islast_chstr_ch(pwdstr, '/')) // si pwdstr se termine PAS par un slash
 	{
-		printf("step 7 1\n");
 		tmp = ft_strjoin(pwdstr, "/");
 		if (!tmp)
 			return (free(curpath), NULL);
@@ -87,14 +99,12 @@ char	*ft_try_pwd(char *curpath)
 	}
 	else // pwdstr se termine par slash
 	{
-		printf("step 7 2\n");
 		tmp = curpath;
 		curpath = ft_strjoin(pwdstr, tmp);
 		free(tmp);
 		if (!curpath)
 			return (NULL);
 	}
-	printf("step 7 return curpath = %s\n", curpath);
 	return (curpath);
 }
 
@@ -116,14 +126,12 @@ char	*ft_test_concat_dir(char *cdpathname, char *directory)
 	{
 		if (splited_cdpathname[i][0] == 0) // si splited_cdpathname[i] = "\0", doit mettre "./"
 		{
-			printf("4332532\n");
 			curpath = ft_strjoin("./", directory);
 			if (!curpath)
 				return (NULL);
 		}
-		else if (ft_islast_chstr_ch(splited_cdpathname[i], '/') != -1) // si '/' est PAS a la fin
+		else if (!ft_islast_chstr_ch(splited_cdpathname[i], '/')) // si '/' est PAS a la fin
 		{
-			printf("24325324\n");
 			curpath = ft_strjoin(splited_cdpathname[i], "/");
 			if (!curpath)
 				return (NULL);
@@ -135,7 +143,6 @@ char	*ft_test_concat_dir(char *cdpathname, char *directory)
 		}
 		else // si pathname != NULL et a le '/' a la fin
 		{
-			printf("0942013\n");
 			curpath = ft_strjoin(splited_cdpathname[i], directory);
 			if (!curpath)
 				return (NULL);
@@ -149,108 +156,115 @@ char	*ft_test_concat_dir(char *cdpathname, char *directory)
 
 // check and test CDPATH ATTENTION CDPATH=:$HOME:$HOME/projects:etc 1er ele = empty entry = regarde curr directory. si pas ': totu seul des le debut alors cherche jamais dans le curr dir
 /*________ STEP 5 ________*/
-char	*ft_try_cdpath(char *directory)
+char	*ft_try_cdpath(char *directory, char ***env)
 {
 	char	*cdpathname;
 	char	*curpath;
-	char	*tmp;
 
-	cdpathname = getenv("CDPATH");
+	cdpathname = ft_varenv_str(env, "CDPATH");
 	if (cdpathname != NULL) //1ere partie
 	{
-		printf("step 5 1\n");
 		curpath = ft_test_concat_dir(cdpathname, directory);
 		if (!curpath) // STEP 6 
 			return (NULL);
-		if (ft_isadir(curpath))
-			return (curpath);
+		return (curpath);
 	}
 	else // cdpathname is NULL, 2eme partie
 	{
-		printf("step 5 2\n");
 		curpath = ft_strjoin("./", directory);
 		if (!curpath)
 			return (NULL);
-		if (ft_isadir(curpath))
-		{
-			tmp = curpath;
-			curpath = ft_strdup(tmp + 2);
-			free(tmp);
-			if (!curpath)
-				return (NULL);
-			return (curpath);
-		}
+		return (curpath);
 	}
-	return (NULL);
 }
 
-int	ft_cd(char *directory)
+/*________ STEPS 1 and 2 __________*/
+int ft_cd_home(char **curpath)
+{
+	char	*home;
+
+	home = getenv("HOME"); //getenv() donne la str apres le '=' de "HOME"
+	if (home == NULL) // => HOME undefined
+		return (ft_putstr_fd("HOME not set",2), -1); //A FAIRE par error handler (return statusest de 1)
+	else if (*home == 0) // HOME empty
+		return (0);
+	*curpath = ft_strdup(home);
+	if (!*curpath)
+		return (-1);
+	return (0);
+}
+
+int	ft_cd(char *directory, char ***env)
 {
 	char	*curpath;
 
+	curpath = NULL;
 	if (directory == NULL) //steps 1 and 2
 	{
-		printf("main 1\n");
-		curpath = ft_cd_home();
+		if (ft_cd_home(&curpath) == -1)
+			return (-1);
+		else if (!curpath) // si pas d'erreur de malloc mais que *home==rien
+			return (0);
+	}
+	else if (*directory == 0)
+		return (0);
+	else if (*directory == '/' || *directory == '.' || (*(directory + 1) 
+		&& *directory == '.' && *(directory + 1) == '.'))
+	{
+		curpath = ft_strdup(directory);
 		if (!curpath)
 			return (-1);
 	}
-	else if (*directory == 0)
-	{
-		printf("main 2\n");
-		return (0);
-	}
-	/*____ STEP 5 ____*/
 	else
 	{
-		printf("main 3\n");
-		curpath = ft_try_cdpath(directory); //Si directory commence pas part '/' '.' ni '..' 
-		/*_______ STEP 6 _____*/
+		curpath = ft_try_cdpath(directory, env);
 		if (!curpath)
-			curpath = directory;
-		printf("try cdpath return curpath = %s\n", curpath);
-		/*______ STEP 7 ______*/
-		if (curpath[0] && curpath[0] != '/' && curpath[0] != '.') //si curpath commence PAS par slash
-		{
-			printf("main 4 curpath = %s\n", curpath);
-			curpath = ft_try_pwd(curpath);
-			if (!curpath)
-				return (perror("step 7 failed"), -1);
-		}
+			return (-1);
 	}
-	/*______ STEP 9 ______*/
-	if (ft_strlen(curpath) + 1 > PATH_MAX) // FAIRE STEP 9
+	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // FAIRE STEP 9
 		return (perror("supp PATH_MAX"), -1);
-	printf("curpath before chdir = %s\n", curpath);
 	if (chdir(curpath) != 0)
-		return (perror("chdir failed"), -1);
+		return (perror("(chdir) cd"), ft_putstr_fd(curpath, 2), -1);
 	free(curpath);
 	return (0);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	(void)argv;
+	char	*directory;
+	char	***env;
 	int		debug = 0;
 
+	env = minishell_get_env(envp);
+	if (argc == 1)
+		directory = NULL;
+	else
+		directory = *(argv + 1);
 	if (!debug)
 	{
 		printf("AVANT cd pwd = %s\n", getcwd(NULL, 0));
-		if (ft_cd(*(argv + 1)) != 0) //ERROR HANDLER
+		if (ft_cd(directory, env) != 0) //ERROR HANDLER
 		{
 			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
 			return (1);
 		}
-		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+	printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
 	}
 	else
 	{
-		int x;
-		x = ft_islast_chstr_ch("/mnt/nfs/homes/cdefonte/MiniShell", '/');
-		printf("x = %d\n", x);
-		if (chdir("/docs") != 0)
-			return (perror("NIEH"), 1);
+		char	*str;
+
+		str = getcwd(NULL, 0);
+		if (!str)
+			return (perror("NISNDI"), 1);
+		printf("AVANT cd pwd = %s\n", str);
+		if (chdir(*(argv + 1)) != 0)
+			return (perror("(chdir) cd"), -1);
+		str = getcwd(NULL, 0);
+		if (!str)
+			return (perror("NISNDI"), 1);
+		printf("APRES cd pwd = %s\n", str);
+		free(str);
 	}
 	return (0);
 }
