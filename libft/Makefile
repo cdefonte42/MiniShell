@@ -23,6 +23,7 @@ str/ft_strchr.c \
 str/ft_strdup.c \
 str/ft_striteri.c \
 str/ft_strjoin.c \
+str/ft_strsjoin.c \
 str/ft_strlcat.c \
 str/ft_strlcpy.c \
 str/ft_strlen.c \
