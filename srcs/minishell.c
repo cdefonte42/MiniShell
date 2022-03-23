@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/22 16:21:39 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/23 11:37:01 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	builtin_exec(t_minishell *msh)
 		if (msh->raw_cmd[1] != NULL)
 			status = ft_atoi(msh->raw_cmd[1]);
 		msh->loop = 0;
+		ft_putendl_fd("exit", 1);
 		// fexit(msh);
 	}
 	// if ((ft_strcmp(line_args[0], "cd") == 0))
@@ -130,7 +131,6 @@ int	minishell_loop(t_minishell *msh)
 		if (line == NULL)
 		{
 			ft_putendl_fd("exit", 1);
-			status = 130;
 			break ;
 		}
 		else
