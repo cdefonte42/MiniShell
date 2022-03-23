@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/03/23 11:27:33 by mbraets          ###   ########.fr        #
+#    Updated: 2022/03/23 12:29:03 by mbraets          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,9 @@ CFLAGS		=	-Werror -Wall -Wextra -g3
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/minishell.c \
-srcs/free.c
+srcs/free.c \
+srcs/builtin/echo.c
+
 
 OBJS		=	$(SRCS:.c=.o)
 

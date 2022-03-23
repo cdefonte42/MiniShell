@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/23 11:44:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/23 12:41:31 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	builtin_exec(t_minishell *msh)
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
 	{
-		minishell_echo(msh, msh->raw_cmd, msh->env);
+		msh->status = minishell_echo(msh, msh->raw_cmd);
 	}
 	// if ((ft_strcmp(line_args[0], "cd") == 0))
 	// {
