@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/22 15:52:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/23 11:44:35 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,7 @@ typedef struct s_minishell {
 void	minishell_free_env(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
 
+
+int	minishell_echo(t_minishell *msh, char **av, char **env);
 
 #endif
