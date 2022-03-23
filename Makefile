@@ -3,33 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+         #
+#    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2022/03/18 12:36:09 by cdefonte         ###   ########.fr        #
+=======
+#    Updated: 2022/03/21 19:17:41 by mbraets          ###   ########.fr        #
+>>>>>>> Marius
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	minishell
 
-HEADER		=	includes/
+HEADER		=	includes/minishell.h
+DHEADER		=	-Iincludes/ -Ilibft/
 
 LIBFT		=	libft/libft.a
 
-CC			=	gcc
+CC			=	cc
 
-CFLAGS		=	-Werror -Wall -Wextra -g3 -I$(HEADER) -Ilibft -Llibft -lft -lreadline
-LFLAGS		=	-Werror -Wall -Wextra -g3
+CFLAGS		=	-Werror -Wall -Wextra -g3
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
-SRCS		=	srcs/minishell.c
+SRCS		=	srcs/minishell.c \
+srcs/free.c
 
 OBJS		=	$(SRCS:.c=.o)
+
+%.o : %.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@ $(DHEADER)
 
 all			:	$(NAME)
 
 $(NAME)		:	$(OBJS) $(LIBFT) $(HEADER)
-				$(CC) $(LFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(LIBFLAGS)
+				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT) $(LIBFLAGS)
 
 $(LIBFT)	:
 				make gnl -C ./libft
@@ -39,10 +47,13 @@ clean		:
 				make clean -C ./libft
 
 fclean		:	clean
-				rm $(NAME)
+				rm -f $(NAME)
 				make fclean -C ./libft
 
-run			:	all
+debug		:
+				$(eval CFLAGS+=-DDEBUG)
+
+run			:	debug all
 				valgrind --suppressions=.ignore_leaks --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./minishell
 
 re			:	fclean all

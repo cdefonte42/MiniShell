@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:13:03 by mbraets           #+#    #+#             */
-/*   Updated: 2021/11/29 12:35:49 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:25:21 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ static int	ft_strlchr(char c, const char *set)
 	return (0);
 }
 
+/**
+ * @brief Allocates (with malloc(3)) and returns a copy of
+’s1’ with the characters specified in ’set’ removed
+from the beginning and the end of the string.
+ * @param s1 The string to be trimmed.
+ * @param set The reference set of characters to trim.
+à la liste.
+ * @return The trimmed string.
+NULL if the allocation fails.
+ */
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	start;

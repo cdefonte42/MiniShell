@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 12:23:39 by mbraets           #+#    #+#             */
-/*   Updated: 2021/12/02 18:41:56 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:33:45 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,17 @@ static char	**ft_allocword(char const *s, char c)
 	return (strs);
 }
 
+/**
+ * @brief Allocates (with malloc(3)) and returns an array
+of strings obtained by splitting ’s’ using the
+character ’c’ as a delimiter. The array must end
+with a NULL pointer.
+ * 
+ * @param s The string to be split.
+ * @param c The delimiter character
+ * @return char** The array of new strings resulting from the split.
+NULL if the allocation fails.
+ */
 char	**ft_split(char const *s, char c)
 {
 	char	**strs;

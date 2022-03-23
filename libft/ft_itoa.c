@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 12:36:20 by mbraets           #+#    #+#             */
-/*   Updated: 2021/12/01 12:33:12 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:34:35 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,15 @@ static size_t	ft_intlen(long n)
 	return (len);
 }
 
+/**
+ * @brief Allocates (with malloc(3)) and returns a string
+representing the integer received as an argument.
+Negative numbers must be handled.
+ * 
+ * @param c The integer to convert.
+ * @return char* The string representing the integer.
+NULL if the allocation fails.
+ */
 char	*ft_itoa(int c)
 {
 	char	*result;

@@ -6,14 +6,25 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/17 11:16:40 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/22 15:52:15 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define C_RESET "\033[0m"
+# define C_BLUE "\033[0;34m"
+# define VERSION "0.1"
+# define FAILURE 0
+# define SUCCESS 1
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
+
 # include "libft.h" 
+
+# include <stdbool.h>
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -43,15 +54,17 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-typedef struct s_args {
-	char	**av;
-	int		ac;
-	char	**env;
-}	t_args;
-
 typedef struct s_minishell {
 	char	**path;
-	t_args	a;
-} t_minishell; 
+	char	***env;
+	char	**raw_cmd;
+	unsigned int	status;
+	unsigned int	loop;
+} t_minishell;
+
+// Free
+void	minishell_free_env(t_minishell *msh);
+void	minishell_free_rawcmd(t_minishell *msh);
+
 
 #endif
