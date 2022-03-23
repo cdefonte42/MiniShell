@@ -6,7 +6,7 @@
 /*   By: cdefonte <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 15:15:31 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/18 18:49:51 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/23 14:44:31 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static char	**lines(char const *s, char c, char **split)
 		i = i + j;
 		k++;
 	}
-	split[k] = '\0';
+	split[k] = 0;
 	return (split);
 }
 
