@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/22 15:51:22 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/23 18:17:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,109 +75,114 @@ int	ft_islast_chstr_ch(char *str, char c)
 	return (0);
 }
 
-/*______________ STEP 7 _________*/
-char	*ft_try_pwd(char *curpath)
-{
-	char	*pwdstr;
-	char	*tmp;
-	char	*tmpbis;
-
-	pwdstr = getenv("PWD");
-	if (!pwdstr)
-		return (free(curpath), NULL);
-	if (!ft_islast_chstr_ch(pwdstr, '/')) // si pwdstr se termine PAS par un slash
-	{
-		tmp = ft_strjoin(pwdstr, "/");
-		if (!tmp)
-			return (free(curpath), NULL);
-		tmpbis = curpath;
-		curpath = ft_strjoin(tmp, tmpbis);
-		free(tmp);
-		free(tmpbis);
-		if (!curpath)
-			return (NULL);
-	}
-	else // pwdstr se termine par slash
-	{
-		tmp = curpath;
-		curpath = ft_strjoin(pwdstr, tmp);
-		free(tmp);
-		if (!curpath)
-			return (NULL);
-	}
-	return (curpath);
-}
+///* USELESS FCT? Devrait se faire apres avoir try tous les chemins de CDPATH, 
+//mais en vrai chdir en a pas besoin */
+///*______________ STEP 7 _________*/
+//char	*ft_try_pwd(char *curpath)
+//{
+//	char	*pwdstr;
+//	char	*tmp;
+//	char	*tmpbis;
+//
+//	pwdstr = getenv("PWD");
+//	if (!pwdstr)
+//		return (free(curpath), NULL);
+//	if (!ft_islast_chstr_ch(pwdstr, '/')) // si pwdstr se END PAS par un slash
+//	{
+//		tmp = ft_strjoin(pwdstr, "/");
+//		if (!tmp)
+//			return (free(curpath), NULL);
+//		tmpbis = curpath;
+//		curpath = ft_strjoin(tmp, tmpbis);
+//		free(tmp);
+//		free(tmpbis);
+//		if (!curpath)
+//			return (NULL);
+//	}
+//	else // pwdstr se termine par slash
+//	{
+//		tmp = curpath;
+//		curpath = ft_strjoin(pwdstr, tmp);
+//		free(tmp);
+//		if (!curpath)
+//			return (NULL);
+//	}
+//	return (curpath);
+//}
 
 /* Concat each CDPATH pathnames (when CDPATH pathname not NULL) et directory. 
 directory should NOT be NULL nor = "\0".*/
 /*______________ STEP 5 ____________*/
-char	*ft_test_concat_dir(char *cdpathname, char *directory)
+int	ft_test_concat_dir(char ** curpath, char *cdpathname, char *directory)
 {
 	char	**splited_cdpathname;
-	char	*curpath;
 	char	*tmp;
 	int		i;
 
 	i = 0;
 	splited_cdpathname = ft_split(cdpathname, ':');
 	if (!splited_cdpathname)
-		return (NULL);
+		return (-1);
 	while (splited_cdpathname[i])
 	{
 		if (splited_cdpathname[i][0] == 0) // si splited_cdpathname[i] = "\0", doit mettre "./"
 		{
-			curpath = ft_strjoin("./", directory);
-			if (!curpath)
-				return (NULL);
+			*curpath = ft_strjoin("./", directory);
+			if (!*curpath)
+				return (-1);
 		}
 		else if (!ft_islast_chstr_ch(splited_cdpathname[i], '/')) // si '/' est PAS a la fin
 		{
-			curpath = ft_strjoin(splited_cdpathname[i], "/");
-			if (!curpath)
-				return (NULL);
-			tmp = curpath;
-			curpath = ft_strjoin(tmp, directory);
+			*curpath = ft_strjoin(splited_cdpathname[i], "/");
+			if (!*curpath)
+				return (-1);
+			tmp = *curpath;
+			*curpath = ft_strjoin(tmp, directory);
 			free(tmp);
-			if (!curpath)
-				return (NULL);
+			if (!*curpath)
+				return (-1);
 		}
 		else // si pathname != NULL et a le '/' a la fin
 		{
-			curpath = ft_strjoin(splited_cdpathname[i], directory);
-			if (!curpath)
-				return (NULL);
+			*curpath = ft_strjoin(splited_cdpathname[i], directory);
+			if (!*curpath)
+				return (-1);
 		}
-		if (ft_isadir(curpath)) //si curpath exists
-			return (curpath);
+		if (ft_isadir(*curpath)) //si curpath exists
+			return (0);
 		i++;
 	}
-	return (NULL);
+	return (1); //FILE NOT FOUND
 }
 
-// check and test CDPATH ATTENTION CDPATH=:$HOME:$HOME/projects:etc 1er ele = empty entry = regarde curr directory. si pas ': totu seul des le debut alors cherche jamais dans le curr dir
+/* check and test CDPATH ATTENTION CDPATH=:$HOME:$HOME/projects:etc 
+1er ele = empty entry = regarde curr directory. si pas ': totu seul des 
+le debut alors cherche jamais dans le curr dir */
 /*________ STEP 5 ________*/
-char	*ft_try_cdpath(char *directory, char ***env)
+int	ft_try_cdpath(char **curpath, char *directory, char ***env)
 {
-	char	*cdpathname;
-	char	*curpath;
+	char	*cdpathstr;
 
-	cdpathname = ft_varenv_str(env, "CDPATH");
-	if (cdpathname != NULL) //1ere partie
+	cdpathstr = ft_varenv_str(env, "CDPATH");
+	if (cdpathstr != NULL) //1ere partie
 	{
-		curpath = ft_test_concat_dir(cdpathname, directory);
-		if (!curpath) // STEP 6 
-			return (NULL);
-		return (curpath);
+		if (ft_test_concat_dir(curpath, cdpathstr, directory) == -1)
+			return (-1);
+		return (0);
 	}
-	else // cdpathname is NULL, 2eme partie
+	else // cdpathstr is NULL, 2eme partie
 	{
-		curpath = ft_strjoin("./", directory);
-		if (!curpath)
-			return (NULL);
-		return (curpath);
+		*curpath = ft_strjoin("./", directory);
+		if (!*curpath)
+			return (-1);
+		return (0);
 	}
 }
 
+/* Fait cd sans aucun. Retourne 0 si tout s'est bien passe et set la val de
+curpath a envoyer a chdir apres appel de ft_cd_home. Attention peut renvoyer 0
+et curpath = NULL, ca veut pas dire pb.
+Retourne -1 en cas d'erreur de malloc. */
 /*________ STEPS 1 and 2 __________*/
 int ft_cd_home(char **curpath)
 {
@@ -199,31 +204,26 @@ int	ft_cd(char *directory, char ***env)
 	char	*curpath;
 
 	curpath = NULL;
-	if (directory == NULL) //steps 1 and 2
+	if (directory == NULL)
 	{
 		if (ft_cd_home(&curpath) == -1)
 			return (-1);
-		else if (!curpath) // si pas d'erreur de malloc mais que *home==rien
-			return (0);
 	}
-	else if (*directory == 0)
-		return (0);
-	else if (*directory == '/' || *directory == '.' || (*(directory + 1) 
-		&& *directory == '.' && *(directory + 1) == '.'))
+	else if (*directory == '/' || *directory == '.' )
 	{
 		curpath = ft_strdup(directory);
 		if (!curpath)
 			return (-1);
+		//else if (curpath == NULL) => join with PWD
 	}
 	else
 	{
-		curpath = ft_try_cdpath(directory, env);
-		if (!curpath)
+		if (ft_try_cdpath(&curpath, directory, env) == -1)
 			return (-1);
 	}
-	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // FAIRE STEP 9
+	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // STEP 9 mais en vrai chdir doit s'en occuper tout seul non ?
 		return (perror("supp PATH_MAX"), -1);
-	if (chdir(curpath) != 0)
+	if (curpath && chdir(curpath) != 0)
 		return (perror("(chdir) cd"), ft_putstr_fd(curpath, 2), -1);
 	free(curpath);
 	return (0);
@@ -248,7 +248,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
 			return (1);
 		}
-	printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
 	}
 	else
 	{
@@ -260,10 +260,10 @@ int	main(int argc, char **argv, char **envp)
 		printf("AVANT cd pwd = %s\n", str);
 		if (chdir(*(argv + 1)) != 0)
 			return (perror("(chdir) cd"), -1);
-		str = getcwd(NULL, 0);
-		if (!str)
-			return (perror("NISNDI"), 1);
-		printf("APRES cd pwd = %s\n", str);
+//		str = getcwd(NULL, 0);
+//		if (!str)
+//			return (perror("NISNDI"), 1);
+//		printf("APRES cd pwd = %s\n", str);
 		free(str);
 	}
 	return (0);
