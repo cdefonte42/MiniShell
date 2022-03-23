@@ -5,8 +5,4 @@ minishell
 .DS*
 *.a
 test_env
-<<<<<<< HEAD
 valgrind-out.txt
-=======
-valgrind-out.txt
->>>>>>> Marius
