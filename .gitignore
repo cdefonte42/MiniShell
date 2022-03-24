@@ -6,3 +6,4 @@ minishell
 *.a
 test_env
 valgrind-out.txt
+*.swp

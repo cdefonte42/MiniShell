@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/24 08:49:18 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/24 10:03:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <fcntl.h>
+
+/* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
+pour return exit status = 128 + errno */
+void	ft_error_handler(char *directory)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd("cd: ", 2);
+	if (directory && *directory)
+	{
+		ft_putstr_fd(directory, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	perror(NULL);
+}
 
 /* Return la str (non allouee) apres le signe '=' de la variable 
 d'env 'var_name' passee en param. 
@@ -211,7 +225,7 @@ int	ft_cd(char *directory, char ***env)
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // STEP 9 mais en vrai chdir doit s'en occuper tout seul non ?
 		return (perror("supp PATH_MAX"), -1);
 	if (curpath && chdir(curpath) != 0)
-		return (perror("(chdir) cd"), ft_putstr_fd(curpath, 2), -1);
+		return (ft_error_handler(directory), -1);
 	free(curpath);
 	return (0);
 }
