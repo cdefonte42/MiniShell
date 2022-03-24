@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cdbin.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/23 18:17:27 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/24 10:03:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "libft.h"
 #include "limits.h"
 #include "stdlib.h"
@@ -17,18 +18,18 @@
 #include "stdio.h"
 #include <fcntl.h>
 
-char***    minishell_get_env(char **envp)
+/* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
+pour return exit status = 128 + errno */
+void	ft_error_handler(char *directory)
 {
-    int    i;
-    char ***env;
-    i = 0;
-    while (envp && envp[i])
-        i++;
-    env = malloc(sizeof(char **) * (i + 1));
-    env[i] = NULL;
-    while (i--)
-        env[i] = ft_split(envp[i], '=');
-    return (env);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd("cd: ", 2);
+	if (directory && *directory)
+	{
+		ft_putstr_fd(directory, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	perror(NULL);
 }
 
 /* Return la str (non allouee) apres le signe '=' de la variable 
@@ -224,9 +225,24 @@ int	ft_cd(char *directory, char ***env)
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // STEP 9 mais en vrai chdir doit s'en occuper tout seul non ?
 		return (perror("supp PATH_MAX"), -1);
 	if (curpath && chdir(curpath) != 0)
-		return (perror("(chdir) cd"), ft_putstr_fd(curpath, 2), -1);
+		return (ft_error_handler(directory), -1);
 	free(curpath);
 	return (0);
+}
+
+/*
+char***    minishell_get_env(char **envp)
+{
+    int    i;
+    char ***env;
+    i = 0;
+    while (envp && envp[i])
+        i++;
+    env = malloc(sizeof(char **) * (i + 1));
+    env[i] = NULL;
+    while (i--)
+        env[i] = ft_split(envp[i], '=');
+    return (env);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -268,3 +284,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
+
+*/
