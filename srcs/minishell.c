@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/23 12:41:31 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/24 08:46:47 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
+		//rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		status = 130;
@@ -45,10 +45,10 @@ void	builtin_exec(t_minishell *msh)
 	{
 		msh->status = minishell_echo(msh, msh->raw_cmd);
 	}
-	// if ((ft_strcmp(line_args[0], "cd") == 0))
-	// {
-	// 	ft_cd(msh);
-	// }
+	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
+	{
+		ft_cd(msh->raw_cmd[1], msh->env);
+	}
 }
 
 int	minishell_get_env(t_minishell *msh, char **envp)
@@ -141,7 +141,7 @@ int	minishell_loop(t_minishell *msh)
 			minishell_parse_line(msh, line);
 		free(line);
 	}
-	rl_clear_history();
+	clear_history();
 	return (SUCCESS);
 }
 

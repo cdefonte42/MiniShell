@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/23 12:20:39 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/24 08:45:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ void	minishell_free_rawcmd(t_minishell *msh);
 
 
 int	minishell_echo(t_minishell *msh, char **av);
+int	ft_cd(char *directory, char ***env);
 
 #endif
