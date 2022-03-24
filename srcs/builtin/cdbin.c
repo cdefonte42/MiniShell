@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/03/24 10:03:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:12:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,33 +200,71 @@ int ft_cd_home(char **curpath)
 	return (0);
 }
 
+/* Ce serait bien de pouvoir faire env[PWD] ou env[OLDPWD], avec ENUM? Mais si
+unset ca pue la merde segfault non? */
+int	ft_maj_varenvstr(char ***env, const char *varname, const char *strtoput)
+{
+	int		i;
+	char	*tmp;
+	
+	i = 0;
+	if (!strtoput || !varname || !env)
+		return (ft_putstr_fd("1 arg offt_maj_varenvstr is NULL!", 2), 0);
+	while (env && env[i])
+	{
+		if (ft_strcmp(env[i][0], varname) == 0)
+		{
+			tmp = env[i][1];
+			env[i][1] = ft_strdup(strtoput);
+			free(tmp);
+			if (!env[i][1])
+				return (perror("ft_maj_varenvstr"), -1); // erreur sys call
+			return (0); // tout s'est bien passe
+		}
+		i++;
+	}
+	return (1); // PAS trouvee
+}
+
 int	ft_cd(char *directory, char ***env)
 {
 	char	*curpath;
+	char	*oldpwd;
+	char	*pwd;
 
 	curpath = NULL;
+	oldpwd = getcwd(NULL, 0);
+	if (oldpwd == NULL)
+		return (perror("getcwp oldpwd debut ft_cd"), -1);
 	if (directory == NULL)
 	{
 		if (ft_cd_home(&curpath) == -1)
-			return (-1);
+			return (free(oldpwd), -1);
 	}
 	else if (*directory == '/' || *directory == '.' )
 	{
 		curpath = ft_strdup(directory);
 		if (!curpath)
-			return (-1);
+			return (free(oldpwd), -1);
 		//else if (curpath == NULL) => join with PWD
 	}
 	else
 	{
 		if (ft_try_cdpath(&curpath, directory, env) == -1)
-			return (-1);
+			return (free(oldpwd), -1);
 	}
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // STEP 9 mais en vrai chdir doit s'en occuper tout seul non ?
-		return (perror("supp PATH_MAX"), -1);
+		return (free(oldpwd), perror("supp PATH_MAX"), -1);
 	if (curpath && chdir(curpath) != 0)
-		return (ft_error_handler(directory), -1);
+		return (free(oldpwd), ft_error_handler(directory), -1);
 	free(curpath);
+	ft_maj_varenvstr(env, "OLDPWD", oldpwd);
+	free(oldpwd);
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (perror("getcwp pwd ft_cd"), -1);
+	ft_maj_varenvstr(env, "PWD", pwd);
+	free(pwd);
 	return (0);
 }
 

@@ -3,6 +3,7 @@
 echo "_________ NORMAL OK TESTS ______"
 mkdir -p prout && echo "dir here OK test" && ./a.out prout; echo $?; rmdir prout
 mkdir -p "../pouet" && echo "dir au dessus OK test" && ./a.out ../pouet; echo $?; rmdir "../pouet"
+mkdir -p "prout" && chmod 644 prout && echo "dir sans x right (644)" && ./a.out .prout; echo $?; rmdir "prout"
 
 
 echo "_________ HOME TESTS ______"
