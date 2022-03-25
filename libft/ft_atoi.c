@@ -5,12 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 18:24:37 by mbraets           #+#    #+#             */
-/*   Updated: 2021/12/01 13:04:20 by mbraets          ###   ########.fr       */
+/*   Created: 2022/03/24 15:23:32 by mbraets           #+#    #+#             */
+/*   Updated: 2022/03/25 12:36:34 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
+
+static int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
 
 static int	ft_isspace(int c)
 {
@@ -25,6 +30,8 @@ int	ft_atoi(const char *str)
 	long	result;
 	int		i;
 
+	if (str == NULL)
+		return (0);
 	i = 0;
 	result = 0;
 	negative = 1;
