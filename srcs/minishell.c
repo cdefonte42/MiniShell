@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/24 09:49:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/03/25 08:16:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	minishell_get_env(t_minishell *msh, char **envp)
 	msh->env = ft_calloc(sizeof(char **), i + 1);
 	if (!msh->env)
 		return (FAILURE);
-	// msh->env[i] = NULL;
+	msh->env[i] = NULL;
 	i = 0;
 	while (envp && envp[i])
 	{
@@ -109,8 +109,26 @@ int	minishell_join_quote(t_minishell *msh)
 		}
 		i++;
 	}
-
+	printf("JOIN QUOTE\n");
 	return (SUCCESS);
+}
+
+void	debug_print_msh(t_minishell *msh)
+{
+	int		i;
+
+	i = 0;
+ //	if (!msh)
+ //		printf("msh NULL\n");
+ //	if (!(msh->raw_cmd))
+ //		printf("msh->cmd NULL\n");
+ //	if ((msh->raw_cmd[0]))
+ //		printf("msh->cmd[0] NULL\n");
+	while (msh && msh->raw_cmd && msh->raw_cmd[i])
+	{
+		printf("[%d]%s\n", i, msh->raw_cmd[i]);
+		i++;
+	}
 }
 
 int	minishell_parse_line(t_minishell *msh, char *s)
@@ -119,14 +137,16 @@ int	minishell_parse_line(t_minishell *msh, char *s)
 
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
+	printf("___AVANT join quote\n");
+	debug_print_msh(msh);
 	minishell_join_quote(msh);
 	if (!msh->raw_cmd)
 		return (FAILURE);
+	printf("___APRES join quote\n");
+	debug_print_msh(msh);
 	builtin_exec(msh);
 	if (line && *line)
 		add_history (line);
-	for (int i = 0; msh->raw_cmd[i]; i++)
-		printf("[%d]%s\n", i, msh->raw_cmd[i]);
 	minishell_free_rawcmd(msh);
 	free(line);
 	return (SUCCESS);
@@ -145,7 +165,9 @@ int	minishell_loop(t_minishell *msh)
 			break ;
 		}
 		else
+		{
 			minishell_parse_line(msh, line);
+		}
 		free(line);
 	}
 	clear_history();
