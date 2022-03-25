@@ -6,16 +6,11 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 15:23:32 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/25 12:36:34 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/03/25 12:40:40 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
-
-static int	ft_isdigit(int c)
-{
-	return (c >= '0' && c <= '9');
-}
+#include "libft.h"
 
 static int	ft_isspace(int c)
 {
