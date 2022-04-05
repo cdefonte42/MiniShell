@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/05 12:24:26 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/05 16:26:08 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-enum e_quote_type {doubleq, singleq};
+enum e_quote_type {doubleq = 1, singleq = 2};
 
 typedef struct s_cmde {
 	char	*name;
@@ -64,11 +64,6 @@ typedef struct s_cmde {
 	int		outfile;
 	struct s_cmde	*next;
 } t_cmde;
-
-typedef struct s_token {
-	char	*str;
-	struct t_token	*next;
-} t_token;
 
 typedef struct s_minishell {
 	char	**path;
@@ -87,6 +82,7 @@ void	minishell_free_rawcmd(t_minishell *msh);
 
 int		minishell_echo(t_minishell *msh, char **av);
 int		ft_cd(char *directory, char ***env);
-int		ft_ismetach(char c);
+int		ft_ismetachar(char c);
+int		ft_isoperator(char c);
 
 #endif
