@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/05 09:48:14 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/05 12:32:03 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	minishell_join_quote(t_minishell *msh)
 				in_quote = !in_quote;
 				quote_type = doubleq;
 			}
-			else if (msh->raw_cmd[i][j] == ''')
+			else if (msh->raw_cmd[i][j] == '\'')
 			{
 				in_quote = !in_quote;
 				quote_type = singleq;
@@ -128,12 +128,6 @@ void	debug_print_msh(t_minishell *msh)
 	int		i;
 
 	i = 0;
- //	if (!msh)
- //		printf("msh NULL\n");
- //	if (!(msh->raw_cmd))
- //		printf("msh->cmd NULL\n");
- //	if ((msh->raw_cmd[0]))
- //		printf("msh->cmd[0] NULL\n");
 	while (msh && msh->raw_cmd && msh->raw_cmd[i])
 	{
 		printf("[%d]%s\n", i, msh->raw_cmd[i]);

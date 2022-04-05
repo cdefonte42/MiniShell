@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/05 10:14:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/05 12:24:26 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,26 @@ tgetnum, tgetstr, tgoto, tputs
 
 enum e_quote_type {doubleq, singleq};
 
+typedef struct s_cmde {
+	char	*name;
+	char	*option;
+	char	*arg;
+	int		infile;
+	int		outfile;
+	struct s_cmde	*next;
+} t_cmde;
+
+typedef struct s_token {
+	char	*str;
+	struct t_token	*next;
+} t_token;
+
 typedef struct s_minishell {
 	char	**path;
 	char	***env;
 	char	**raw_cmd;
+	t_cmde	*cmde_lst;
+	t_list	*token;
 	unsigned int	status;
 	unsigned int	loop;
 } t_minishell;

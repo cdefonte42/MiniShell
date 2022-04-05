@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 18:24:37 by mbraets           #+#    #+#             */
-/*   Updated: 2021/12/01 13:04:20 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/05 10:23:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_atoi(const char *str)
 	long	result;
 	int		i;
 
+	if (str == NULL)
+		return (0);
 	i = 0;
 	result = 0;
 	negative = 1;
