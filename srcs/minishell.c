@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/25 08:16:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/05 09:48:14 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ int	minishell_join_quote(t_minishell *msh)
 	int		in_quote;
 	int		i;
 	int		j;
+	enum e_quote_type	quote_type;
 
 	in_quote = false;
+	quote_type = -1;
 	i = 0;
 	while (msh->raw_cmd[i])
 	{
@@ -95,7 +97,15 @@ int	minishell_join_quote(t_minishell *msh)
 		while (msh->raw_cmd[i][j])
 		{
 			if (msh->raw_cmd[i][j] == '"')
+			{
 				in_quote = !in_quote;
+				quote_type = doubleq;
+			}
+			else if (msh->raw_cmd[i][j] == ''')
+			{
+				in_quote = !in_quote;
+				quote_type = singleq;
+			}
 			j++;
 		}
 		j = 0;

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/24 08:45:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:14:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
+enum e_quote_type {doubleq, singleq};
+
 typedef struct s_minishell {
 	char	**path;
 	char	***env;
@@ -67,7 +69,8 @@ void	minishell_free_env(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
 
 
-int	minishell_echo(t_minishell *msh, char **av);
-int	ft_cd(char *directory, char ***env);
+int		minishell_echo(t_minishell *msh, char **av);
+int		ft_cd(char *directory, char ***env);
+int		ft_ismetach(char c);
 
 #endif
