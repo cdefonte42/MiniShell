@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 13:01:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 13:06:20 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@ void	ft_add_back(t_var **alst, t_var *new)
 	while (last->next)
 		last = last->next;
 	last->next = new;
+}
+
+t_var	*var_getfromkey(t_var *var_list, char *key)
+{
+	t_var	*head;
+
+	if (var_list == NULL)
+		return (NULL);
+	head = var_list;
+	while (head && ft_strcmp(head->key, key) != 0)
+		head = head->next;
+	return (head);
 }
 
 /* Export la variable declaree dans str avec sa value si str contient '=' */
