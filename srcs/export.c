@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:06:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 16:08:24 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	ft_export(t_var **var_lst, char *str)
 	int		add_mode;
 	int		name_len;
 
-	(void)var_lst;
 	add_mode = 0;
 	name_len = 0;
 	if (!str)
@@ -103,10 +102,10 @@ int	ft_export(t_var **var_lst, char *str)
 		free(name);
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
 	}
-	if (var_getfromkey(*var_list, name) == NULL)
-		ft_add_var(var_list, name, value);
+	if (var_getfromkey(*var_lst, name) == NULL)
+		ft_add_var(var_lst, name, value);
 	else
-		ft_set_var(var_list, name, value);
+		ft_set_var(var_lst, name, value);
 	if (add_mode)
 	{
 		//ft_concat_var(name, value);
