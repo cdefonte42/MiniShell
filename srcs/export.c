@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 19:31:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 19:33:35 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,17 @@ t_var	*ft_get_minkey(t_var *var_lst)
 	return (min);
 }
 
-void	ft_get_nextbigger(t_var *lst, t_var *prevmin, int end)
+void	ft_get_nextbigger(t_var *lst, t_var *prevmin)
 {
 	t_var	*currmin;
 	t_var	*tmp;
 	int		currdiff;
 	int		diff;
+	int		end;
 
 	currdiff = 500;
 	tmp = lst;
+	end = 1;
 	if (!prevmin)
 		return ;;
 	while (lst)
@@ -130,7 +132,7 @@ void	ft_get_nextbigger(t_var *lst, t_var *prevmin, int end)
 	if (!end)
 	{
 		ft_print_export(currmin);
-		ft_get_nextbigger(tmp, currmin, 1);
+		ft_get_nextbigger(tmp, currmin);
 	}
 	return ;;
 }
@@ -143,7 +145,7 @@ int	ft_put_export(t_var *var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);
 	ft_print_export(curr_kmin);
-	ft_get_nextbigger(var_lst, curr_kmin, 1);
+	ft_get_nextbigger(var_lst, curr_kmin);
 	return (0);
 }
 
