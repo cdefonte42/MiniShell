@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 18:25:18 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 19:31:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,17 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 	return (SUCCESS);
 }
 
-t_var	*ft_get_minkey(t_var *var_lst, char *str)
+void	ft_print_export(t_var *lst)
+{
+	if (!lst)
+		return ;;
+	if (lst->value == NULL)
+		printf("export %s\n", lst->key);
+	else
+		printf("export %s=\"%s\"\n", lst->key, lst->value);
+}
+
+t_var	*ft_get_minkey(t_var *var_lst)
 {
 	t_var	*min;
 
@@ -95,6 +105,36 @@ t_var	*ft_get_minkey(t_var *var_lst, char *str)
 	return (min);
 }
 
+void	ft_get_nextbigger(t_var *lst, t_var *prevmin, int end)
+{
+	t_var	*currmin;
+	t_var	*tmp;
+	int		currdiff;
+	int		diff;
+
+	currdiff = 500;
+	tmp = lst;
+	if (!prevmin)
+		return ;;
+	while (lst)
+	{
+		diff = ft_strcmp(lst->key, prevmin->key);
+		if (diff > 0 && diff < currdiff)
+		{
+			end = 0;
+			currdiff = diff;
+			currmin = lst;
+		}
+		lst = lst->next;
+	}
+	if (!end)
+	{
+		ft_print_export(currmin);
+		ft_get_nextbigger(tmp, currmin, 1);
+	}
+	return ;;
+}
+
 int	ft_put_export(t_var *var_lst)
 {
 	t_var	*curr_kmin;
@@ -102,8 +142,8 @@ int	ft_put_export(t_var *var_lst)
 	if (!var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);
-	printf("ICI curr mini = %s\n", curr_kmin->key);
-	while (
+	ft_print_export(curr_kmin);
+	ft_get_nextbigger(var_lst, curr_kmin, 1);
 	return (0);
 }
 
@@ -183,9 +223,11 @@ int	main(void)
 
 	if (ft_palloc(&var, sizeof(t_var)))
 		return (1);
-	ft_export(&var, "PROUT=LALALALA");
-	ft_export(&var, "POUET=poulet");
-	ft_export(&var, "BONJOUR=nieh");
+	ft_export(&var, "B=LALALALA");
+	ft_export(&var, "C=poulet");
+	ft_export(&var, "A=nieh");
+	ft_export(&var, "D=""");
+	ft_export(&var, "E=");
 
 	ft_put_export(var);
 //	ft_print_lst(var);
