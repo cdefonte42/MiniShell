@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:30:27 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/06 16:42:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ t_var	*var_getfromkey(t_var *var_list, char *key)
 }
 
 
-/* Export la variable declaree dans str avec sa value si str contient '=' */
+/* Cree et ajoute une nouvel element a la fin de la list var_lst.
+Les arguments name et value doivent avoir ete declare dans la heap avant appel.
+Retorune -1 en cas d'erreur de malloc, et free name et value. */
 int	ft_new_var(t_var **var_lst, char *name, char *value)
 {
 	t_var	*new_var;
@@ -50,9 +52,8 @@ int	ft_new_var(t_var **var_lst, char *name, char *value)
 	new_var = malloc(sizeof(t_var));
 	if (!new_var)
 		return (free(value), free(name), -1);
-	*new_var = (t_var) {.key = value[0], .value = value[1]};
+	*new_var = (t_var) {.key = name, .value = value};
 	ft_add_back(var_lst, new_var);
-	free(value);
 	return (0);
 }
 
