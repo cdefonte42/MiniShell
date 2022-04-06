@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:08:24 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/06 16:29:34 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,12 @@ int	ft_export(t_var **var_lst, char *str)
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
 	}
 	if (var_getfromkey(*var_lst, name) == NULL)
-		ft_add_var(var_lst, name, value);
+		ft_new_var(var_lst, name, value);
 	else
-		ft_set_var(var_lst, name, value);
-	if (add_mode)
-	{
-		//ft_concat_var(name, value);
-		printf("JDSD\n");
-	}
+		if (add_mode)
+			ft_cat_var(name, value);
+		else
+			ft_set_var(var_lst, name, value);
 	return (0);
 }
 
