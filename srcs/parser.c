@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 15:27:40 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/06 15:51:38 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	new_tokens(t_list **token_lst, char *s, int start_token, int i)
 	if (i - start_token == 0)
 		return (SUCCESS);
 	tmp = ft_substr(s, start_token, i - start_token);
+	if (ft_strchr(tmp, '$'))
+		;; //Do parameter explantion
 	if (!tmp)
 		return (printf("substr failed\n"), FAILURE); //et free stuff
 	newtoken = ft_lstnew(tmp);
