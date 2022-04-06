@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:42:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 17:38:58 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,16 @@ t_var	*var_getfromkey(t_var **var_list, char *key)
 
 
 /* Cree et ajoute une nouvel element a la fin de la list var_lst.
-Les arguments name et value doivent avoir ete declare dans la heap avant appel.
-Retorune -1 en cas d'erreur de malloc, et free name et value. */
-int	ft_new_var(t_var **var_lst, char *name, char *value)
+Les arguments key et value doivent avoir ete declare dans la heap avant appel.
+Retorune -1 en cas d'erreur de malloc, et free key et value. */
+int	ft_new_var(t_var **var_lst, char *key, char *value)
 {
 	t_var	*new_var;
 
 	new_var = malloc(sizeof(t_var));
 	if (!new_var)
-		return (free(value), free(name), -1);
-	*new_var = (t_var) {.key = name, .value = value};
+		return (free(value), free(key), -1);
+	*new_var = (t_var) {.key = key, .value = value};
 	ft_add_back(var_lst, new_var);
 	return (0);
 }
@@ -65,10 +65,10 @@ int	ft_cat_var(t_var *var, char *value)
 
 	len_new = ft_strlen(value);
 	len_old = ft_strlen(var->value);
-	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old)))
+	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old + 1)))
 		return (FAILURE);
-	ft_strlcpy(newvalue, var->value, len_old);
-	ft_strlcat(newvalue, value, len_new);
+	ft_strlcpy(newvalue, var->value, len_old + 1);
+	ft_strlcat(newvalue, value, len_old + len_new + 1);
 	free(var->value);
 	free(value);
 	var->value = newvalue;
@@ -77,51 +77,61 @@ int	ft_cat_var(t_var *var, char *value)
 
 int	ft_export(t_var **var_lst, char *str)
 {
-	char	*name;
+	char	*key;
 	char	*value;
 	int		add_mode;
-	int		name_len;
+	int		key_len;
+	t_var	*var_exists;
 
 	add_mode = 0;
-	name_len = 0;
+	key_len = 0;
+	key = NULL;
+	value = NULL;
 	if (!str)
 	{
 		// PRINT
 		return (0);
 	}
-	while (str[name_len] && str[name_len] != '=')
-		name_len++;
-	if (name_len == 0)
+	//ft_get_varkey(str, &key, mode);
+	while (str[key_len] && str[key_len] != '=')
+		key_len++;
+	if (key_len == 0)
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
-	if ((int)ft_strlen(str) >= name_len + 1)
+	if ((int)ft_strlen(str) >= key_len + 1)
 	{
-		value = ft_strdup(str + name_len + 1);
+		value = ft_strdup(str + key_len + 1);
 		if (!value)
 			return (perror("strdup export"), -1);
 	}
-	if (str[name_len - 1] == '+')
+	if (str[key_len - 1] == '+')
 	{
-		name_len--;
+		key_len--;
 		add_mode = 1;
 	}
-	name = ft_substr(str, 0, name_len);
-	if (!name)
+	key = ft_substr(str, 0, key_len);
+	if (!key)
 		return (free(value), perror("substr export"), -1);
-	if (*name == '_' && name_len == 1)
-		return (free(value), free(name), 0);
-	if (!ft_isname(name))
+	if (*key == '_' && key_len == 1)
+		return (free(value), free(key), 0);
+	if (!ft_isname(key))
 	{
 		free(value);
-		free(name);
+		free(key);
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
 	}
-	if (var_getfromkey(var_lst, name) == NULL)
-		ft_new_var(var_lst, name, value);
+	var_exists = var_getfromkey(var_lst, key);
+	if (!var_exists)
+		ft_new_var(var_lst, key, value);
 	else
 		if (add_mode)
-			ft_cat_var(var_getfromkey(var_lst, name), value);
-		// else
-			// ft_set_var(var_lst, name, value);
+			ft_cat_var(var_exists, value);
+		else
+		{
+			free(var_exists->key);
+			free(var_exists->value);
+			var_exists->key = key;
+			var_exists->value = value;
+		}
 	return (0);
 }
 
@@ -131,7 +141,12 @@ int	main(void)
 
 	if (ft_palloc(&var, sizeof(t_var)))
 		return (1);
-	ft_export(&var, "PROUT==idsdsd");
-	ft_export(&var, "PROUT+=dsdsd");
+	ft_export(&var, "PROUT=bonjour");
+	printf("____AVANT____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
+	ft_export(&var, "PROUT+=pouet");
+	printf("____APRES____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
+	free(var->key);
+	free(var->value);
+	free(var);
 	return (0);
 }
