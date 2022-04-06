@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:29:34 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/06 16:30:27 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,20 @@ t_var	*var_getfromkey(t_var *var_list, char *key)
 	return (head);
 }
 
-//
-///* Export la variable declaree dans str avec sa value si str contient '=' */
-//int	ft_add_var(t_var **var_lst, char *str)
-//{
-//	t_var	*new_var;
-//	t_var	*old_var;
-//	char	**value;
-//	char	*new;
-//	
-//	value = ft_split(str, '=');
-//	if (!value)
-//		return (-1);
-//	new_var = malloc(sizeof(t_var));
-//	if (!new_var)
-//		return (free(value), free(value[0]), free(value[1]), -1);
-//	*new_var = (t_var) {.key = value[0], .value = value[1]};
-//	ft_add_back(var_lst, new_var);
-//	free(value);
-//	return (0);
-//}
+
+/* Export la variable declaree dans str avec sa value si str contient '=' */
+int	ft_new_var(t_var **var_lst, char *name, char *value)
+{
+	t_var	*new_var;
+
+	new_var = malloc(sizeof(t_var));
+	if (!new_var)
+		return (free(value), free(name), -1);
+	*new_var = (t_var) {.key = value[0], .value = value[1]};
+	ft_add_back(var_lst, new_var);
+	free(value);
+	return (0);
+}
 
 int	ft_export(t_var **var_lst, char *str)
 {
