@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 17:52:11 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 18:25:18 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,34 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 	return (SUCCESS);
 }
 
+t_var	*ft_get_minkey(t_var *var_lst, char *str)
+{
+	t_var	*min;
+
+	if (!var_lst)
+		return (NULL);
+	min = var_lst;
+	while (var_lst)
+	{
+		if (ft_strcmp(min->key, var_lst->key) > 0)
+			min = var_lst;
+		var_lst = var_lst->next;
+	}
+	return (min);
+}
+
+int	ft_put_export(t_var *var_lst)
+{
+	t_var	*curr_kmin;
+
+	if (!var_lst)
+		return (0);
+	curr_kmin = ft_get_minkey(var_lst);
+	printf("ICI curr mini = %s\n", curr_kmin->key);
+	while (
+	return (0);
+}
+
 int	ft_export(t_var **var_lst, char *str)
 {
 	char	*key;
@@ -96,7 +124,6 @@ int	ft_export(t_var **var_lst, char *str)
 		// PRINT
 		return (0);
 	}
-	//ft_get_varkey(str, &key, mode);
 	while (str[key_len] && str[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
@@ -139,6 +166,17 @@ int	ft_export(t_var **var_lst, char *str)
 	return (0);
 }
 
+void	ft_print_lst(t_var *lst)
+{
+	if (!lst)
+		return ;;
+	while (lst)
+	{
+		printf("name=%s value=%s\n", lst->key, lst->value);
+		lst = lst->next;
+	}
+}
+
 int	main(void)
 {
 	t_var *var;
@@ -146,9 +184,12 @@ int	main(void)
 	if (ft_palloc(&var, sizeof(t_var)))
 		return (1);
 	ft_export(&var, "PROUT=LALALALA");
-	printf("____AVANT____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
-	ft_export(&var, "PROUT+=+=YEt");
-	printf("____APRES____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
+	ft_export(&var, "POUET=poulet");
+	ft_export(&var, "BONJOUR=nieh");
+
+	ft_put_export(var);
+//	ft_print_lst(var);
+//	ft_lst_clear(var);
 	free(var->key);
 	free(var->value);
 	free(var);
