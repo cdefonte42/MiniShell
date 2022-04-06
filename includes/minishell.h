@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/05 16:26:08 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 12:59:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,18 @@ typedef struct s_cmde {
 	struct s_cmde	*next;
 } t_cmde;
 
+typedef struct s_var {
+	char	*key;
+	char	*value;
+	struct s_var	*next;
+} t_var;
+
 typedef struct s_minishell {
 	char	**path;
 	char	***env;
 	char	**raw_cmd;
 	t_cmde	*cmde_lst;
+	t_var	*vars;
 	t_list	*token;
 	unsigned int	status;
 	unsigned int	loop;
@@ -84,5 +91,6 @@ int		minishell_echo(t_minishell *msh, char **av);
 int		ft_cd(char *directory, char ***env);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
+int		ft_isname(char *str);
 
 #endif

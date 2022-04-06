@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/05 15:12:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 12:59:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,25 @@ int	ft_isoperator(char c)
 	if (c == '|' || c == '<' || c == '>')
 		return (1);
 	return (0);
+}
+
+/* In the shell command language, a word consisting solely of underscores, 
+digits, and alphabetics from the portable character set. 
+The first character of a name is not a digit. */
+int	ft_isname(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	if (str[0] >= '0' && str[0] <= '9')
+		return (0);
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }
