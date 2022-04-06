@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 16:30:27 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/06 17:09:07 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ void	ft_add_back(t_var **alst, t_var *new)
 	last->next = new;
 }
 
-t_var	*var_getfromkey(t_var *var_list, char *key)
+t_var	*var_getfromkey(t_var **var_list, char *key)
 {
 	t_var	*head;
 
-	if (var_list == NULL)
+	if (var_list == NULL || *var_list == NULL)
 		return (NULL);
-	head = var_list;
-	while (head && ft_strcmp(head->key, key) != 0)
+	head = *var_list;
+	while (head != NULL && key && head->key != NULL && ft_strcmp(head->key, key) != 0)
 		head = head->next;
 	return (head);
 }
@@ -50,10 +50,28 @@ int	ft_new_var(t_var **var_lst, char *name, char *value)
 	new_var = malloc(sizeof(t_var));
 	if (!new_var)
 		return (free(value), free(name), -1);
-	*new_var = (t_var) {.key = value[0], .value = value[1]};
+	*new_var = (t_var) {.key = &value[0], .value = &value[1]};
 	ft_add_back(var_lst, new_var);
 	free(value);
 	return (0);
+}
+
+int	ft_cat_var(t_var *var, char *value)
+{
+	char	*newvalue;
+	int		len_new;
+	int		len_old;
+
+	len_new = ft_strlen(value);
+	len_old = ft_strlen(var->value);
+	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old)))
+		return (FAILURE);
+	ft_strlcpy(newvalue, var->value, len_old);
+	ft_strlcat(newvalue, value, len_new);
+	free(var->value);
+	free(value);
+	var->value = newvalue;
+	return (SUCCESS);
 }
 
 int	ft_export(t_var **var_lst, char *str)
@@ -96,18 +114,23 @@ int	ft_export(t_var **var_lst, char *str)
 		free(name);
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
 	}
-	if (var_getfromkey(*var_lst, name) == NULL)
+	if (var_getfromkey(var_lst, name) == NULL)
 		ft_new_var(var_lst, name, value);
 	else
 		if (add_mode)
-			ft_cat_var(name, value);
-		else
-			ft_set_var(var_lst, name, value);
+			ft_cat_var(var_getfromkey(var_lst, name), value);
+		// else
+			// ft_set_var(var_lst, name, value);
 	return (0);
 }
 
 int	main(void)
 {
-	ft_export(NULL, "PROUT==dsdsd");
+	t_var *var;
+
+	if (ft_palloc(&var, sizeof(t_var)))
+		return (1);
+	ft_export(&var, "PROUT==idsdsd");
+	ft_export(&var, "PROUT+=dsdsd");
 	return (0);
 }
