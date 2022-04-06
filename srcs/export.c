@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 17:38:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/06 17:52:11 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,24 @@ int	ft_new_var(t_var **var_lst, char *key, char *value)
 	return (0);
 }
 
-int	ft_cat_var(t_var *var, char *value)
+int	ft_cat_var(t_var *var, char *key, char *value)
 {
 	char	*newvalue;
 	int		len_new;
 	int		len_old;
 
 	len_new = ft_strlen(value);
-	len_old = ft_strlen(var->value);
+	len_old = 0;
+	if (var->value)
+		len_old = ft_strlen(var->value);
 	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old + 1)))
 		return (FAILURE);
-	ft_strlcpy(newvalue, var->value, len_old + 1);
+	if (var->value)
+		ft_strlcpy(newvalue, var->value, len_old + 1);
 	ft_strlcat(newvalue, value, len_old + len_new + 1);
 	free(var->value);
 	free(value);
+	free(key);
 	var->value = newvalue;
 	return (SUCCESS);
 }
@@ -102,11 +106,11 @@ int	ft_export(t_var **var_lst, char *str)
 		value = ft_strdup(str + key_len + 1);
 		if (!value)
 			return (perror("strdup export"), -1);
-	}
-	if (str[key_len - 1] == '+')
-	{
-		key_len--;
-		add_mode = 1;
+		if (str[key_len - 1] == '+')
+		{
+			key_len--;
+			add_mode = 1;
+		}
 	}
 	key = ft_substr(str, 0, key_len);
 	if (!key)
@@ -124,7 +128,7 @@ int	ft_export(t_var **var_lst, char *str)
 		ft_new_var(var_lst, key, value);
 	else
 		if (add_mode)
-			ft_cat_var(var_exists, value);
+			ft_cat_var(var_exists, key, value);
 		else
 		{
 			free(var_exists->key);
@@ -141,9 +145,9 @@ int	main(void)
 
 	if (ft_palloc(&var, sizeof(t_var)))
 		return (1);
-	ft_export(&var, "PROUT=bonjour");
+	ft_export(&var, "PROUT=LALALALA");
 	printf("____AVANT____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
-	ft_export(&var, "PROUT+=pouet");
+	ft_export(&var, "PROUT+=+=YEt");
 	printf("____APRES____\nNAME=%s\nVALUE=%s\n", var->key, var->value);
 	free(var->key);
 	free(var->value);
