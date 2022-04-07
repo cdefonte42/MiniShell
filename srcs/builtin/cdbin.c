@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 17:04:38 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 17:43:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,6 @@ void	ft_error_handler(char *directory)
 	perror(NULL);
 }
 
-/* Return la str (non allouee) apres le signe '=' de la variable 
-d'env 'var_name' passee en param. 
-Si apres le '=', le char est '\0', on return une str = "" */
-// TEUBEE LA FONCION EXISTE ET EST AUTORISEE CEST GETENV() 
-char	*ft_varenv_str(char ***env, char *var_name)
-{
-	int		i;
-
-	i = 0;
-	if (!env || !*env || !var_name)
-		return (NULL);
-	while (env[i])
-	{
-		if (ft_strcmp(env[i][0], var_name) == 0)
-			return (env[i][1]);
-		i++;
-	}
-	return (NULL);
-}
-
 /* Test si le dossier 'path' a les droits d'acces en read et execute. 
 Retourne 1 si oui, 0 si NON */
 int	ft_isadir(char *path)
@@ -77,41 +57,6 @@ int	ft_islast_chstr_ch(char *str, char c)
 	return (0);
 }
 
-///* USELESS FCT? Devrait se faire apres avoir try tous les chemins de CDPATH, 
-//mais en vrai chdir en a pas besoin */
-///*______________ STEP 7 _________*/
-//char	*ft_try_pwd(char *curpath)
-//{
-//	char	*pwdstr;
-//	char	*tmp;
-//	char	*tmpbis;
-//
-//	pwdstr = getenv("PWD");
-//	if (!pwdstr)
-//		return (free(curpath), NULL);
-//	if (!ft_islast_chstr_ch(pwdstr, '/')) // si pwdstr se END PAS par un slash
-//	{
-//		tmp = ft_strjoin(pwdstr, "/");
-//		if (!tmp)
-//			return (free(curpath), NULL);
-//		tmpbis = curpath;
-//		curpath = ft_strjoin(tmp, tmpbis);
-//		free(tmp);
-//		free(tmpbis);
-//		if (!curpath)
-//			return (NULL);
-//	}
-//	else // pwdstr se termine par slash
-//	{
-//		tmp = curpath;
-//		curpath = ft_strjoin(pwdstr, tmp);
-//		free(tmp);
-//		if (!curpath)
-//			return (NULL);
-//	}
-//	return (curpath);
-//}
-
 /* Concat each CDPATH pathnames (when CDPATH pathname not NULL) et directory. 
 directory should NOT be NULL nor = "\0".*/
 /*______________ STEP 5 ____________*/
@@ -124,7 +69,7 @@ int	ft_test_concat_dir(char ** curpath, char *cdpathname, char *directory)
 	i = 0;
 	splited_cdpathname = ft_split(cdpathname, ':');
 	if (!splited_cdpathname)
-		return (-1);
+		return (FAILURE);
 	while (splited_cdpathname[i])
 	{
 		if (splited_cdpathname[i][0] == '\0') // si splited_cdpathname[i] = "\0", doit mettre "./"
@@ -132,30 +77,30 @@ int	ft_test_concat_dir(char ** curpath, char *cdpathname, char *directory)
 			printf("DOIT PASSE ICI\n");
 			*curpath = ft_strjoin("./", directory);
 			if (!*curpath)
-				return (-1);
+				return (FAILURE);
 		}
 		else if (!ft_islast_chstr_ch(splited_cdpathname[i], '/')) // si '/' est PAS a la fin
 		{
 			*curpath = ft_strjoin(splited_cdpathname[i], "/");
 			if (!*curpath)
-				return (-1);
+				return (FAILURE);
 			tmp = *curpath;
 			*curpath = ft_strjoin(tmp, directory);
 			free(tmp);
 			if (!*curpath)
-				return (-1);
+				return (FAILURE);
 		}
 		else // si pathname != NULL et a le '/' a la fin
 		{
 			*curpath = ft_strjoin(splited_cdpathname[i], directory);
 			if (!*curpath)
-				return (-1);
+				return (FAILURE);
 		}
 		if (ft_isadir(*curpath)) //si curpath exists
-			return (0);
+			return (SUCCESS);
 		i++;
 	}
-	return (1); //FILE NOT FOUND
+	return (-1); //FILE NOT FOUND
 }
 
 /* check and test CDPATH ATTENTION CDPATH=:$HOME:$HOME/projects:etc 
@@ -172,23 +117,23 @@ int	ft_try_cdpath(char **curpath, char *directory, t_var *var_lst)
 	{
 		
 		res_cdpath = ft_test_concat_dir(curpath, cdpath->value, directory);
-		if (res_cdpath == -1)
-			return (-1);
-		else if (res_cdpath == 1)
+		if (res_cdpath == FAILURE)
+			return (FAILURE);
+		else if (res_cdpath == -1)
 		{
 			*curpath = ft_strjoin("./", directory);
 			if (!*curpath)
-				return (-1);
-			return (0);
+				return (FAILURE);
+			return (SUCCESS);
 		}
-		return (0);
+		return (SUCCESS);
 	}
 	else // cdpathstr is NULL, 2eme partie
 	{
 		*curpath = ft_strjoin("./", directory);
 		if (!*curpath)
-			return (-1);
-		return (0);
+			return (FAILURE);
+		return (SUCCESS);
 	}
 }
 
@@ -203,27 +148,51 @@ int ft_cd_home(char **curpath)
 
 	home = getenv("HOME"); //getenv() donne la str apres le '=' de "HOME"
 	if (home == NULL) // => HOME undefined
-		return (ft_putstr_fd("HOME not set",2), -1); //A FAIRE par error handler (return statusest de 1)
+		return (ft_putstr_fd("HOME not set",2), FAILURE); //A FAIRE par error handler (return statusest de 1)
 	else if (*home == 0) // HOME empty
-		return (0);
+		return (SUCCESS);
 	*curpath = ft_strdup(home);
 	if (!*curpath)
-		return (-1);
-	return (0);
+		return (FAILURE);
+	return (SUCCESS);
 }
 
-int	ft_maj_varenvstr(t_var *var_lst, char *varname, char *strtoput)
+/* Cherche l'element de la liste 'var_lst' qui a la 'key' egale a 'varname',
+et remplace sa 'value' par 'strtoput'. Free l'ancienne 'value'. 'strtoput' doit
+etre une chaine allouee. */
+void	ft_maj_varenvstr(t_var *var_lst, char *varname, char *strtoput)
 {
 	t_var	*var;
 	
 	if (!strtoput || !varname || !var_lst)
-		return (ft_putstr_fd("1 arg of ft_maj_varenvstr is NULL!", 2), SUCCESS);
+		return ;
 	var = var_getfromkey(var_lst, varname);
 	if (!var)
-		return (ft_putstr_fd("key not found in var_lst ft_maj_varenvstr\n", 2), FAILURE);
+		return ;
 	free(var->value);
 	var->value = strtoput;
-	return (FAILURE); // PAS trouvee
+}
+
+/* Launch la bonne fonction en fonction de la valeur de l'arg 'directory' */
+int	ft_parse_dir(char **curpath, char *directory, t_var *var_lst)
+{
+	if (directory == NULL)
+	{
+		if (ft_cd_home(curpath) == FAILURE)
+			return (FAILURE);
+	}
+	else if (*directory == '/' || *directory == '.' )
+	{
+		*curpath = ft_strdup(directory);
+		if (!*curpath)
+			return (FAILURE);
+	}
+	else
+	{
+		if (ft_try_cdpath(curpath, directory, var_lst) == FAILURE)
+			return (FAILURE);
+	}
+	return (SUCCESS);
 }
 
 int	ft_cd(char *directory, t_var *var_lst)
@@ -235,35 +204,20 @@ int	ft_cd(char *directory, t_var *var_lst)
 	curpath = NULL;
 	oldpwd = getcwd(NULL, 0);
 	if (oldpwd == NULL)
-		return (perror("getcwp oldpwd debut ft_cd"), -1);
-	if (directory == NULL)
-	{
-		if (ft_cd_home(&curpath) == -1)
-			return (free(oldpwd), -1);
-	}
-	else if (*directory == '/' || *directory == '.' )
-	{
-		curpath = ft_strdup(directory);
-		if (!curpath)
-			return (free(oldpwd), -1);
-		//else if (curpath == NULL) => join with PWD
-	}
-	else
-	{
-		if (ft_try_cdpath(&curpath, directory, var_lst) == -1)
-			return (free(oldpwd), -1);
-	}
-	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX) // STEP 9 mais en vrai chdir doit s'en occuper tout seul non ?
-		return (free(oldpwd), perror("supp PATH_MAX"), -1);
+		return (perror("getcwp oldpwd debut ft_cd"), FAILURE);
+	if (ft_parse_dir(&curpath, directory, var_lst) == FAILURE)
+		return (free(oldpwd), FAILURE);
+	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
+		return (free(oldpwd), perror("supp PATH_MAX"), FAILURE);
 	if (curpath && chdir(curpath) != 0)
-		return (free(oldpwd), ft_error_handler(directory), -1);
+		return (free(oldpwd), ft_error_handler(directory), FAILURE);
 	free(curpath);
 	ft_maj_varenvstr(var_lst, "OLDPWD", oldpwd);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
-		return (perror("getcwp pwd ft_cd"), -1);
+		return (perror("getcwp pwd ft_cd"), FAILURE);
 	ft_maj_varenvstr(var_lst, "PWD", pwd);
-	return (0);
+	return (SUCCESS);
 }
 //
 //int	minishell_get_env(t_var **vars, char **envp)
