@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 12:26:00 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:26:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	minishell_free_env(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
 
 int		minishell_echo(t_minishell *msh, char **av);
-int		ft_cd(char *directory, char ***env);
+int		ft_cd(char *directory, t_var *var_lst);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_isname(char *str);

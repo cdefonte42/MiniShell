@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 12:30:55 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:26:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #include "export.h"
 
 /* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
-t_var	*var_getfromkey(t_var **var_list, char *key)
+t_var	*var_getfromkey(t_var *var_list, char *key)
 {
 	t_var	*head;
 
-	if (var_list == NULL || *var_list == NULL || !key)
+	if (var_list == NULL || !key)
 		return (NULL);
-	head = *var_list;
+	head = var_list;
 	while (head != NULL && head->key != NULL && ft_strcmp(head->key, key) != 0)
 		head = head->next;
 	return (head);
