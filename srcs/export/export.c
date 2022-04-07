@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 15:19:20 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:26:28 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_print_export(t_var *lst)
 		printf("export %s=\"%s\"\n", lst->key, lst->value);
 }
 
-/* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha */
+/* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha*/
 int	ft_put_export(t_var *var_lst)
 {
 	t_var	*curr_kmin;

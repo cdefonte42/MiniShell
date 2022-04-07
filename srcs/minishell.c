@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 15:22:56 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:25:38 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	minishell_join_quote(t_minishell *msh)
 		}
 		i++;
 	}
-	printf("JOIN QUOTE\n");
+	// printf("JOIN QUOTE\n");
 	return (SUCCESS);
 }
 
@@ -152,13 +152,13 @@ int	minishell_parse_line(t_minishell *msh, char *s)
 
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
-	printf("___AVANT join quote\n");
-	debug_print_msh(msh);
+	// printf("___AVANT join quote\n");
+	// debug_print_msh(msh);
 	minishell_join_quote(msh);
 	if (!msh->raw_cmd)
 		return (FAILURE);
-	printf("___APRES join quote\n");
-	debug_print_msh(msh);
+	// printf("___APRES join quote\n");
+	// debug_print_msh(msh);
 	builtin_exec(msh);
 	if (line && *line)
 		add_history (line);
