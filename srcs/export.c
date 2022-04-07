@@ -6,12 +6,13 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 19:33:35 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 11:39:03 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
 void	ft_add_back(t_var **alst, t_var *new)
 {
 	t_var	*last;
@@ -29,6 +30,7 @@ void	ft_add_back(t_var **alst, t_var *new)
 	last->next = new;
 }
 
+/* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
 t_var	*var_getfromkey(t_var **var_list, char *key)
 {
 	t_var	*head;
@@ -57,6 +59,8 @@ int	ft_new_var(t_var **var_lst, char *key, char *value)
 	return (0);
 }
 
+/* Concatenation de la current value de l'element 'var' ayant pour key valeur
+'key', avec le prama 'value'. Return FAILURE si erreur de mallo.*/
 int	ft_cat_var(t_var *var, char *key, char *value)
 {
 	char	*newvalue;
@@ -79,16 +83,19 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 	return (SUCCESS);
 }
 
+/* Print un element t_var selon le modele du bin export sans arg */
 void	ft_print_export(t_var *lst)
 {
 	if (!lst)
-		return ;;
+		return ;
 	if (lst->value == NULL)
 		printf("export %s\n", lst->key);
 	else
 		printf("export %s=\"%s\"\n", lst->key, lst->value);
 }
 
+/* Retourne l'element de la liste var_lst qui a la plus petite valeur ASCII 
+pour son element de struct t_var 'key' */
 t_var	*ft_get_minkey(t_var *var_lst)
 {
 	t_var	*min;
@@ -105,47 +112,48 @@ t_var	*ft_get_minkey(t_var *var_lst)
 	return (min);
 }
 
-void	ft_get_nextbigger(t_var *lst, t_var *prevmin)
+/* Retourne l'element dans la liste plsu grand que la valeur ASCII de de la key
+de 'prevmin'. ATTENTION prevmin ne doit PAS etre NULL, donc necessite d'avoir 
+trouve le plus petit element ds la liste avant appel. */
+t_var	*ft_get_nextbigger(t_var *lst, t_var *prevmin, int *end)
 {
 	t_var	*currmin;
-	t_var	*tmp;
 	int		currdiff;
 	int		diff;
-	int		end;
 
 	currdiff = 500;
-	tmp = lst;
-	end = 1;
+	*end = 1;
 	if (!prevmin)
-		return ;;
+		return (NULL);
 	while (lst)
 	{
 		diff = ft_strcmp(lst->key, prevmin->key);
 		if (diff > 0 && diff < currdiff)
 		{
-			end = 0;
+			*end = 0;
 			currdiff = diff;
 			currmin = lst;
 		}
 		lst = lst->next;
 	}
-	if (!end)
-	{
-		ft_print_export(currmin);
-		ft_get_nextbigger(tmp, currmin);
-	}
-	return ;;
+	return (currmin);
 }
 
+/* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha */
 int	ft_put_export(t_var *var_lst)
 {
 	t_var	*curr_kmin;
+	int		end;
 
+	end = 0;
 	if (!var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);
-	ft_print_export(curr_kmin);
-	ft_get_nextbigger(var_lst, curr_kmin);
+	while (!end)
+	{
+		ft_print_export(curr_kmin);
+		curr_kmin = ft_get_nextbigger(var_lst, curr_kmin, &end);
+	}
 	return (0);
 }
 
@@ -163,7 +171,7 @@ int	ft_export(t_var **var_lst, char *str)
 	value = NULL;
 	if (!str)
 	{
-		// PRINT
+		ft_put_export(*var_lst);
 		return (0);
 	}
 	while (str[key_len] && str[key_len] != '=')
@@ -219,10 +227,26 @@ void	ft_print_lst(t_var *lst)
 	}
 }
 
+/* Free tous les elements de struct t_var et la liste */
+static void	ft_lst_clear(t_var *lst)
+{
+	t_var *tmp;
+
+	while (lst)
+	{
+		tmp = lst;
+		lst = lst->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
+	}
+}
+
 int	main(void)
 {
 	t_var *var;
 
+	var = NULL;
 	if (ft_palloc(&var, sizeof(t_var)))
 		return (1);
 	ft_export(&var, "B=LALALALA");
@@ -230,12 +254,7 @@ int	main(void)
 	ft_export(&var, "A=nieh");
 	ft_export(&var, "D=""");
 	ft_export(&var, "E=");
-
-	ft_put_export(var);
-//	ft_print_lst(var);
-//	ft_lst_clear(var);
-	free(var->key);
-	free(var->value);
-	free(var);
+	ft_export(&var, NULL);
+	ft_lst_clear(var);
 	return (0);
 }
