@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 14:16:10 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:22:56 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 // SIGINT == 2
 
-int	status;
+int	g_status;
 
 void	signal_handler(int signalid)
 {
@@ -25,7 +25,7 @@ void	signal_handler(int signalid)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		status = 130;
+		g_status = 130;
 	}
 	if (signalid == SIGQUIT || signalid == SIGTSTP)
 		write(1, "\b\b  \b\b", 6);
@@ -38,7 +38,7 @@ void	builtin_exec(t_minishell *msh)
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
-			status = ft_atoi(msh->raw_cmd[1]);
+			g_status = ft_atoi(msh->raw_cmd[1]);
 		msh->loop = 0;
 		ft_putendl_fd("exit", 1);
 		// fexit(msh);
@@ -73,21 +73,19 @@ void	builtin_exec(t_minishell *msh)
 
 int	minishell_get_env(t_minishell *msh, char **envp)
 {
-	int	i;
+	int		i;
+	char	**splited;
 
 	i = 0;
-	while (envp && envp[i])
-		i++;
-	msh->env = ft_calloc(sizeof(char **), i + 1);
-	if (!msh->env)
+	if (!envp)
 		return (FAILURE);
-	msh->env[i] = NULL;
 	i = 0;
 	while (envp && envp[i])
 	{
-		msh->env[i] = ft_split(envp[i], '=');
-		if (msh->env[i] == NULL)
-			return (minishell_free_env(msh), FAILURE); // free old env
+		splited = ft_split(envp[i], '=');
+		if (!ft_new_var(&msh->vars, splited[0], splited[1], 0))
+			return (free(splited), FAILURE);
+		free(splited);
 		i++;
 	}
 	return (SUCCESS);
@@ -95,10 +93,10 @@ int	minishell_get_env(t_minishell *msh, char **envp)
 
 int	minishell_join_quote(t_minishell *msh)
 {
-	char	*tmp;
-	int		in_quote;
-	int		i;
-	int		j;
+	char				*tmp;
+	int					in_quote;
+	int					i;
+	int					j;
 	enum e_quote_type	quote_type;
 
 	in_quote = false;
@@ -195,21 +193,19 @@ int	main(int ac, char *av[], char *envp[])
 {
 	(void)		ac;
 	(void)		av;
-	status = 0;
+	g_status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
-	// if (ft_palloc(&msh.vars, sizeof(t_var)))
-	// 	return (1);
 	if (minishell_get_env(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
 	signal(SIGQUIT, &signal_handler);
 	signal(SIGTSTP, &signal_handler);
-	printf("%p\n", &ac + 2);
-	printf("%p\n", __builtin_frame_address(0));
+	// printf("%p\n", &ac + 2);
+	// printf("%p\n", __builtin_frame_address(0));
 	printf("Welcome to my minishell.\n");
 	minishell_loop(&msh);
 	printf("Bye.\n");
-	minishell_free_env(&msh); 
-	return (status);
+	minishell_free_env(&msh);
+	return (g_status);
 }

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 12:57:34 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:19:20 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "export.h"
 
 /* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
-void	ft_add_back(t_var **alst, t_var *new)
+void	var_add_back(t_var **alst, t_var *new)
 {
 	t_var	*last;
 
@@ -33,17 +33,17 @@ void	ft_add_back(t_var **alst, t_var *new)
 
 /* Cree et ajoute une nouvel element a la fin de la list var_lst.
 Les arguments key et value doivent avoir ete declare dans la heap avant appel.
-Retorune -1 en cas d'erreur de malloc, et free key et value. */
+Retorune 1 en cas d'erreur de malloc, et free key et value. */
 int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
 {
 	t_var	*new_var;
 
 	new_var = ft_calloc(1, sizeof(t_var));
 	if (!new_var)
-		return (free(value), free(key), -1);
+		return (free(value), free(key), FAILURE);
 	*new_var = (t_var){.key = key, .value = value, .type = type};
-	ft_add_back(var_lst, new_var);
-	return (0);
+	var_add_back(var_lst, new_var);
+	return (SUCCESS);
 }
 
 /* Concatenation de la current value de l'element 'var' ayant pour key valeur
@@ -142,7 +142,7 @@ int	ft_export(t_var **var_lst, char *str)
 		free(key);
 		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
 	}
-	var_exists = var_getfromkey(var_lst, key);
+	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)
 		ft_new_var(var_lst, key, value, 0);
 	else if (value != NULL)
