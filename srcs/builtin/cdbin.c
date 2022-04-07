@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 15:24:30 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 15:59:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,9 +164,9 @@ le debut alors cherche jamais dans le curr dir */
 int	ft_try_cdpath(char **curpath, char *directory, t_var *var_lst)
 {
 	t_var	*cdpath;
-
+	
 	cdpath = var_getfromkey(var_lst, "CDPATH");
-	if (cdpath->value != NULL) //1ere partie
+	if (cdpath && cdpath->value != NULL) //1ere partie
 	{
 		if (ft_test_concat_dir(curpath, cdpath->value, directory) == -1)
 			return (-1);
@@ -255,56 +255,62 @@ int	ft_cd(char *directory, t_var *var_lst)
 	return (0);
 }
 
-//char***    minishell_get_env(char **envp)
-//{
-//    int    i;
-//    char ***env;
-//    i = 0;
-//    while (envp && envp[i])
-//        i++;
-//    env = malloc(sizeof(char **) * (i + 1));
-//    env[i] = NULL;
-//    while (i--)
-//        env[i] = ft_split(envp[i], '=');
-//    return (env);
-//}
-//
-//int	main(int argc, char **argv, char **envp)
-//{
-//	char	*directory;
-//	char	***env;
-//	int		debug = 0;
-//
-//	env = minishell_get_env(envp);
-//	if (argc == 1)
-//		directory = NULL;
-//	else
-//		directory = *(argv + 1);
-//	if (!debug)
-//	{
-//		printf("AVANT cd pwd = %s\n", getcwd(NULL, 0));
-//		if (ft_cd(directory, env) != 0) //ERROR HANDLER
-//		{
-//			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
-//			return (1);
-//		}
-//		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
-//	}
-//	else
-//	{
-//		char	*str;
-//
+int	minishell_get_env(t_var **vars, char **envp)
+{
+	int		i;
+	char	**splited;
+
+	i = 0;
+	if (!envp)
+		return (FAILURE);
+	i = 0;
+	while (envp && envp[i])
+	{
+		splited = ft_split(envp[i], '=');
+		if (!ft_new_var(vars, splited[0], splited[1], 0))
+			return (free(splited), FAILURE);
+		free(splited);
+		i++;
+	}
+	return (SUCCESS);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	char	*directory;
+	t_var	*var_lst;
+	int		debug = 0;
+
+	minishell_get_env(&var_lst, envp);
+	if (argc == 1)
+		directory = NULL;
+	else
+		directory = *(argv + 1);
+	if (!debug)
+	{
+		printf("AVANT cd pwd = %s\n", getcwd(NULL, 0));
+		if (ft_cd(directory, var_lst) != 0) //ERROR HANDLER
+		{
+			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+			return (1);
+		}
+		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+	}
+	else
+	{
+		char	*str;
+
+		str = getcwd(NULL, 0);
+		if (!str)
+			return (perror("NISNDI"), 1);
+		printf("AVANT cd pwd = %s\n", str);
+		if (chdir(*(argv + 1)) != 0)
+			return (perror("(chdir) cd"), -1);
 //		str = getcwd(NULL, 0);
 //		if (!str)
 //			return (perror("NISNDI"), 1);
-//		printf("AVANT cd pwd = %s\n", str);
-//		if (chdir(*(argv + 1)) != 0)
-//			return (perror("(chdir) cd"), -1);
-////		str = getcwd(NULL, 0);
-////		if (!str)
-////			return (perror("NISNDI"), 1);
-////		printf("APRES cd pwd = %s\n", str);
-//		free(str);
-//	}
-//	return (0);
-//}
+//		printf("APRES cd pwd = %s\n", str);
+		free(str);
+	}
+	return (0);
+}

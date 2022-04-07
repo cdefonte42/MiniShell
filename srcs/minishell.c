@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 15:25:38 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 15:39:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	builtin_exec(t_minishell *msh)
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
 	{
-		ft_cd(msh->raw_cmd[1], msh->env);
+		ft_cd(msh->raw_cmd[1], msh->vars);
 		char	*pwd;
 		pwd = getcwd(NULL, 0);
 		if (!pwd)
