@@ -6,13 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 15:30:39 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 18:54:37 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
-
 /* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
 t_var	*var_getfromkey(t_var *var_list, char *key)
 {
@@ -25,6 +24,17 @@ t_var	*var_getfromkey(t_var *var_list, char *key)
 		head = head->next;
 	return (head);
 }
+
+/*
+
+	IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!
+	For get_minkey_prev and get_minkey check the TYPE
+		DONT PRINT THE SHELL VARIABLE
+		
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+*/
+
 
 /* Retourne l'element de la liste var_lst qui a la plus petite valeur ASCII 
 pour son element de struct t_var 'key' */
@@ -39,6 +49,39 @@ t_var	*ft_get_minkey(t_var *var_lst)
 	{
 		if (ft_strcmp(min->key, var_lst->key) > 0)
 			min = var_lst;
+		var_lst = var_lst->next;
+	}
+	return (min);
+}
+
+t_var	*ft_get_maxkey(t_var *var_lst)
+{
+	t_var	*max;
+
+	if (!var_lst)
+		return (NULL);
+	max = var_lst;
+	while (var_lst)
+	{
+		if (ft_strcmp(max->key, var_lst->key) < 0)
+			max = var_lst;
+		var_lst = var_lst->next;
+	}
+	return (max);
+}
+
+t_var	*ft_get_minkey_prev(t_var *var_lst, t_var *prev)
+{
+	t_var	*min;
+
+	if (!var_lst)
+		return (NULL);
+	min = ft_get_maxkey(var_lst);
+	while (var_lst)
+	{
+		if (ft_strcmp(prev->key, var_lst->key) < 0)
+			if (ft_strcmp(min->key, var_lst->key) > 0)
+				min = var_lst;
 		var_lst = var_lst->next;
 	}
 	return (min);

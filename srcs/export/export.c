@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 15:26:28 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 18:50:49 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,37 @@ void	ft_print_export(t_var *lst)
 		printf("export %s=\"%s\"\n", lst->key, lst->value);
 }
 
+int	ft_count_vars(t_var *var_lst)
+{
+	t_var	*head;
+	int		i;
+
+	i = 0;
+	head = var_lst;
+	// Check if is export var and not shell var
+	while (head)
+	{
+		head = head->next; 
+		++i;
+	}
+	return (i);
+}
+
 /* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha*/
 int	ft_put_export(t_var *var_lst)
 {
 	t_var	*curr_kmin;
 	int		end;
 
-	end = 0;
+	end = ft_count_vars(var_lst);
 	if (!var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);
-	while (!end)
+	while (end--)
 	{
 		ft_print_export(curr_kmin);
-		curr_kmin = ft_get_nextbigger(var_lst, curr_kmin, &end);
+		// curr_kmin = ft_get_nextbigger(var_lst, curr_kmin, &end);
+		curr_kmin = ft_get_minkey_prev(var_lst, curr_kmin);
 	}
 	return (0);
 }
