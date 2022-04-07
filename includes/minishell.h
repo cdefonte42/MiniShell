@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/24 08:45:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:26:00 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,43 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
+enum e_quote_type {doubleq = 1, singleq = 2};
+
+typedef struct s_cmde {
+	char			*name;
+	char			*option;
+	char			*arg;
+	int				infile;
+	int				outfile;
+	struct s_cmde	*next;
+}	t_cmde;
+
+typedef struct s_var {
+	char			*key;
+	char			*value;
+	int				type;
+	struct s_var	*next;
+}	t_var;
+
 typedef struct s_minishell {
-	char	**path;
-	char	***env;
-	char	**raw_cmd;
+	char			**path;
+	char			***env;
+	char			**raw_cmd;
+	t_cmde			*cmde_lst;
+	t_var			*vars;
+	t_list			*token;
 	unsigned int	status;
-	unsigned int	loop;
-} t_minishell;
+	bool			loop;
+}	t_minishell;
 
 // Free
 void	minishell_free_env(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
 
-
-int	minishell_echo(t_minishell *msh, char **av);
-int	ft_cd(char *directory, char ***env);
+int		minishell_echo(t_minishell *msh, char **av);
+int		ft_cd(char *directory, char ***env);
+int		ft_ismetachar(char c);
+int		ft_isoperator(char c);
+int		ft_isname(char *str);
 
 #endif

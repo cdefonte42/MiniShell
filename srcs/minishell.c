@@ -6,11 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/24 09:49:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 14:16:10 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "export.h"
 
 // SIGINT == 2
 
@@ -21,18 +22,19 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		status = 130;
 	}
 	if (signalid == SIGQUIT || signalid == SIGTSTP)
 		write(1, "\b\b  \b\b", 6);
-	// printf("%d", signalid);
 }
 
 void	builtin_exec(t_minishell *msh)
 {
+	int	i;
+
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
@@ -56,6 +58,17 @@ void	builtin_exec(t_minishell *msh)
 			printf("new pwd after cd = %s\n", pwd);
 		free(pwd);
 	}
+	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
+	{
+		if (msh->raw_cmd[1] == NULL)
+			ft_export(&msh->vars, NULL);
+		else
+		{
+			i = 0;
+			while (msh->raw_cmd[++i])
+				ft_export(&msh->vars, msh->raw_cmd[i]);
+		}
+	}
 }
 
 int	minishell_get_env(t_minishell *msh, char **envp)
@@ -68,7 +81,7 @@ int	minishell_get_env(t_minishell *msh, char **envp)
 	msh->env = ft_calloc(sizeof(char **), i + 1);
 	if (!msh->env)
 		return (FAILURE);
-	// msh->env[i] = NULL;
+	msh->env[i] = NULL;
 	i = 0;
 	while (envp && envp[i])
 	{
@@ -86,8 +99,10 @@ int	minishell_join_quote(t_minishell *msh)
 	int		in_quote;
 	int		i;
 	int		j;
+	enum e_quote_type	quote_type;
 
 	in_quote = false;
+	quote_type = -1;
 	i = 0;
 	while (msh->raw_cmd[i])
 	{
@@ -95,7 +110,15 @@ int	minishell_join_quote(t_minishell *msh)
 		while (msh->raw_cmd[i][j])
 		{
 			if (msh->raw_cmd[i][j] == '"')
+			{
 				in_quote = !in_quote;
+				quote_type = doubleq;
+			}
+			else if (msh->raw_cmd[i][j] == '\'')
+			{
+				in_quote = !in_quote;
+				quote_type = singleq;
+			}
 			j++;
 		}
 		j = 0;
@@ -109,8 +132,20 @@ int	minishell_join_quote(t_minishell *msh)
 		}
 		i++;
 	}
-
+	printf("JOIN QUOTE\n");
 	return (SUCCESS);
+}
+
+void	debug_print_msh(t_minishell *msh)
+{
+	int		i;
+
+	i = 0;
+	while (msh && msh->raw_cmd && msh->raw_cmd[i])
+	{
+		printf("[%d]%s\n", i, msh->raw_cmd[i]);
+		i++;
+	}
 }
 
 int	minishell_parse_line(t_minishell *msh, char *s)
@@ -119,14 +154,16 @@ int	minishell_parse_line(t_minishell *msh, char *s)
 
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
+	printf("___AVANT join quote\n");
+	debug_print_msh(msh);
 	minishell_join_quote(msh);
 	if (!msh->raw_cmd)
 		return (FAILURE);
+	printf("___APRES join quote\n");
+	debug_print_msh(msh);
 	builtin_exec(msh);
 	if (line && *line)
 		add_history (line);
-	for (int i = 0; msh->raw_cmd[i]; i++)
-		printf("[%d]%s\n", i, msh->raw_cmd[i]);
 	minishell_free_rawcmd(msh);
 	free(line);
 	return (SUCCESS);
@@ -145,7 +182,9 @@ int	minishell_loop(t_minishell *msh)
 			break ;
 		}
 		else
+		{
 			minishell_parse_line(msh, line);
+		}
 		free(line);
 	}
 	clear_history();
@@ -159,6 +198,8 @@ int	main(int ac, char *av[], char *envp[])
 	status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
+	// if (ft_palloc(&msh.vars, sizeof(t_var)))
+	// 	return (1);
 	if (minishell_get_env(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);

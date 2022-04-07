@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_palloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/25 15:27:38 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/06 17:05:59 by mbraets          ###   ########.fr       */
+/*   Created: 2022/04/06 16:38:31 by mbraets           #+#    #+#             */
+/*   Updated: 2022/04/06 16:50:44 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_palloc(void *dst, size_t size)
 {
-	size_t	i;
-
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	*(void **)dst = malloc(size);
+	if (*(void **)dst == NULL)
+		return (1);
+	ft_memset(*(void **)dst, 0, size);
+	return (0);
 }

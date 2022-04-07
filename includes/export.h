@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   export.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/25 15:27:38 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/06 17:05:59 by mbraets          ###   ########.fr       */
+/*   Created: 2022/04/07 12:17:05 by mbraets           #+#    #+#             */
+/*   Updated: 2022/04/07 12:31:00 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef EXPORT_H
+# define EXPORT_H
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
+# include "minishell.h"
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
+t_var	*var_getfromkey(t_var **var_list, char *key);
+t_var	*ft_get_minkey(t_var *var_lst);
+t_var	*ft_get_nextbigger(t_var *lst, t_var *prevmin, int *end);
+
+int		ft_export(t_var **var_lst, char *str);
+void	ft_lst_clear(t_var *lst);
+#endif
