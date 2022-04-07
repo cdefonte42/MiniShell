@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 16:27:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 17:04:38 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,9 @@ int	ft_test_concat_dir(char ** curpath, char *cdpathname, char *directory)
 		return (-1);
 	while (splited_cdpathname[i])
 	{
-		if (splited_cdpathname[i][0] == 0) // si splited_cdpathname[i] = "\0", doit mettre "./"
+		if (splited_cdpathname[i][0] == '\0') // si splited_cdpathname[i] = "\0", doit mettre "./"
 		{
+			printf("DOIT PASSE ICI\n");
 			*curpath = ft_strjoin("./", directory);
 			if (!*curpath)
 				return (-1);
@@ -164,12 +165,22 @@ le debut alors cherche jamais dans le curr dir */
 int	ft_try_cdpath(char **curpath, char *directory, t_var *var_lst)
 {
 	t_var	*cdpath;
+	int		res_cdpath;
 	
 	cdpath = var_getfromkey(var_lst, "CDPATH");
 	if (cdpath && cdpath->value != NULL) //1ere partie
 	{
-		if (ft_test_concat_dir(curpath, cdpath->value, directory) == -1)
+		
+		res_cdpath = ft_test_concat_dir(curpath, cdpath->value, directory);
+		if (res_cdpath == -1)
 			return (-1);
+		else if (res_cdpath == 1)
+		{
+			*curpath = ft_strjoin("./", directory);
+			if (!*curpath)
+				return (-1);
+			return (0);
+		}
 		return (0);
 	}
 	else // cdpathstr is NULL, 2eme partie
