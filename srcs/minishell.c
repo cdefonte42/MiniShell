@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 12:35:46 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 12:52:10 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,8 @@ int	main(int ac, char *av[], char *envp[])
 	status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
-	if (ft_palloc(&msh.vars, sizeof(t_var)))
-		return (1);
+	// if (ft_palloc(&msh.vars, sizeof(t_var)))
+	// 	return (1);
 	if (minishell_get_env(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
