@@ -6,11 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 11:39:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:45:31 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+// #include "minishell.h"
+#include "export.h"
 
 /* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
 void	ft_add_back(t_var **alst, t_var *new)
@@ -30,31 +31,17 @@ void	ft_add_back(t_var **alst, t_var *new)
 	last->next = new;
 }
 
-/* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
-t_var	*var_getfromkey(t_var **var_list, char *key)
-{
-	t_var	*head;
-
-	if (var_list == NULL || *var_list == NULL)
-		return (NULL);
-	head = *var_list;
-	while (head != NULL && key && head->key != NULL && ft_strcmp(head->key, key) != 0)
-		head = head->next;
-	return (head);
-}
-
-
 /* Cree et ajoute une nouvel element a la fin de la list var_lst.
 Les arguments key et value doivent avoir ete declare dans la heap avant appel.
 Retorune -1 en cas d'erreur de malloc, et free key et value. */
-int	ft_new_var(t_var **var_lst, char *key, char *value)
+int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
 {
 	t_var	*new_var;
 
-	new_var = malloc(sizeof(t_var));
+	new_var = ft_calloc(1, sizeof(t_var));
 	if (!new_var)
 		return (free(value), free(key), -1);
-	*new_var = (t_var) {.key = key, .value = value};
+	*new_var = (t_var){.key = key, .value = value, .type = type};
 	ft_add_back(var_lst, new_var);
 	return (0);
 }
@@ -86,57 +73,12 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 /* Print un element t_var selon le modele du bin export sans arg */
 void	ft_print_export(t_var *lst)
 {
-	if (!lst)
+	if (!lst || lst->type)
 		return ;
 	if (lst->value == NULL)
 		printf("export %s\n", lst->key);
 	else
 		printf("export %s=\"%s\"\n", lst->key, lst->value);
-}
-
-/* Retourne l'element de la liste var_lst qui a la plus petite valeur ASCII 
-pour son element de struct t_var 'key' */
-t_var	*ft_get_minkey(t_var *var_lst)
-{
-	t_var	*min;
-
-	if (!var_lst)
-		return (NULL);
-	min = var_lst;
-	while (var_lst)
-	{
-		if (ft_strcmp(min->key, var_lst->key) > 0)
-			min = var_lst;
-		var_lst = var_lst->next;
-	}
-	return (min);
-}
-
-/* Retourne l'element dans la liste plsu grand que la valeur ASCII de de la key
-de 'prevmin'. ATTENTION prevmin ne doit PAS etre NULL, donc necessite d'avoir 
-trouve le plus petit element ds la liste avant appel. */
-t_var	*ft_get_nextbigger(t_var *lst, t_var *prevmin, int *end)
-{
-	t_var	*currmin;
-	int		currdiff;
-	int		diff;
-
-	currdiff = 500;
-	*end = 1;
-	if (!prevmin)
-		return (NULL);
-	while (lst)
-	{
-		diff = ft_strcmp(lst->key, prevmin->key);
-		if (diff > 0 && diff < currdiff)
-		{
-			*end = 0;
-			currdiff = diff;
-			currmin = lst;
-		}
-		lst = lst->next;
-	}
-	return (currmin);
 }
 
 /* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha */
@@ -174,6 +116,7 @@ int	ft_export(t_var **var_lst, char *str)
 		ft_put_export(*var_lst);
 		return (0);
 	}
+	printf("%p\n%p:%s\n", var_lst, str, str);
 	while (str[key_len] && str[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
@@ -202,8 +145,9 @@ int	ft_export(t_var **var_lst, char *str)
 	}
 	var_exists = var_getfromkey(var_lst, key);
 	if (!var_exists)
-		ft_new_var(var_lst, key, value);
+		ft_new_var(var_lst, key, value, 0);
 	else
+	{
 		if (add_mode)
 			ft_cat_var(var_exists, key, value);
 		else
@@ -213,48 +157,35 @@ int	ft_export(t_var **var_lst, char *str)
 			var_exists->key = key;
 			var_exists->value = value;
 		}
+	}
 	return (0);
 }
 
-void	ft_print_lst(t_var *lst)
-{
-	if (!lst)
-		return ;;
-	while (lst)
-	{
-		printf("name=%s value=%s\n", lst->key, lst->value);
-		lst = lst->next;
-	}
-}
+// void	ft_print_lst(t_var *lst)
+// {
+// 	if (!lst)
+// 		return ;
+// 	while (lst)
+// 	{
+// 		printf("name=%s value=%s\n", lst->key, lst->value);
+// 		lst = lst->next;
+// 	}
+// }
 
-/* Free tous les elements de struct t_var et la liste */
-static void	ft_lst_clear(t_var *lst)
-{
-	t_var *tmp;
 
-	while (lst)
-	{
-		tmp = lst;
-		lst = lst->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
-}
+// int	main(void)
+// {
+// 	t_var	*var;
 
-int	main(void)
-{
-	t_var *var;
-
-	var = NULL;
-	if (ft_palloc(&var, sizeof(t_var)))
-		return (1);
-	ft_export(&var, "B=LALALALA");
-	ft_export(&var, "C=poulet");
-	ft_export(&var, "A=nieh");
-	ft_export(&var, "D=""");
-	ft_export(&var, "E=");
-	ft_export(&var, NULL);
-	ft_lst_clear(var);
-	return (0);
-}
+// 	var = NULL;
+// 	if (ft_palloc(&var, sizeof(t_var)))
+// 		return (1);
+// 	ft_export(&var, "B=LALALALA");
+// 	ft_export(&var, "C=poulet");
+// 	ft_export(&var, "A=nieh");
+// 	ft_export(&var, "D=""");
+// 	ft_export(&var, "E=");
+// 	ft_export(&var, NULL);
+// 	ft_lst_clear(var);
+// 	return (0);
+// }

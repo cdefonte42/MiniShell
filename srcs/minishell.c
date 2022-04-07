@@ -6,11 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/05 12:32:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:35:46 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "export.h"
 
 // SIGINT == 2
 
@@ -33,6 +34,8 @@ void	signal_handler(int signalid)
 
 void	builtin_exec(t_minishell *msh)
 {
+	int	i;
+
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
@@ -55,6 +58,17 @@ void	builtin_exec(t_minishell *msh)
 		else
 			printf("new pwd after cd = %s\n", pwd);
 		free(pwd);
+	}
+	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
+	{
+		if (msh->raw_cmd[1] == NULL)
+			ft_export(&msh->vars, NULL);
+		else
+		{
+			i = 0;
+			while (msh->raw_cmd[++i])
+				ft_export(&msh->vars, msh->raw_cmd[i]);
+		}
 	}
 }
 
@@ -185,6 +199,8 @@ int	main(int ac, char *av[], char *envp[])
 	status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
+	if (ft_palloc(&msh.vars, sizeof(t_var)))
+		return (1);
 	if (minishell_get_env(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
