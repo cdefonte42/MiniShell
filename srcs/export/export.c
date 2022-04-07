@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 12:53:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:57:34 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	ft_export(t_var **var_lst, char *str)
 	var_exists = var_getfromkey(var_lst, key);
 	if (!var_exists)
 		ft_new_var(var_lst, key, value, 0);
-	else
+	else if (value != NULL)
 	{
 		if (add_mode)
 			ft_cat_var(var_exists, key, value);

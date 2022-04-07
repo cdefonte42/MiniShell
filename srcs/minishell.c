@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 12:52:10 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 14:16:10 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,13 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		status = 130;
 	}
 	if (signalid == SIGQUIT || signalid == SIGTSTP)
 		write(1, "\b\b  \b\b", 6);
-	// printf("%d", signalid);
 }
 
 void	builtin_exec(t_minishell *msh)

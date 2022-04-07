@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/07 12:33:31 by mbraets          ###   ########.fr        #
+#    Updated: 2022/04/07 14:43:05 by mbraets          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,8 +27,8 @@ srcs/utils.c \
 srcs/free.c \
 srcs/builtin/echo.c \
 srcs/builtin/cdbin.c \
-srcs/builtin/export/export.c \
-srcs/builtin/export/export_utils.c
+srcs/export/export.c \
+srcs/export/export_utils.c
 
 
 OBJS		=	$(SRCS:.c=.o)
