@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 12:45:31 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/07 12:53:05 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ int	ft_export(t_var **var_lst, char *str)
 		ft_put_export(*var_lst);
 		return (0);
 	}
-	printf("%p\n%p:%s\n", var_lst, str, str);
 	while (str[key_len] && str[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
@@ -171,15 +170,13 @@ int	ft_export(t_var **var_lst, char *str)
 // 		lst = lst->next;
 // 	}
 // }
-
-
+//
+//
 // int	main(void)
 // {
 // 	t_var	*var;
-
+//
 // 	var = NULL;
-// 	if (ft_palloc(&var, sizeof(t_var)))
-// 		return (1);
 // 	ft_export(&var, "B=LALALALA");
 // 	ft_export(&var, "C=poulet");
 // 	ft_export(&var, "A=nieh");
