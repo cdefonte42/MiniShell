@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 15:59:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/07 16:27:15 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,63 +254,63 @@ int	ft_cd(char *directory, t_var *var_lst)
 	ft_maj_varenvstr(var_lst, "PWD", pwd);
 	return (0);
 }
-
-int	minishell_get_env(t_var **vars, char **envp)
-{
-	int		i;
-	char	**splited;
-
-	i = 0;
-	if (!envp)
-		return (FAILURE);
-	i = 0;
-	while (envp && envp[i])
-	{
-		splited = ft_split(envp[i], '=');
-		if (!ft_new_var(vars, splited[0], splited[1], 0))
-			return (free(splited), FAILURE);
-		free(splited);
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	char	*directory;
-	t_var	*var_lst;
-	int		debug = 0;
-
-	minishell_get_env(&var_lst, envp);
-	if (argc == 1)
-		directory = NULL;
-	else
-		directory = *(argv + 1);
-	if (!debug)
-	{
-		printf("AVANT cd pwd = %s\n", getcwd(NULL, 0));
-		if (ft_cd(directory, var_lst) != 0) //ERROR HANDLER
-		{
-			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
-			return (1);
-		}
-		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
-	}
-	else
-	{
-		char	*str;
-
-		str = getcwd(NULL, 0);
-		if (!str)
-			return (perror("NISNDI"), 1);
-		printf("AVANT cd pwd = %s\n", str);
-		if (chdir(*(argv + 1)) != 0)
-			return (perror("(chdir) cd"), -1);
+//
+//int	minishell_get_env(t_var **vars, char **envp)
+//{
+//	int		i;
+//	char	**splited;
+//
+//	i = 0;
+//	if (!envp)
+//		return (FAILURE);
+//	i = 0;
+//	while (envp && envp[i])
+//	{
+//		splited = ft_split(envp[i], '=');
+//		if (!ft_new_var(vars, splited[0], splited[1], 0))
+//			return (free(splited), FAILURE);
+//		free(splited);
+//		i++;
+//	}
+//	return (SUCCESS);
+//}
+//
+//int	main(int argc, char **argv, char **envp)
+//{
+//	char	*directory;
+//	t_var	*var_lst;
+//	int		debug = 0;
+//
+//	minishell_get_env(&var_lst, envp);
+//	if (argc == 1)
+//		directory = NULL;
+//	else
+//		directory = *(argv + 1);
+//	if (!debug)
+//	{
+//		printf("AVANT cd pwd = %s\n", getcwd(NULL, 0));
+//		if (ft_cd(directory, var_lst) != 0) //ERROR HANDLER
+//		{
+//			printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+//			return (1);
+//		}
+//		printf("APRES cd pwd = %s\n", getcwd(NULL, 0));
+//	}
+//	else
+//	{
+//		char	*str;
+//
 //		str = getcwd(NULL, 0);
 //		if (!str)
 //			return (perror("NISNDI"), 1);
-//		printf("APRES cd pwd = %s\n", str);
-		free(str);
-	}
-	return (0);
-}
+//		printf("AVANT cd pwd = %s\n", str);
+//		if (chdir(*(argv + 1)) != 0)
+//			return (perror("(chdir) cd"), -1);
+////		str = getcwd(NULL, 0);
+////		if (!str)
+////			return (perror("NISNDI"), 1);
+////		printf("APRES cd pwd = %s\n", str);
+//		free(str);
+//	}
+//	return (0);
+//}
