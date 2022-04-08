@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 15:26:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 11:50:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,10 @@ void	minishell_free_rawcmd(t_minishell *msh);
 
 int		minishell_echo(t_minishell *msh, char **av);
 int		ft_cd(char *directory, t_var *var_lst);
+int		ft_try_cdpath(char **curpath, char *directory, char *cdpathval);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_isname(char *str);
+int		ft_islast_chstr_ch(char *str, char c);
 
 #endif
