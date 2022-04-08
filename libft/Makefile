@@ -22,6 +22,7 @@ put/ft_putnbr_fd.c \
 put/ft_putstr_fd.c \
 str/ft_strchr.c \
 str/ft_strdup.c \
+str/ft_strdup_until.c \
 str/ft_striteri.c \
 str/ft_strjoin.c \
 str/ft_strsjoin.c \

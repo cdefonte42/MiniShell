@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 10:49:41 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/06 16:41:24 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/08 17:37:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	ft_bzero(void *s, size_t n);
 int		ft_palloc(void *dst, size_t size);
 void	*ft_calloc(size_t count, size_t size);
 char	*ft_strdup(const char *s1);
+char	*ft_strdup_until(const char *src, char stop);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
