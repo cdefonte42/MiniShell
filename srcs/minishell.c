@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 14:17:00 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 15:19:17 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,9 @@ void	builtin_exec(t_minishell *msh)
 		msh->status = minishell_echo(msh, msh->raw_cmd);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
-	{
-		ft_cd(msh->raw_cmd[1], msh->vars);
-		char	*pwd;
-		pwd = getcwd(NULL, 0);
-		if (!pwd)
-			perror("perror cd");
-		else
-			printf("new pwd after cd = %s\n", pwd);
-		free(pwd);
-	}
+		ft_cd(&msh->vars, msh->raw_cmd);
+	if ((ft_strcmp(msh->raw_cmd[0], "pwd") == 0))
+		ft_pwd();
 	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
 	{
 		if (msh->raw_cmd[1] == NULL)

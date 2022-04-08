@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 14:21:40 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 15:27:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_parse_dir(char **curpath, char *directory)
 	return (SUCCESS);
 }
 
-int	ft_cd(char *directory, t_var *var_lst)
+int	ft_cd(t_var **var_lst, char **directory)
 {
 	char	*curpath;
 	char	*oldpwd;
@@ -101,18 +101,18 @@ int	ft_cd(char *directory, t_var *var_lst)
 	oldpwd = getcwd(NULL, 0);
 	if (oldpwd == NULL)
 		return (perror("getcwp oldpwd debut ft_cd"), FAILURE);
-	if (ft_parse_dir(&curpath, directory) == FAILURE)
+	if (ft_parse_dir(&curpath, directory[1]) == FAILURE)
 		return (free(oldpwd), FAILURE);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
 		return (free(oldpwd), perror("supp PATH_MAX"), FAILURE);
 	if (curpath && chdir(curpath) != 0)
-		return (free(oldpwd), ft_error_handler(directory), FAILURE);
+		return (free(oldpwd), ft_error_handler(directory[1]), FAILURE);
 	free(curpath);
-	ft_maj_varenvstr(var_lst, "OLDPWD", oldpwd);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
-		return (perror("getcwp pwd ft_cd"), FAILURE);
-	ft_maj_varenvstr(var_lst, "PWD", pwd);
+		return (free(oldpwd), perror("getcwp pwd ft_cd"), FAILURE);
+	ft_maj_varenvstr(*var_lst, "PWD", pwd);
+	ft_maj_varenvstr(*var_lst, "OLDPWD", oldpwd);
 	return (SUCCESS);
 }
 //
