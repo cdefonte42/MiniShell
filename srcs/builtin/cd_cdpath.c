@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:45:12 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 11:47:08 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 15:40:21 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -79,22 +79,25 @@ le debut alors cherche jamais dans le curr dir */
 et ces value est un dir.
 Retourne FAILURE si erreur syscall, SUCCESS sinon (si dir pas trouve,
 set juste la valeur de curpath a "./" cad curr dir. */
-int	ft_try_cdpath(char **curpath, char *directory, char *cdpathval)
+int	ft_try_cdpath(char **curpath, char *directory, t_var *cdpath)
 {
 	char	**splited_cdpath;
 	int		i;
 
 	i = 0;
-	splited_cdpath = ft_split(cdpathval, ':');
-	if (cdpathval && !splited_cdpath)
-		return (FAILURE);
-	while (splited_cdpath && splited_cdpath[i])
+	if (cdpath && cdpath->value)
 	{
-		if (ft_concat_cdpath(curpath, directory, splited_cdpath[i]) == FAILURE)
+		splited_cdpath = ft_split(cdpath->value, ':');
+		if (!splited_cdpath)
 			return (FAILURE);
-		if (ft_isadir(*curpath))
-			return (SUCCESS);
-		i++;
+		while (splited_cdpath && splited_cdpath[i])
+		{
+			if (ft_concat_cdpath(curpath, directory, splited_cdpath[i]) == FAILURE)
+				return (FAILURE);
+			if (ft_isadir(*curpath))
+				return (SUCCESS);
+			i++;
+		}
 	}
 	*curpath = ft_strjoin("./", directory);
 	if (!*curpath)

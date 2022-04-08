@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 15:27:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 15:41:45 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ void	ft_maj_varenvstr(t_var *var_lst, char *varname, char *strtoput)
 }
 
 /* Launch la bonne fonction en fonction de la valeur de l'arg 'directory' */
-int	ft_parse_dir(char **curpath, char *directory)
+int	ft_parse_dir(char **curpath, char *directory, t_var *lst)
 {
+	t_var	*cdpath;
+
 	if (directory == NULL)
 	{
 		if (ft_cd_home(curpath) == FAILURE)
@@ -85,7 +87,8 @@ int	ft_parse_dir(char **curpath, char *directory)
 	}
 	else
 	{
-		if (ft_try_cdpath(curpath, directory, getenv("CDPATH")) == FAILURE)
+		cdpath = var_getfromkey(lst, "CDPATH");
+		if (ft_try_cdpath(curpath, directory, cdpath) == FAILURE)
 			return (FAILURE);
 	}
 	return (SUCCESS);
@@ -101,7 +104,7 @@ int	ft_cd(t_var **var_lst, char **directory)
 	oldpwd = getcwd(NULL, 0);
 	if (oldpwd == NULL)
 		return (perror("getcwp oldpwd debut ft_cd"), FAILURE);
-	if (ft_parse_dir(&curpath, directory[1]) == FAILURE)
+	if (ft_parse_dir(&curpath, directory[1], *var_lst) == FAILURE)
 		return (free(oldpwd), FAILURE);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
 		return (free(oldpwd), perror("supp PATH_MAX"), FAILURE);
