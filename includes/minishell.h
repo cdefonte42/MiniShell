@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 11:50:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 12:21:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ tgetnum, tgetstr, tgoto, tputs
 */
 
 enum e_quote_type {doubleq = 1, singleq = 2};
+enum e_var_type {envvar, shellvar};
 
 typedef struct s_cmde {
 	char			*name;
@@ -94,5 +95,6 @@ int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_isname(char *str);
 int		ft_islast_chstr_ch(char *str, char c);
+void	ft_free_tabtab(char **tab);
 
 #endif

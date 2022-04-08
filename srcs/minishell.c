@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 10:41:07 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 12:25:42 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,26 @@ void	builtin_exec(t_minishell *msh)
 				ft_export(&msh->vars, msh->raw_cmd[i]);
 		}
 	}
+}
+
+int	ft_init_envlst(t_minishell *msh, char **envp)
+{
+	int		i;
+	char	**splited;
+
+	i = 0;
+	if (!envp)
+		return (FAILURE);
+	i = 0;
+	while (envp && envp[i])
+	{
+		splited = ft_split(envp[i], '=');
+		if (ft_new_var(&(msh->vars), splited[0], splited[1], envvar) == FAILURE)
+			return (ft_free_tabtab(splited), FAILURE);
+		free(splited);
+		i++;
+	}
+	return (SUCCESS);
 }
 
 int	minishell_get_env(t_minishell *msh, char **envp)
@@ -134,7 +154,7 @@ int	minishell_join_quote(t_minishell *msh)
 	return (SUCCESS);
 }
 
-void	debug_print_msh(t_minishell *msh)
+void	debug_print_msh_cmdes(t_minishell *msh)
 {
 	int		i;
 
@@ -153,12 +173,12 @@ int	minishell_parse_line(t_minishell *msh, char *s)
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
 	// printf("___AVANT join quote\n");
-	// debug_print_msh(msh);
+	// debug_print_msh_cmdes(msh);
 	minishell_join_quote(msh);
 	if (!msh->raw_cmd)
 		return (FAILURE);
 	// printf("___APRES join quote\n");
-	// debug_print_msh(msh);
+	// debug_print_msh_cmdes(msh);
 	builtin_exec(msh);
 	if (line && *line)
 		add_history (line);
@@ -189,6 +209,18 @@ int	minishell_loop(t_minishell *msh)
 	return (SUCCESS);
 }
 
+void	ft_print_envp(char **envp)
+{
+	int		i;
+	
+	i = 0;
+	while (envp && envp[i])
+	{
+		printf("off: %s\n", envp[i]);
+		i++;
+	}	
+}
+
 int	main(int ac, char *av[], char *envp[])
 {
 	(void)		ac;
@@ -196,7 +228,10 @@ int	main(int ac, char *av[], char *envp[])
 	g_status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
-	if (minishell_get_env(&msh, envp) == FAILURE)
+//	if (minishell_get_env(&msh, envp) == FAILURE)
+//		return (1);
+	ft_print_envp(envp);
+	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
 	signal(SIGQUIT, &signal_handler);

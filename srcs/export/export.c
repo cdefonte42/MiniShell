@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 18:50:49 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/08 12:17:44 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
 
 	new_var = ft_calloc(1, sizeof(t_var));
 	if (!new_var)
-		return (free(value), free(key), FAILURE);
+		return (FAILURE);
 	*new_var = (t_var){.key = key, .value = value, .type = type};
 	var_add_back(var_lst, new_var);
 	return (SUCCESS);
@@ -161,7 +161,10 @@ int	ft_export(t_var **var_lst, char *str)
 	}
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)
-		ft_new_var(var_lst, key, value, 0);
+	{
+		if (ft_new_var(var_lst, key, value, 0) == FAILURE)
+			return (free(key), free(value), FAILURE);
+	}
 	else if (value != NULL)
 	{
 		if (add_mode)

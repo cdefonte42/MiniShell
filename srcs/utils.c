@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 11:46:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 12:21:02 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,17 @@ int	ft_isname(char *str)
 		i++;
 	}
 	return (1);
+}
+
+void	ft_free_tabtab(char **tab)
+{
+	int		i;
+
+	i = 0;
+	while (tab && tab[i])
+	{
+		free(tab[i]);
+		i++;	
+	}
+	free(tab);
 }
