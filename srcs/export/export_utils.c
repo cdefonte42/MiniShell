@@ -6,12 +6,29 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 13:56:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:53:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
+
+/* Retourne le nombre d'elements dans la liste 'var_lst' */
+int	ft_count_vars(t_var *var_lst)
+{
+	t_var	*head;
+	int		i;
+
+	i = 0;
+	head = var_lst;
+	while (head)
+	{
+		head = head->next; 
+		++i;
+	}
+	return (i);
+}
+
 /* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
 t_var	*var_getfromkey(t_var *var_list, char *key)
 {
@@ -85,33 +102,6 @@ t_var	*ft_get_minkey_prev(t_var *var_lst, t_var *prev)
 		var_lst = var_lst->next;
 	}
 	return (min);
-}
-
-/* Retourne l'element dans la liste plsu grand que la valeur ASCII de de la key
-de 'prevmin'. ATTENTION prevmin ne doit PAS etre NULL, donc necessite d'avoir 
-trouve le plus petit element ds la liste avant appel. */
-t_var	*ft_get_nextbigger(t_var *lst, t_var *prevmin, int *end)
-{
-	t_var	*currmin;
-	int		currdiff;
-	int		diff;
-
-	currdiff = 500;
-	*end = 1;
-	if (!prevmin)
-		return (NULL);
-	while (lst)
-	{
-		diff = ft_strcmp(lst->key, prevmin->key);
-		if (diff > 0 && diff < currdiff)
-		{
-			*end = 0;
-			currdiff = diff;
-			currmin = lst;
-		}
-		lst = lst->next;
-	}
-	return (currmin);
 }
 
 /* Free tous les elements de struct t_var et la liste */

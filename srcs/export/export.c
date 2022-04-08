@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 16:46:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:57:11 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 	return (SUCCESS);
 }
 
-/* Print un element t_var selon le modele du bin export sans arg */
+/* Print un element t_var selon le modele de export sans arg */
 void	ft_print_export(t_var *lst)
 {
 	if (!lst || lst->type)
@@ -92,22 +92,6 @@ void	ft_print_export(t_var *lst)
 		printf("export %s\n", lst->key);
 	else
 		printf("export %s=\"%s\"\n", lst->key, lst->value);
-}
-
-int	ft_count_vars(t_var *var_lst)
-{
-	t_var	*head;
-	int		i;
-
-	i = 0;
-	head = var_lst;
-	// Check if is export var and not shell var
-	while (head)
-	{
-		head = head->next; 
-		++i;
-	}
-	return (i);
 }
 
 /* Print les var d'env (et pas shell var) de la liste var_lst au format 
@@ -125,7 +109,6 @@ int	ft_put_export(t_var *var_lst)
 	{
 		if (curr_kmin->type == envvar)
 			ft_print_export(curr_kmin);
-		// curr_kmin = ft_get_nextbigger(var_lst, curr_kmin, &end);
 		curr_kmin = ft_get_minkey_prev(var_lst, curr_kmin);
 	}
 	return (0);
