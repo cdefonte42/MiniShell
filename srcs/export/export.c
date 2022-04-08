@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 16:57:11 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 18:27:04 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,24 @@ int	ft_put_export(t_var *var_lst)
 	return (0);
 }
 
+int	ft_extract_key(char **key, char *token)
+{
+	int		key_len;
+
+	key_len = 0;
+	if (token[0] != '_' && !ft_isalpha(token[0]))
+		return (SUCCESS);
+	while (token[key_len] && token[key_len] != '=')
+		key_len++;
+	if (token[key_len - 1] == '+')
+		*key = ft_strdup_until(token, '+');
+	else
+		*key = ft_strdup_until(token, '=');
+	if (!*key)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 int	ft_loop_export(t_var **var_lst, char *token)
 {
 	char	*key;
@@ -126,6 +144,11 @@ int	ft_loop_export(t_var **var_lst, char *token)
 	key_len = 0;
 	key = NULL;
 	value = NULL;
+//	if (ft_extract_key(&key, token) == FAILURE)
+//		return (perror(NULL), FAILURE);
+//	if (!ft_isname(key))
+//		return (free(key), ft_put_error(token), FAILURE);
+
 	while (token[key_len] && token[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
@@ -146,12 +169,6 @@ int	ft_loop_export(t_var **var_lst, char *token)
 		return (free(value), perror("substr export"), -1);
 	if (*key == '_' && key_len == 1)
 		return (free(value), free(key), 0);
-	if (!ft_isname(key))
-	{
-		free(value);
-		free(key);
-		return (ft_put_error(token), -1);
-	}
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)
 	{
@@ -177,8 +194,10 @@ int	ft_loop_export(t_var **var_lst, char *token)
 int	ft_export(t_var **var_lst, char **argv)
 {
 	int		i;
+	int		ret_stat;
 
 	i = 1;
+	ret_stat = 0;
 	if (!argv || !*argv || !argv[1])
 	{
 		ft_put_export(*var_lst);
@@ -186,10 +205,11 @@ int	ft_export(t_var **var_lst, char **argv)
 	}
 	while (argv[i])
 	{
-		ft_loop_export(var_lst, argv[i]);
+		if (ft_loop_export(var_lst, argv[i]) == FAILURE)
+			ret_stat = 1;
 		i++;
 	}
-	return (0);
+	return (ret_stat);
 }
 
 // void	ft_print_lst(t_var *lst)
