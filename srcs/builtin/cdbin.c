@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/07 18:08:32 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 11:16:07 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,43 +58,50 @@ int	ft_islast_chstr_ch(char *str, char c)
 }
 
 /* Concat each CDPATH pathnames (when CDPATH pathname not NULL) et directory. 
-directory should NOT be NULL nor = "\0".*/
-/*______________ STEP 5 ____________*/
-int	ft_test_concat_dir(char ** curpath, char *cdpathname, char *directory)
+directory should NOT be NULL nor = "\0".
+En fonction du cdpath, join direcory avec:
+- "./" si *cdpath!=NULL && *cdpath=='\0'
+- "/" si cdpath se termine pas par un '/', puis join res avec cdpath
+- cdpath directement
+Retourne FAILURE si erreur de malloc. */
+int	ft_parse_cdpath(char **curpath, char *directory, char *cdpaths)
 {
-	char	**splited_cdpathname;
 	char	*tmp;
+
+	if (cdpaths[0] == '\0')
+		*curpath = ft_strjoin("./", directory);
+	else if (!ft_islast_chstr_ch(cdpaths, '/'))
+	{
+		*curpath = ft_strjoin(cdpaths, "/");
+		if (!*curpath)
+			return (FAILURE);
+		tmp = *curpath;
+		*curpath = ft_strjoin(tmp, directory);
+		free(tmp);
+	}
+	else
+		*curpath = ft_strjoin(cdpaths, directory);
+	if (!*curpath)
+		return (FAILURE);
+}
+
+/* Verifie que pour chaque cdpath value que la concatenation de directory
+et ces value est un dir.
+Retourne FAILURE si erreur syscall, SUCCESS sinon (si dir pas trouve,
+set juste la valeur de curpath a "./" cad curr dir. */
+int	ft_test_concat_dir(char **curpath, char *cdpathname, char *directory)
+{
+	char	**splited_cdpath;
 	int		i;
 
 	i = 0;
-	splited_cdpathname = ft_split(cdpathname, ':');
-	if (!splited_cdpathname)
+	splited_cdpath = ft_split(cdpathname, ':');
+	if (!splited_cdpath)
 		return (FAILURE);
-	while (splited_cdpathname[i])
+	while (splited_cdpath[i])
 	{
-		if (splited_cdpathname[i][0] == '\0') // si splited_cdpathname[i] = "\0", doit mettre "./"
-		{
-			*curpath = ft_strjoin("./", directory);
-			if (!*curpath)
-				return (FAILURE);
-		}
-		else if (!ft_islast_chstr_ch(splited_cdpathname[i], '/')) // si '/' est PAS a la fin
-		{
-			*curpath = ft_strjoin(splited_cdpathname[i], "/");
-			if (!*curpath)
-				return (FAILURE);
-			tmp = *curpath;
-			*curpath = ft_strjoin(tmp, directory);
-			free(tmp);
-			if (!*curpath)
-				return (FAILURE);
-		}
-		else // si pathname != NULL et a le '/' a la fin
-		{
-			*curpath = ft_strjoin(splited_cdpathname[i], directory);
-			if (!*curpath)
-				return (FAILURE);
-		}
+		if (ft_parse_cdpath(curpath, directory, splited_cdpath[i]) == FAILURE)
+			return (FAILURE);
 		if (ft_isadir(*curpath)) //si curpath exists
 			return (SUCCESS);
 		i++;
