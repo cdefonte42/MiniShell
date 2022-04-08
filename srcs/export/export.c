@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 16:14:38 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:46:16 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,41 +131,34 @@ int	ft_put_export(t_var *var_lst)
 	return (0);
 }
 
-int	ft_export(t_var **var_lst, char **argv)
+int	ft_loop_export(t_var **var_lst, char *token)
 {
 	char	*key;
 	char	*value;
 	int		add_mode;
 	int		key_len;
 	t_var	*var_exists;
-	int		i;
 
 	add_mode = 0;
 	key_len = 0;
 	key = NULL;
 	value = NULL;
-	i = 1;
-	if (!argv || !*argv || !argv[1])
-	{
-		ft_put_export(*var_lst);
-		return (0);
-	}
-	while (argv[i][key_len] && argv[i][key_len] != '=')
+	while (token[key_len] && token[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
-		return (ft_put_error(argv[1]), -1);
-	if ((int)ft_strlen(argv[i]) >= key_len + 1)
+		return (ft_put_error(token), -1);
+	if ((int)ft_strlen(token) >= key_len + 1)
 	{
-		value = ft_strdup(argv[i] + key_len + 1);
+		value = ft_strdup(token + key_len + 1);
 		if (!value)
 			return (perror("strdup export"), -1);
-		if (argv[i][key_len - 1] == '+')
+		if (token[key_len - 1] == '+')
 		{
 			key_len--;
 			add_mode = 1;
 		}
 	}
-	key = ft_substr(argv[i], 0, key_len);
+	key = ft_substr(token, 0, key_len);
 	if (!key)
 		return (free(value), perror("substr export"), -1);
 	if (*key == '_' && key_len == 1)
@@ -174,7 +167,7 @@ int	ft_export(t_var **var_lst, char **argv)
 	{
 		free(value);
 		free(key);
-		return (ft_put_error(argv[1]), -1);
+		return (ft_put_error(token), -1);
 	}
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)
@@ -194,6 +187,24 @@ int	ft_export(t_var **var_lst, char **argv)
 			var_exists->value = value;
 			var_exists->type = envvar;
 		}
+	}
+	return (0);
+}
+
+int	ft_export(t_var **var_lst, char **argv)
+{
+	int		i;
+
+	i = 1;
+	if (!argv || !*argv || !argv[1])
+	{
+		ft_put_export(*var_lst);
+		return (0);
+	}
+	while (argv[i])
+	{
+		ft_loop_export(var_lst, argv[i]);
+		i++;
 	}
 	return (0);
 }
