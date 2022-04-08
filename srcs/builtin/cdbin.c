@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 11:49:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 14:21:40 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 /* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
 pour return exit status = 128 + errno */
-void	ft_error_handler(char *directory)
+static void	ft_error_handler(char *directory)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd("cd: ", 2);

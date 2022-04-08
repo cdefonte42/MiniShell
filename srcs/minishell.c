@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 12:25:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 14:17:00 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	builtin_exec(t_minishell *msh)
 				ft_export(&msh->vars, msh->raw_cmd[i]);
 		}
 	}
+	if ((ft_strcmp(msh->raw_cmd[0], "unset") == 0))
+		ft_unset(&msh->vars, msh->raw_cmd);
 }
 
 int	ft_init_envlst(t_minishell *msh, char **envp)
@@ -230,7 +232,7 @@ int	main(int ac, char *av[], char *envp[])
 	msh = (t_minishell){.loop = 42};
 //	if (minishell_get_env(&msh, envp) == FAILURE)
 //		return (1);
-	ft_print_envp(envp);
+//	ft_print_envp(envp);
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);

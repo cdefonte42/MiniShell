@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 12:21:20 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 14:04:15 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ enum e_var_type {envvar, shellvar};
 
 typedef struct s_cmde {
 	char			*name;
-	char			*option;
-	char			*arg;
+	char			**argv; // [0]=cmde name, reste = options et arguments
 	int				infile;
 	int				outfile;
 	struct s_cmde	*next;
@@ -69,7 +68,7 @@ typedef struct s_cmde {
 typedef struct s_var {
 	char			*key;
 	char			*value;
-	int				type;
+	enum e_var_type	type;
 	struct s_var	*next;
 }	t_var;
 

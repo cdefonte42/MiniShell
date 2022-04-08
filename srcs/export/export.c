@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 12:17:44 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 13:36:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ int	ft_count_vars(t_var *var_lst)
 	return (i);
 }
 
-/* Print la totatile de la liste var_lst au format d'export cad ds ordre alpha*/
+/* Print les var d'env (et pas shell var) de la liste var_lst au format 
+d'export cad ds ordre alpha*/
 int	ft_put_export(t_var *var_lst)
 {
 	t_var	*curr_kmin;
@@ -109,7 +110,8 @@ int	ft_put_export(t_var *var_lst)
 	curr_kmin = ft_get_minkey(var_lst);
 	while (end--)
 	{
-		ft_print_export(curr_kmin);
+		if (curr_kmin->type == envvar)
+			ft_print_export(curr_kmin);
 		// curr_kmin = ft_get_nextbigger(var_lst, curr_kmin, &end);
 		curr_kmin = ft_get_minkey_prev(var_lst, curr_kmin);
 	}
@@ -162,7 +164,7 @@ int	ft_export(t_var **var_lst, char *str)
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)
 	{
-		if (ft_new_var(var_lst, key, value, 0) == FAILURE)
+		if (ft_new_var(var_lst, key, value, envvar) == FAILURE)
 			return (free(key), free(value), FAILURE);
 	}
 	else if (value != NULL)
@@ -175,6 +177,7 @@ int	ft_export(t_var **var_lst, char *str)
 			free(var_exists->value);
 			var_exists->key = key;
 			var_exists->value = value;
+			var_exists->type = envvar;
 		}
 	}
 	return (0);
