@@ -6,12 +6,25 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 13:36:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:14:38 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
 #include "export.h"
+
+/* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
+pour return exit status = 128 + errno */
+static void	ft_put_error(char *token)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd("export: `", 2);
+	if (token && *token)
+	{
+		ft_putstr_fd(token, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+	}
+}
 
 /* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
 void	var_add_back(t_var **alst, t_var *new)
@@ -118,39 +131,41 @@ int	ft_put_export(t_var *var_lst)
 	return (0);
 }
 
-int	ft_export(t_var **var_lst, char *str)
+int	ft_export(t_var **var_lst, char **argv)
 {
 	char	*key;
 	char	*value;
 	int		add_mode;
 	int		key_len;
 	t_var	*var_exists;
+	int		i;
 
 	add_mode = 0;
 	key_len = 0;
 	key = NULL;
 	value = NULL;
-	if (!str)
+	i = 1;
+	if (!argv || !*argv || !argv[1])
 	{
 		ft_put_export(*var_lst);
 		return (0);
 	}
-	while (str[key_len] && str[key_len] != '=')
+	while (argv[i][key_len] && argv[i][key_len] != '=')
 		key_len++;
 	if (key_len == 0)
-		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
-	if ((int)ft_strlen(str) >= key_len + 1)
+		return (ft_put_error(argv[1]), -1);
+	if ((int)ft_strlen(argv[i]) >= key_len + 1)
 	{
-		value = ft_strdup(str + key_len + 1);
+		value = ft_strdup(argv[i] + key_len + 1);
 		if (!value)
 			return (perror("strdup export"), -1);
-		if (str[key_len - 1] == '+')
+		if (argv[i][key_len - 1] == '+')
 		{
 			key_len--;
 			add_mode = 1;
 		}
 	}
-	key = ft_substr(str, 0, key_len);
+	key = ft_substr(argv[i], 0, key_len);
 	if (!key)
 		return (free(value), perror("substr export"), -1);
 	if (*key == '_' && key_len == 1)
@@ -159,7 +174,7 @@ int	ft_export(t_var **var_lst, char *str)
 	{
 		free(value);
 		free(key);
-		return (ft_putstr_fd("export: not an identifier: str HANDLER\n", 2), -1);
+		return (ft_put_error(argv[1]), -1);
 	}
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists)

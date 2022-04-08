@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 15:19:17 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:07:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	signal_handler(int signalid)
 
 void	builtin_exec(t_minishell *msh)
 {
-	int	i;
-
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
@@ -48,20 +46,11 @@ void	builtin_exec(t_minishell *msh)
 		msh->status = minishell_echo(msh, msh->raw_cmd);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
-		ft_cd(&msh->vars, msh->raw_cmd);
+		msh->status = ft_cd(&msh->vars, msh->raw_cmd);
 	if ((ft_strcmp(msh->raw_cmd[0], "pwd") == 0))
-		ft_pwd();
+		msh->status = ft_pwd();
 	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
-	{
-		if (msh->raw_cmd[1] == NULL)
-			ft_export(&msh->vars, NULL);
-		else
-		{
-			i = 0;
-			while (msh->raw_cmd[++i])
-				ft_export(&msh->vars, msh->raw_cmd[i]);
-		}
-	}
+		ft_export(&msh->vars, msh->raw_cmd);
 	if ((ft_strcmp(msh->raw_cmd[0], "unset") == 0))
 		ft_unset(&msh->vars, msh->raw_cmd);
 }
