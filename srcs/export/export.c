@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 18:27:04 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/09 11:05:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,17 @@ int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
 	*new_var = (t_var){.key = key, .value = value, .type = type};
 	var_add_back(var_lst, new_var);
 	return (SUCCESS);
+}
+
+/* Free les valeurs actuelles de key et value de l'elem var. Remplace par ceux
+passes en param (doivent etre alloues). */
+void	ft_set_var(t_var *var, char *key, char *value, int type)
+{
+	free(var->key);
+	free(var->value);
+	var->key = key;
+	var->value = value;
+	var->type = type;
 }
 
 /* Concatenation de la current value de l'element 'var' ayant pour key valeur
@@ -114,21 +125,29 @@ int	ft_put_export(t_var *var_lst)
 	return (0);
 }
 
-int	ft_extract_key(char **key, char *token)
+int	ft_get_keynval(char **key, char **value, int *mode, char *token)
 {
 	int		key_len;
 
 	key_len = 0;
-	if (token[0] != '_' && !ft_isalpha(token[0]))
-		return (SUCCESS);
 	while (token[key_len] && token[key_len] != '=')
 		key_len++;
-	if (token[key_len - 1] == '+')
-		*key = ft_strdup_until(token, '+');
-	else
-		*key = ft_strdup_until(token, '=');
+	if (key_len == 0)
+		return (ft_put_error(token), FAILURE);
+	if (token[key_len] == '=')
+	{
+		*value = ft_strdup(token + key_len + 1);
+		if (!*value)
+			return (perror("strdup export"), FAILURE);
+		if (token[key_len - 1] == '+')
+		{
+			key_len--;
+			*mode = 1;
+		}
+	}
+	*key = ft_substr(token, 0, key_len);
 	if (!*key)
-		return (FAILURE);
+		return (free(value), perror("substr export"), FAILURE);
 	return (SUCCESS);
 }
 
@@ -137,58 +156,25 @@ int	ft_loop_export(t_var **var_lst, char *token)
 	char	*key;
 	char	*value;
 	int		add_mode;
-	int		key_len;
 	t_var	*var_exists;
 
 	add_mode = 0;
-	key_len = 0;
 	key = NULL;
 	value = NULL;
-//	if (ft_extract_key(&key, token) == FAILURE)
-//		return (perror(NULL), FAILURE);
-//	if (!ft_isname(key))
-//		return (free(key), ft_put_error(token), FAILURE);
-
-	while (token[key_len] && token[key_len] != '=')
-		key_len++;
-	if (key_len == 0)
-		return (ft_put_error(token), -1);
-	if ((int)ft_strlen(token) >= key_len + 1)
-	{
-		value = ft_strdup(token + key_len + 1);
-		if (!value)
-			return (perror("strdup export"), -1);
-		if (token[key_len - 1] == '+')
-		{
-			key_len--;
-			add_mode = 1;
-		}
-	}
-	key = ft_substr(token, 0, key_len);
-	if (!key)
-		return (free(value), perror("substr export"), -1);
-	if (*key == '_' && key_len == 1)
-		return (free(value), free(key), 0);
+	if (ft_get_keynval(&key, &value, &add_mode, token) == FAILURE)
+		return (FAILURE);
+	if (*key == '_' && *(key + 1) == 0)
+		return (free(value), free(key), SUCCESS);
+	if (!ft_isname(key))
+		return (free(key), free(value), ft_put_error(token), FAILURE);
 	var_exists = var_getfromkey(*var_lst, key);
-	if (!var_exists)
-	{
-		if (ft_new_var(var_lst, key, value, envvar) == FAILURE)
-			return (free(key), free(value), FAILURE);
-	}
-	else if (value != NULL)
-	{
-		if (add_mode)
-			ft_cat_var(var_exists, key, value);
-		else
-		{
-			free(var_exists->key);
-			free(var_exists->value);
-			var_exists->key = key;
-			var_exists->value = value;
-			var_exists->type = envvar;
-		}
-	}
-	return (0);
+	if (!var_exists && ft_new_var(var_lst, key, value, envvar) == FAILURE)
+		return (free(key), free(value), FAILURE);
+	else if (var_exists && value != NULL && add_mode == 1)
+		ft_cat_var(var_exists, key, value);
+	else if (var_exists && value != NULL && add_mode == 0)
+		ft_set_var(var_exists, key, value, envvar);
+	return (SUCCESS);
 }
 
 int	ft_export(t_var **var_lst, char **argv)
