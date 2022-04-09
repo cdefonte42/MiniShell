@@ -6,11 +6,47 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/06 15:51:38 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/09 12:45:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Parcours src  jusqu'a ce que ce ne soit plus un name. Alloue le name 
+resultant. Retourne FAILURE en cas d'erreur de malloc seulement (peut laisser
+name à NULL);
+ATTENTION src = ft_strchr(s, $) + 1. Autrement dit src[0] = 1er cara de name.*/
+int	ft_get_name(char *src, char **name)
+{
+	int		i;
+
+	i = 0;
+	if (src && src[0] != '_' && !ft_isalpha(src[0]))
+	{
+		*name = NULL;
+		return (SUCCESS);
+	}
+	i = 1;
+	while (src && src[i] && (src[i] == '_' || ft_isalnum(src[i])))
+		i++;
+	*name = ft_substr(src, 0, i);
+	if (!*name)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
+///* Vas cherche si la variable correspondante existe, et retourne sa 
+//char * value. 
+//ATTENTION src = ft_strchr(s, $) + 1. */
+//char	*ft_param_subst(t_var *lst, char *var_name)
+//{
+//	t_var	*var;
+//
+//	var = var_getfromkey(lst, name);
+//	if (!var)
+//		return (NULL);
+//	return (var->value);
+//}
 
 int	new_tokens(t_list **token_lst, char *s, int start_token, int i)
 {
@@ -51,7 +87,7 @@ int	ft_get_tokens(t_list **token_lst, char *s)
 			inquote = inquote ^ singleq;
 		if (ft_ismetachar(s[i]) && !inquote)
 		{
-			if (!new_tokens(token_lst, s, start_token, i))
+			if (new_tokens(token_lst, s, start_token, i) == FAILURE)
 				return (FAILURE);
 			start_token = i + 1;
 			if (*ft_substr(s, i, 1) != ' ')
@@ -69,10 +105,12 @@ int	ft_get_tokens(t_list **token_lst, char *s)
 int	main(int ac, char **av)
 {
 	(void)ac;
+	(void)av;
 	char	*s = "   cd|Bonjour\"Tst\"\"\" \"test\"\"et";
-	t_list	*token_lst;
 	(void)s;
+	t_list	*token_lst;
 	token_lst = NULL;
+	printf("AV[1]=%s\n", av[1]);
 	ft_get_tokens(&token_lst, av[1]);
 	for (t_list *head = token_lst; head != NULL; head = head->next)
 		printf("%s\n", (char *)head->content);
