@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 16:07:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/09 12:44:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ void	builtin_exec(t_minishell *msh)
 		// fexit(msh);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
-	{
 		msh->status = minishell_echo(msh, msh->raw_cmd);
-	}
 	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
 		msh->status = ft_cd(&msh->vars, msh->raw_cmd);
 	if ((ft_strcmp(msh->raw_cmd[0], "pwd") == 0))
@@ -57,38 +55,21 @@ void	builtin_exec(t_minishell *msh)
 
 int	ft_init_envlst(t_minishell *msh, char **envp)
 {
-	int		i;
-	char	**splited;
+	int				i;
+	char			**splited;
+	enum e_var_type	type;
 
 	i = 0;
 	if (!envp)
 		return (FAILURE);
-	i = 0;
 	while (envp && envp[i])
 	{
+		type = envvar;
 		splited = ft_split(envp[i], '=');
-		if (ft_new_var(&(msh->vars), splited[0], splited[1], envvar) == FAILURE)
+		if (ft_strcmp(splited[1], "_") == 0)
+			type = shellvar;
+		if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
 			return (ft_free_tabtab(splited), FAILURE);
-		free(splited);
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int	minishell_get_env(t_minishell *msh, char **envp)
-{
-	int		i;
-	char	**splited;
-
-	i = 0;
-	if (!envp)
-		return (FAILURE);
-	i = 0;
-	while (envp && envp[i])
-	{
-		splited = ft_split(envp[i], '=');
-		if (!ft_new_var(&msh->vars, splited[0], splited[1], 0))
-			return (free(splited), FAILURE);
 		free(splited);
 		i++;
 	}
@@ -185,6 +166,7 @@ int	minishell_loop(t_minishell *msh)
 		}
 		else
 		{
+			//ft_get_tokens(&msh->token, line);
 			minishell_parse_line(msh, line);
 		}
 		free(line);
@@ -212,9 +194,6 @@ int	main(int ac, char *av[], char *envp[])
 	g_status = 0;
 	t_minishell	msh;
 	msh = (t_minishell){.loop = 42};
-//	if (minishell_get_env(&msh, envp) == FAILURE)
-//		return (1);
-//	ft_print_envp(envp);
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
