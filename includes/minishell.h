@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/10 11:37:32 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 17:59:11 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,15 @@ tgetnum, tgetstr, tgoto, tputs
 */
 
 typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
-typedef enum e_token_type {redirin, redirout, redirapp, heredoc, word, cpipe} t_token_type;
+typedef enum e_token_type {none, word, redirin, redirout, redirapp, heredoc, \
+dquoted, squoted, op, cpipe, dollar} t_token_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
 
-//typedef struct s_token {
-//	char			*str;
-//	t_token_type	type;
-//}	t_token;
+typedef struct s_token {
+	char			*str;
+	t_token_type	type;
+	struct s_token	*next;
+}	t_token;
 
 typedef struct s_cmde {
 	char			*name;
@@ -108,10 +110,14 @@ int	ft_init_envlst(t_minishell *msh, char **envp);
 
 /*________ UTILS __________*/
 int		ft_ismetachar(char c);
+int		ft_formoperator(char c1, char c2);
 int		ft_isoperator(char c);
+int		ft_iscontrol_operator(char c);
 int		ft_isname(char *str);
 int		ft_isset(char c, char *set);
+int		ft_isblank(char c);
 void	ft_free_tabtab(char **tab);
+char* toBinary(int n, int len);
 
 /*_______ PARSER _______*/
 int		ft_get_tokens(t_list **token_lst, char *s);
