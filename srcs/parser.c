@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 22:29:47 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 23:06:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 est 'none' (default). */
 void	ft_token_type(t_token_type *type, char c)
 {
-	if (*type != none)
-		return ;
+	if (ft_isblank(c))
+		*type = blank;
 	else if (ft_isoperator(c))
 		*type = op;
 	else if (c == '\'')
@@ -80,50 +80,40 @@ t_token	*ft_create_token(char *line, int start, int len, int type)
 	return (new_token);
 }
 
+/* Parse la string line et decoup selon les regles de token reco. 
+Permet d'obtenir une RAW liste of tokens. */
 int	ft_token_delimiter(t_token **token_lst, char *line)
 {
 	t_token_type	curr_type;
 	int		start;
-	int		len; //ATTENTION overfloaw longueur line
+	int		len;
 	t_token	*new_token;
 	
 	start = 0;
-	curr_type = none;
-	while (line[start] && ft_isblank(line[start])) //discards firsts blank caracteres
-		start++;
 	while (line && line[start])
 	{
 		len = 1;
 		ft_token_type(&curr_type, line[start]);
-		len = ft_token_size(line + start, &curr_type);
-		new_token = ft_create_token(line, start, len, curr_type);
-		if (!new_token)
+		if (curr_type != blank)
 		{
-			ft_tokenlst_free(token_lst);
-			return (perror("token_delimiter malloc failed"), FAILURE);
+			len = ft_token_size(line + start, &curr_type);
+			new_token = ft_create_token(line, start, len, curr_type);
+			if (!new_token)
+			{
+				ft_tokenlst_free(token_lst);
+				return (perror("token_delimiter malloc failed"), FAILURE);
+			}
+			ft_tokenlst_addback(token_lst, new_token);
 		}
-		ft_tokenlst_addback(token_lst, new_token);
-		curr_type = none;
 		start += len;
-		while (line[start] && ft_isblank(line[start])) //discards blank caracteres
-			start++;
 	}
-	return (SUCCESS); //ATTENTION peut retourner SUCCESS en laissant token_lst = NULL
+	return (SUCCESS);
 }
-
-//	if (line && ft_iscontrol_operator(line[start]))
-//	{
-//		printf("syntax error near unexpected token `%c'\n", line[start]);
-//		errno = 130; //car return status doit etre = 258 (128 + 130);
-//		return (FAILURE);
-//	}
 
 int	main(int ac, char **av)
 {
 	(void)ac;
 	(void)av;
-	char	*s = "   cd|Bonjour\"Tst\"\"\" \"test\"\"et";
-	(void)s;
 	t_token	*token_lst;
 
 	token_lst = NULL;

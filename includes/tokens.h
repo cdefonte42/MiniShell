@@ -6,14 +6,14 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 21:13:26 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 22:38:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENS_H
 # define TOKENS_H
 
-typedef enum e_token_type {none, word, redirin, redirout, redirapp, heredoc, \
+typedef enum e_token_type {none, blank, word, redirin, redirout, redirapp, heredoc, \
 dquoted, squoted, op, cpipe, dollar} t_token_type;
 
 typedef struct s_token {
