@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/09 12:44:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 12:11:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ void	builtin_exec(t_minishell *msh)
 
 int	ft_init_envlst(t_minishell *msh, char **envp)
 {
-	int				i;
-	char			**splited;
-	enum e_var_type	type;
+	int			i;
+	char		**splited;
+	t_var_type	type;
 
 	i = 0;
 	if (!envp)

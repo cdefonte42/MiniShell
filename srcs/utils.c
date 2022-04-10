@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 12:21:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 11:00:18 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,20 @@ void	ft_free_tabtab(char **tab)
 		i++;	
 	}
 	free(tab);
+}
+
+/* Compare c avec chaque caractere de set. Retourne 1 si c est parmis set. 0 si
+c ne fait pas partis du set de caracteres. */
+int	ft_isset(char c, char *set)
+{
+	int		i;
+
+	i = 0;
+	while (set && set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;	
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/09 11:35:25 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 11:37:32 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,27 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-enum e_quote_type {doubleq = 1, singleq = 2};
-enum e_var_type {envvar, shellvar};
+typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
+typedef enum e_token_type {redirin, redirout, redirapp, heredoc, word, cpipe} t_token_type;
+typedef enum e_var_type {envvar, shellvar} t_var_type;
+
+//typedef struct s_token {
+//	char			*str;
+//	t_token_type	type;
+//}	t_token;
 
 typedef struct s_cmde {
 	char			*name;
 	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				infile;
-	int				outfile;
+	int				fdin;
+	int				fdout;
 	struct s_cmde	*next;
 }	t_cmde;
 
 typedef struct s_var {
 	char			*key;
 	char			*value;
-	enum e_var_type	type;
+	t_var_type		type;
 	struct s_var	*next;
 }	t_var;
 
@@ -95,13 +101,21 @@ int		minishell_echo(t_minishell *msh, char **av);
 int		ft_cd(t_var **var_lst, char **directory);
 int		ft_pwd(void); //devrait avoir meme proto que tous les bin
 int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
+int		ft_islast_chstr_ch(char *str, char c);
+
+/*________ MSH __________*/
+int	ft_init_envlst(t_minishell *msh, char **envp);
+
+/*________ UTILS __________*/
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_isname(char *str);
-int		ft_islast_chstr_ch(char *str, char c);
+int		ft_isset(char c, char *set);
 void	ft_free_tabtab(char **tab);
 
 /*_______ PARSER _______*/
 int		ft_get_tokens(t_list **token_lst, char *s);
+
+/*_______ EXPANSER _______*/
 
 #endif
