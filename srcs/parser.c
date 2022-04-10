@@ -6,10 +6,11 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 19:32:23 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 21:16:51 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "tokens.h"
 #include "minishell.h"
 
 /* Set la valeur du type de token en fonction du caractere c SSI le type actuel
@@ -20,46 +21,94 @@ void	ft_token_type(t_token_type *type, char c)
 		return ;
 	if (ft_isoperator(c))
 		*type = op;
+	if (c == '\'')
+		*type = squoted;
+	if (c == '"')
+		*type = dquoted;
 	else
 		*type = word;
+}
+
+int	ft_token_size(char *line, t_token_type token_type)
+{
+	int	len;
+
+	len = 1;
+	if (token_type == op)
+	{
+		if (ft_isoperator(line[0]) 
+			&& ft_formoperator(line[0], line [1]))
+			return (2);
+	}
+	if (token_type == squoted)
+	{
+		while (line[len] && line[len] != singleq)
+			len++;
+		len++;
+	}
+	if (token_type == dquoted)
+	{
+		while (line[len] && line[len] != doubleq)
+			len++;
+		len++;
+	}
+	return (len);
+}
+
+
+t_token	*ft_create_token(char *line, int start, int len, int type)
+{
+	t_token	*new_token;
+
+	new_token = ft_tokenlst_new(NULL, type);
+	if (!new_token)
+		return (perror("token_delimiter malloc failed"), NULL);
+	new_token->str = ft_substr(line, start, len);
+	if (!new_token->str)
+	{
+		ft_tokenlst_free(&new_token);
+		return (perror("token_delimiter malloc failed"), NULL);
+	}
+	return (new_token);
 }
 
 int	ft_token_delimiter(t_token **token_lst, char *line)
 {
 	t_token_type	curr_type;
 	int		start;
-	int		i; //ATTENTION overfloaw longueur line
+	int		len; //ATTENTION overfloaw longueur line
+	t_token	*new_token;
 	
 	start = 0;
 	curr_type = none;
-	while (ft_isblank(line[start])) //discards firts blank caracteres
+	while (line[start] && ft_isblank(line[start])) //discards firsts blank caracteres
 		start++;
-	if (line && ft_iscontrol_operator(line[start]))
-	{
-		printf("syntax error near unexpected token `%c'\n", line[start]);
-		errno = 130; //car return status doit etre = 258 (128 + 130);
-		return (FAILURE);
-	}
 	while (line && line[start])
 	{
+		len = 1;
 		ft_token_type(&curr_type, line[start]);
-		i = start;
-		if (curr_type == op)
+		len = ft_token_size(line + start, curr_type);
+		new_token = ft_create_token(line, start, len, curr_type);
+		if (!new_token)
 		{
-			if (ft_isoperator(line[i++]) && ft_formoperator(line[i], line [i + 1]))
-				i++;
+			ft_tokenlst_free(token_lst);
+			return (perror("token_delimiter malloc failed"), FAILURE);
 		}
-		new_token_str = ft_substr(line, start, i - start + 1);
-		if (!new_token_str)
-			return (perror("token_delimiter malloc"), FAILURE) // FREE TOKEN LST
-		ft_tokenlst_add(token_lst, new_token_str, curr_type);
+		ft_tokenlst_addback(token_lst, new_token);
 		curr_type = none;
-		i++;
-		while (ft_isblank(line[i])) //discards firts blank caracteres
-			i++;
+		start += len;
+		while (line[start] && ft_isblank(line[start])) //discards blank caracteres
+			start++;
 	}
 	return (SUCCESS); //ATTENTION peut retourner SUCCESS en laissant token_lst = NULL
 }
+
+//	if (line && ft_iscontrol_operator(line[start]))
+//	{
+//		printf("syntax error near unexpected token `%c'\n", line[start]);
+//		errno = 130; //car return status doit etre = 258 (128 + 130);
+//		return (FAILURE);
+//	}
 
 int	main(int ac, char **av)
 {

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/10 17:59:11 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 21:14:44 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 # include <stdbool.h>
 
+# include "tokens.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -55,15 +56,7 @@ tgetnum, tgetstr, tgoto, tputs
 */
 
 typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
-typedef enum e_token_type {none, word, redirin, redirout, redirapp, heredoc, \
-dquoted, squoted, op, cpipe, dollar} t_token_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
-
-typedef struct s_token {
-	char			*str;
-	t_token_type	type;
-	struct s_token	*next;
-}	t_token;
 
 typedef struct s_cmde {
 	char			*name;
@@ -118,6 +111,8 @@ int		ft_isset(char c, char *set);
 int		ft_isblank(char c);
 void	ft_free_tabtab(char **tab);
 char* toBinary(int n, int len);
+
+/*_______ TOKENS _______*/
 
 /*_______ PARSER _______*/
 int		ft_get_tokens(t_list **token_lst, char *s);
