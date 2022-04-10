@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 22:24:10 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 22:29:47 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,26 @@ void	ft_token_type(t_token_type *type, char c)
 		*type = word;
 }
 
-int	ft_token_size(char *line, t_token_type token_type)
+int	ft_token_size(char *line, t_token_type *token_type)
 {
 	int	len;
 
 	len = 1;
-	if (token_type == op)
+	if (*token_type == op)
 	{
 		if (ft_isoperator(line[0]) 
 			&& ft_formoperator(line[0], line [1]))
 			return (2);
+		else if (line[0] == '&' && line[1] != '&')
+			*token_type = word;
 	}
-	else if (token_type == squoted)
+	else if (*token_type == squoted)
 	{
 		while (line[len] && line[len] != '\'')
 			len++;
 		len++;
 	}
-	else if (token_type == dquoted)
+	else if (*token_type == dquoted)
 	{
 		while (line[len] && line[len] != '"')
 			len++;
@@ -93,7 +95,7 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	{
 		len = 1;
 		ft_token_type(&curr_type, line[start]);
-		len = ft_token_size(line + start, curr_type);
+		len = ft_token_size(line + start, &curr_type);
 		new_token = ft_create_token(line, start, len, curr_type);
 		if (!new_token)
 		{
