@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 22:18:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 22:24:10 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,12 @@ int	main(int ac, char **av)
 	t_token	*token_lst;
 
 	token_lst = NULL;
+	if (!av[1])
+		return (printf("Need 1 argument str pour tester debile\n"), 1);
 	printf("AV[1]=%s\n", av[1]);
 	ft_token_delimiter(&token_lst, av[1]);
 	if (!token_lst)
-		return (printf("error\n"), 1);
+		return (printf("Raw token list empty\n"), 1);
 	for (t_token *head = token_lst; head != NULL; head = head->next)
 		printf("%s; type=%d\n", head->str, head->type);
 	ft_tokenlst_free(&token_lst);
