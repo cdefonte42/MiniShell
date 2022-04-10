@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 21:16:51 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 22:18:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	ft_token_type(t_token_type *type, char c)
 {
 	if (*type != none)
 		return ;
-	if (ft_isoperator(c))
+	else if (ft_isoperator(c))
 		*type = op;
-	if (c == '\'')
+	else if (c == '\'')
 		*type = squoted;
-	if (c == '"')
+	else if (c == '"')
 		*type = dquoted;
 	else
 		*type = word;
@@ -40,17 +40,23 @@ int	ft_token_size(char *line, t_token_type token_type)
 			&& ft_formoperator(line[0], line [1]))
 			return (2);
 	}
-	if (token_type == squoted)
+	else if (token_type == squoted)
 	{
-		while (line[len] && line[len] != singleq)
+		while (line[len] && line[len] != '\'')
 			len++;
 		len++;
 	}
-	if (token_type == dquoted)
+	else if (token_type == dquoted)
 	{
-		while (line[len] && line[len] != doubleq)
+		while (line[len] && line[len] != '"')
 			len++;
 		len++;
+	}
+	else
+	{
+		while (line[len] && !ft_ismetachar(line[len]) && line[len] != '\''
+			&& line[len] != '"')
+			len++;
 	}
 	return (len);
 }
@@ -121,7 +127,10 @@ int	main(int ac, char **av)
 	token_lst = NULL;
 	printf("AV[1]=%s\n", av[1]);
 	ft_token_delimiter(&token_lst, av[1]);
+	if (!token_lst)
+		return (printf("error\n"), 1);
 	for (t_token *head = token_lst; head != NULL; head = head->next)
-		printf("%s\ntype=%d", head->str, head->type);
+		printf("%s; type=%d\n", head->str, head->type);
+	ft_tokenlst_free(&token_lst);
 	return (0);
 }
