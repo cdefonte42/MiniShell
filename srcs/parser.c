@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 23:06:27 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/10 23:17:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,23 @@ int	ft_token_size(char *line, t_token_type *token_type)
 	len = 1;
 	if (*token_type == op)
 	{
-		if (ft_isoperator(line[0]) 
+		if (ft_isoperator(line[0])
 			&& ft_formoperator(line[0], line [1]))
 			return (2);
 		else if (line[0] == '&' && line[1] != '&')
 			*token_type = word;
 	}
-	else if (*token_type == squoted)
-	{
-		while (line[len] && line[len] != '\'')
-			len++;
+	while (*token_type == squoted && line[len] && line[len] != '\'')
 		len++;
-	}
-	else if (*token_type == dquoted)
-	{
-		while (line[len] && line[len] != '"')
-			len++;
+	while (*token_type == dquoted && line[len] && line[len] != '"')
 		len++;
-	}
-	else
-	{
-		while (line[len] && !ft_ismetachar(line[len]) && line[len] != '\''
-			&& line[len] != '"')
-			len++;
-	}
+	if (*token_type == dquoted || *token_type == squoted)
+		len++;
+	while (*token_type == word && line[len]
+		&& !ft_ismetachar(line[len]) && line[len] != '\'' && line[len] != '"')
+		len++;
 	return (len);
 }
-
 
 t_token	*ft_create_token(char *line, int start, int len, int type)
 {
@@ -85,10 +75,10 @@ Permet d'obtenir une RAW liste of tokens. */
 int	ft_token_delimiter(t_token **token_lst, char *line)
 {
 	t_token_type	curr_type;
-	int		start;
-	int		len;
-	t_token	*new_token;
-	
+	int				start;
+	int				len;
+	t_token			*new_token;
+
 	start = 0;
 	while (line && line[start])
 	{
@@ -109,22 +99,22 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	}
 	return (SUCCESS);
 }
-
-int	main(int ac, char **av)
-{
-	(void)ac;
-	(void)av;
-	t_token	*token_lst;
-
-	token_lst = NULL;
-	if (!av[1])
-		return (printf("Need 1 argument str pour tester debile\n"), 1);
-	printf("AV[1]=%s\n", av[1]);
-	ft_token_delimiter(&token_lst, av[1]);
-	if (!token_lst)
-		return (printf("Raw token list empty\n"), 1);
-	for (t_token *head = token_lst; head != NULL; head = head->next)
-		printf("%s; type=%d\n", head->str, head->type);
-	ft_tokenlst_free(&token_lst);
-	return (0);
-}
+//
+//int	main(int ac, char **av)
+//{
+//	(void)ac;
+//	(void)av;
+//	t_token	*token_lst;
+//
+//	token_lst = NULL;
+//	if (!av[1])
+//		return (printf("Need 1 argument str pour tester debile\n"), 1);
+//	printf("AV[1]=%s\n", av[1]);
+//	ft_token_delimiter(&token_lst, av[1]);
+//	if (!token_lst)
+//		return (printf("Raw token list empty\n"), 1);
+//	for (t_token *head = token_lst; head != NULL; head = head->next)
+//		printf("%s; type=%d\n", head->str, head->type);
+//	ft_tokenlst_free(&token_lst);
+//	return (0);
+//}
