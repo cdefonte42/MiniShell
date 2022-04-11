@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 10:49:41 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 17:37:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:50:05 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+
+// Malloc
+char	*ft_replacestr(char *dst, const char *t_replace, const char *replace_w);
 
 // List
 // Malloc

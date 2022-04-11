@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/09 11:35:25 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:33:51 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_isname(char *str);
+int		ft_cisname(char c);
 int		ft_islast_chstr_ch(char *str, char c);
 void	ft_free_tabtab(char **tab);
 

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/09 12:44:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:37:22 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,34 @@ void	debug_print_msh_cmdes(t_minishell *msh)
 int	minishell_parse_line(t_minishell *msh, char *s)
 {
 	char	*line;
+	int		i;
+	int		j;
+	int		len;
+	char	*tmp;
 
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
 	// printf("___AVANT join quote\n");
 	// debug_print_msh_cmdes(msh);
 	minishell_join_quote(msh);
+	i = 0;
+	while (msh->raw_cmd[i])
+	{
+		j = 0;
+		while (msh->raw_cmd[i][j])
+		{
+			if (msh->raw_cmd[i][j] == '$')
+			{
+				len = 1;
+				while (ft_cisname(msh->raw_cmd[i][j + len]))
+					len++;
+				tmp = ft_substr(msh->raw_cmd[i], j + 1, len);
+				ft_strncmp(tmp, "?", len);
+			}
+			j++;
+		}
+		i++;
+	}
 	if (!msh->raw_cmd)
 		return (FAILURE);
 	// printf("___APRES join quote\n");

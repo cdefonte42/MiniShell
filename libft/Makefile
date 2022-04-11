@@ -6,6 +6,7 @@ ft_palloc.c \
 ft_itoa.c \
 ft_split.c \
 ft_substr.c \
+ft_replacestr.c \
 char/ft_isalnum.c \
 char/ft_isalpha.c \
 char/ft_isascii.c \
