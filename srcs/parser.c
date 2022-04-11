@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 12:20:29 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 13:09:16 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,33 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	return (SUCCESS);
 }
 
+int	ft_quotes_check(char *str)
+{
+	int				i;
+	t_quote_type	inquote;
+
+	i = 0;
+	inquote = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '"' && (inquote != singleq || inquote == 0))
+			inquote = inquote ^ doubleq;
+		if (str[i] == '\'' && (inquote != doubleq || inquote == 0))
+			inquote = inquote ^ singleq;
+		i++;
+	}
+	if (inquote)
+		return (ft_putstr_fd("Error: quoted field never ends\n", 2), FAILURE);
+	return (SUCCESS);
+}
+
+int	ft_parse_tokens(t_token *lst)
+{
+	if (ft_tokenlst_iteri(lst, &ft_quotes_check) == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 int	main(int ac, char **av)
 {
 	(void)ac;
@@ -117,6 +144,10 @@ int	main(int ac, char **av)
 	ft_token_delimiter(&token_lst, av[1]);
 	if (!token_lst)
 		return (printf("Raw token list empty\n"), 1);
+
+	if (ft_parse_tokens(token_lst) == FAILURE)
+		return (ft_tokenlst_free(&token_lst), 1);
+
 	for (t_token *head = token_lst; head != NULL; head = head->next)
 		printf("%s; type=%d\n", head->str, head->type);
 	ft_tokenlst_free(&token_lst);
