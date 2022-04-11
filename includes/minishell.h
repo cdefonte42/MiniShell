@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/10 21:14:44 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:13:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,6 @@ int		ft_islast_chstr_ch(char *str, char c);
 int	ft_init_envlst(t_minishell *msh, char **envp);
 
 /*________ UTILS __________*/
-int		ft_ismetachar(char c);
-int		ft_formoperator(char c1, char c2);
-int		ft_isoperator(char c);
-int		ft_iscontrol_operator(char c);
 int		ft_isname(char *str);
 int		ft_isset(char c, char *set);
 int		ft_isblank(char c);

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 13:09:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:51:18 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 /* Set la valeur du type de token en fonction du caractere c SSI le type actuel
 est 'none' (default). */
-void	ft_token_type(t_token_type *type, char c)
+void	ft_char_type(t_token_type *type, char c)
 {
-	if (ft_isblank(c))
-		*type = blank;
-	else if (ft_isoperator(c))
+	if (ft_isoperator(c))
 		*type = op;
+	else if (ft_isblank(c))
+		*type = blank;
 //	else if (c == '\'')
 //		*type = squoted;
 //	else if (c == '"')
@@ -29,23 +29,15 @@ void	ft_token_type(t_token_type *type, char c)
 		*type = word;
 }
 
-int	ft_token_size(char *line, t_token_type *token_type)
+/* Retourne la taille du token en fonction de son type */
+int	ft_delimit_token(char *line, t_token_type *token_type)
 {
 	int				len;
 	t_quote_type	inquote;
 
 	len = 0;
 	inquote = 0;
-	if (*token_type == op)
-	{
-		if (ft_isoperator(line[0])
-			&& ft_formoperator(line[0], line [1]))
-			return (2);
-		else if (line[0] == '&' && line[1] != '&')
-			*token_type = word;
-		return (1);
-	}
-	while (line && line[len])
+	while (*token_type != op && line && line[len])
 	{
 		if (line[len] == '"' && (inquote != singleq || inquote == 0))
 			inquote = inquote ^ doubleq;
@@ -54,6 +46,13 @@ int	ft_token_size(char *line, t_token_type *token_type)
 		if (ft_ismetachar(line[len]) && !inquote)
 			return (len);
 		len++;
+	}
+	if (*token_type == op)
+	{
+		len = 1;
+		if (ft_isoperator(line[0])
+			&& ft_formoperator(line[0], line [1]))
+			len = 2;
 	}
 	return (len);
 }
@@ -76,7 +75,7 @@ t_token	*ft_create_token(char *line, int start, int len, int type)
 
 /* Parse la string line et decoup selon les regles de token reco. 
 Permet d'obtenir une RAW liste of tokens. */
-int	ft_token_delimiter(t_token **token_lst, char *line)
+int	ft_tokener(t_token **token_lst, char *line)
 {
 	t_token_type	curr_type;
 	int				start;
@@ -87,10 +86,10 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	while (line && line[start])
 	{
 		len = 1;
-		ft_token_type(&curr_type, line[start]);
+		ft_char_type(&curr_type, line[start]);
 		if (curr_type != blank)
 		{
-			len = ft_token_size(line + start, &curr_type);
+			len = ft_delimit_token(line + start, &curr_type);
 			new_token = ft_create_token(line, start, len, curr_type);
 			if (!new_token)
 			{
@@ -103,6 +102,8 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	}
 	return (SUCCESS);
 }
+
+/*________ Parse tokens __________*/
 
 int	ft_quotes_check(char *str)
 {
@@ -124,9 +125,36 @@ int	ft_quotes_check(char *str)
 	return (SUCCESS);
 }
 
+void	ft_operator_type(t_token *elem)
+{
+	(void)elem;
+}
+
+int	ft_token_order(t_token *lst)
+{
+	t_token_type	prev_type;
+
+	prev_type = none;
+	while (lst)
+	{
+		if (lst->type == op && prev_type == op)
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(lst->str, 2);
+			ft_putstr_fd("'\n", 2);
+			return (FAILURE);
+		}
+		prev_type = lst->type;
+		lst = lst->next;
+	}
+	return (SUCCESS);
+}
+
 int	ft_parse_tokens(t_token *lst)
 {
 	if (ft_tokenlst_iteri(lst, &ft_quotes_check) == FAILURE)
+		return (FAILURE);
+	if (ft_token_order(lst) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -141,7 +169,7 @@ int	main(int ac, char **av)
 	if (!av[1])
 		return (printf("Need 1 argument str pour tester debile\n"), 1);
 	printf("AV[1]=%s\n", av[1]);
-	ft_token_delimiter(&token_lst, av[1]);
+	ft_tokener(&token_lst, av[1]);
 	if (!token_lst)
 		return (printf("Raw token list empty\n"), 1);
 
