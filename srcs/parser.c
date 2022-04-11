@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/10 23:17:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 12:20:29 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,21 @@ void	ft_token_type(t_token_type *type, char c)
 		*type = blank;
 	else if (ft_isoperator(c))
 		*type = op;
-	else if (c == '\'')
-		*type = squoted;
-	else if (c == '"')
-		*type = dquoted;
+//	else if (c == '\'')
+//		*type = squoted;
+//	else if (c == '"')
+//		*type = dquoted;
 	else
 		*type = word;
 }
 
 int	ft_token_size(char *line, t_token_type *token_type)
 {
-	int	len;
+	int				len;
+	t_quote_type	inquote;
 
-	len = 1;
+	len = 0;
+	inquote = 0;
 	if (*token_type == op)
 	{
 		if (ft_isoperator(line[0])
@@ -41,16 +43,18 @@ int	ft_token_size(char *line, t_token_type *token_type)
 			return (2);
 		else if (line[0] == '&' && line[1] != '&')
 			*token_type = word;
+		return (1);
 	}
-	while (*token_type == squoted && line[len] && line[len] != '\'')
+	while (line && line[len])
+	{
+		if (line[len] == '"' && (inquote != singleq || inquote == 0))
+			inquote = inquote ^ doubleq;
+		if (line[len] == '\'' && (inquote != doubleq || inquote == 0))
+			inquote = inquote ^ singleq;
+		if (ft_ismetachar(line[len]) && !inquote)
+			return (len);
 		len++;
-	while (*token_type == dquoted && line[len] && line[len] != '"')
-		len++;
-	if (*token_type == dquoted || *token_type == squoted)
-		len++;
-	while (*token_type == word && line[len]
-		&& !ft_ismetachar(line[len]) && line[len] != '\'' && line[len] != '"')
-		len++;
+	}
 	return (len);
 }
 
@@ -99,22 +103,22 @@ int	ft_token_delimiter(t_token **token_lst, char *line)
 	}
 	return (SUCCESS);
 }
-//
-//int	main(int ac, char **av)
-//{
-//	(void)ac;
-//	(void)av;
-//	t_token	*token_lst;
-//
-//	token_lst = NULL;
-//	if (!av[1])
-//		return (printf("Need 1 argument str pour tester debile\n"), 1);
-//	printf("AV[1]=%s\n", av[1]);
-//	ft_token_delimiter(&token_lst, av[1]);
-//	if (!token_lst)
-//		return (printf("Raw token list empty\n"), 1);
-//	for (t_token *head = token_lst; head != NULL; head = head->next)
-//		printf("%s; type=%d\n", head->str, head->type);
-//	ft_tokenlst_free(&token_lst);
-//	return (0);
-//}
+
+int	main(int ac, char **av)
+{
+	(void)ac;
+	(void)av;
+	t_token	*token_lst;
+
+	token_lst = NULL;
+	if (!av[1])
+		return (printf("Need 1 argument str pour tester debile\n"), 1);
+	printf("AV[1]=%s\n", av[1]);
+	ft_token_delimiter(&token_lst, av[1]);
+	if (!token_lst)
+		return (printf("Raw token list empty\n"), 1);
+	for (t_token *head = token_lst; head != NULL; head = head->next)
+		printf("%s; type=%d\n", head->str, head->type);
+	ft_tokenlst_free(&token_lst);
+	return (0);
+}
