@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/09 12:45:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 12:21:15 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ int	ft_get_tokens(t_list **token_lst, char *s)
 	if (!new_tokens(token_lst, s, start_token, i))
 		return (FAILURE);
 	if (inquote)
+	{
 		printf("Error.\n");
+		return (FAILURE);
+	}
 	return (SUCCESS);
 }
 
@@ -111,8 +114,10 @@ int	main(int ac, char **av)
 	t_list	*token_lst;
 	token_lst = NULL;
 	printf("AV[1]=%s\n", av[1]);
-	ft_get_tokens(&token_lst, av[1]);
-	for (t_list *head = token_lst; head != NULL; head = head->next)
-		printf("%s\n", (char *)head->content);
+	if (ft_get_tokens(&token_lst, s))
+	{
+		for (t_list *head = token_lst; head != NULL; head = head->next)
+			printf("%s\n", (char *)head->content);
+	}
 	return (0);
 }
