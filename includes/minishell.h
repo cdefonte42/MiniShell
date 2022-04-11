@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/11 15:13:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 19:33:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
+//typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
 
 typedef struct s_cmde {
@@ -108,11 +108,5 @@ int		ft_isblank(char c);
 void	ft_free_tabtab(char **tab);
 char* toBinary(int n, int len);
 
-/*_______ TOKENS _______*/
-
-/*_______ PARSER _______*/
-int		ft_get_tokens(t_list **token_lst, char *s);
-
-/*_______ EXPANSER _______*/
 
 #endif
