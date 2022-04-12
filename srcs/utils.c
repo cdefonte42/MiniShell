@@ -6,28 +6,11 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 12:21:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:02:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* Retourne 1 si c est un metacharacter cad | < > ou backspace (8 \b) 
-horizontal tab (9 \t) line feed (10 \n) vertical tab (11 \v) form feed (12 \f) 
-ou carriage return (13 \r) */
-int	ft_ismetachar(char c)
-{
-	if ((c >= 8 && c <= 13) || c == '|' || c == '<' || c == '>' || c == 32)
-		return (1);
-	return (0);
-}
-
-int	ft_isoperator(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	return (0);
-}
 
 /* In the shell command language, a word consisting solely of underscores, 
 digits, and alphabetics from the portable character set. 
@@ -62,3 +45,48 @@ void	ft_free_tabtab(char **tab)
 	}
 	free(tab);
 }
+
+int	ft_isblank(char c)
+{
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
+}
+
+/* Compare c avec chaque caractere de set. Retourne 1 si c est parmis set. 0 si
+c ne fait pas partis du set de caracteres. */
+int	ft_isset(char c, char *set)
+{
+	int		i;
+
+	i = 0;
+	while (set && set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;	
+	}
+	return (0);
+}
+
+char* toBinary(int n, int len)
+{
+    char* binary = (char*)malloc(sizeof(char) * len);
+    int k = 0;
+    for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2) {
+        binary[k++] = (n & i) ? '1' : '0';
+    }
+    binary[k] = '\0';
+    return binary;
+}
+//
+//int	main(void)
+//{
+//    int n = '|' & '|';
+//    int len = 32;
+//
+//    char* binary = toBinary(n, len);
+//    printf("The binary representation of %d is %s\n", n, binary);
+//    free(binary);
+//	return (0);
+//}
