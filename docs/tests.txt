@@ -1,0 +1,10 @@
+bash-5.0$ echo prout << lala echo niah > 1file | echo POUET
+> hdhfs
+> lala
+POUET
+bash-5.0$ ls
+1file  a.out  docs  heap.c  includes  libft  Makefile  minishell  pipex  srcs
+bash-5.0$ cat 1file 
+prout echo niah
+bash-5.0$ 
+

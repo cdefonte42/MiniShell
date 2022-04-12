@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 13:03:18 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 14:39:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,3 +78,17 @@ int	ft_tokenlst_iteri(t_token *lst, int (*f)(char *))
 	}
 	return (SUCCESS);
 }
+
+int	ft_tokenlst_size(t_token *lst)
+{
+	int	size;
+
+	size = 0;
+	while (lst)
+	{
+		size++;
+		lst = lst->next;
+	}
+	return (size);
+}
+

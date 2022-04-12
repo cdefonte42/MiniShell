@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 13:05:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 16:02:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,45 @@
 #include <stdio.h>
 
 typedef struct s_token	t_cmde_line;
+
+/* retourne le nombre de oken ayant pour type 'type' */
+int	ft_count_words(t_token *lst, int type)
+{
+	int	nbelem;
+
+	nbelem = 0;
+	while (lst)
+	{
+		if (lst->type == type)
+			nbelem++;
+		lst = lst->next;
+	}
+	return (nbelem);
+}
+
+/* Transforme la liste cmde line en char **tab */
+char	**ft_lst_to_char(t_token *lst)
+{
+	char	**argv;
+	int		i;
+	int		nbword;
+
+	i = 0;
+	nbword = ft_count_tokens_type(lst, word);
+	argv = malloc(sizeof(char *) * (nbword + 1));
+	if (!argv)
+		return (perror("malloc failed in ft_token_to_argv"), NULL);
+	while (lst && lst->type != spipe)
+	{
+		if (lst->type == word)
+		{
+			argv[i] = lst->str;
+			i++;
+		}
+		lst = lst->next;
+	}
+	return (argv);
+}
 
 /* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
 token_lst jusqu'a l'operator control '|'. La token_lst doit etre propre*/
@@ -77,6 +116,7 @@ int	main(int ac, char **av)
 	for (t_cmde_line *pouet = cmde; pouet != NULL; pouet = pouet->next)
 		printf("%s; type=%d\n", pouet->str, pouet->type);
 
+	ft_lst_to_char(cmde);
 
 	ft_tokenlst_free(&token_lst);
 	return (0);

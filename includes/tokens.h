@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 12:45:22 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 14:37:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_tokenlst_addback(t_token **alst, t_token *new);
 t_token	*ft_tokenlst_last(t_token *lst);
 void	ft_tokenlst_free(t_token **lst);
 int		ft_tokenlst_iteri(t_token *lst, int (*f)(char *));
+int		ft_tokenlst_size(t_token *lst);
 
 /*__________ UTILS ___________*/
 int		ft_iscontrol_operator(char c);
