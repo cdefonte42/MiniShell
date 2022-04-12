@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/12 10:18:23 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 10:54:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ int	minishell_loop(t_minishell *msh)
 		else
 		{
 			//ft_get_tokens(&msh->token, line);
+			//ft_fill_cmde_lst(&msh->cmde, mhs->token);
 			minishell_parse_line(msh, line);
 		}
 		free(line);

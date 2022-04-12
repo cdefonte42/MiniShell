@@ -6,23 +6,44 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 10:18:04 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 12:04:29 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
-#include "minishell.h"
+#include "libft.h"
 #include <stdio.h>
 
-//int ft_parse_line(t_minishell *msh); if == FAILURE exit minishell
+typedef struct s_token	t_cmde_line;
+
+/* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
+token_lst jusqu'a l'operator control '|'. */
+int	ft_get_cmde_tokens(t_token *token_lst)
+{
+//	t_list	*lst;
+	t_cmde_line	*cmde_line;
+	t_cmde_line	*token_toadd;
+
+	while (token_lst && token_lst->type != spipe)
+	{
+		if (token_lst->type != spipe)
+		{
+			token_toadd = ft_tokenlst_new(token_lst->str, token_lst->type);
+			if (!token_toadd)
+				return (FAILURE);
+			ft_tokenlst_addback(&cmde_line, token_toadd);
+		}
+		token_lst = token_lst->next;
+	}
+	return (SUCCESS);
+}
 
 int	main(int ac, char **av)
 {
+	t_token	*token_lst;
+
 	(void)ac;
 	(void)av;
-	t_token	*token_lst;
-	t_cmde	*cmde_lst; //simple commands
-
 	token_lst = NULL;
 	if (!av[1])
 		return (printf("Need 1 argument str pour tester debile\n"), 1);
@@ -30,13 +51,13 @@ int	main(int ac, char **av)
 
 	if (ft_tokener(&token_lst, av[1]) == FAILURE)
 		return (1);
-	if (!token_lst)
+	if (!token_lst)	
 		return (printf("Raw token list empty\n"), 0); //en gros line vide rien a faire
 	if (ft_check_tokens(token_lst) == FAILURE)
 		return (ft_tokenlst_free(&token_lst), 1);
 
-// Expansion A FAIRE 
-//	if (ft_expansion(&token_lst) == FAILURE)
+// Expansion A FAIRE ET SPLITING WORDS genre ZA="echo prout" donne 1 token lors cut mais lors expansion pus splitting donne deux tokens !!!
+//	if (ft_expansion(&token_lst) == FAILURE) 
 //		return (ft_tokenlst_free(&token_lst), 1);
 
 //	ft_fill_cmde_lst
