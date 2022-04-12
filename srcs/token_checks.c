@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 19:25:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/12 12:09:21 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	ft_operator_order(t_token *lst)
 	prev_type = none;
 	while (lst)
 	{
-		if (lst->type == op && prev_type == op)
+		if ((lst->type == op && prev_type == op) 
+			|| (lst->next == NULL && lst->type == op))
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 			ft_putstr_fd(lst->str, 2);
