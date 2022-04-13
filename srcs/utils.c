@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 15:02:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/13 12:48:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,26 @@ int	ft_isset(char c, char *set)
 	return (0);
 }
 
-char* toBinary(int n, int len)
+/* Retourne 1 si 'name' est le nom d'un buildin, 0 sinon */
+int	ft_isbin(char *name)
 {
-    char* binary = (char*)malloc(sizeof(char) * len);
-    int k = 0;
-    for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2) {
-        binary[k++] = (n & i) ? '1' : '0';
-    }
-    binary[k] = '\0';
-    return binary;
+	char	*bin[7];
+	int		i;
+
+	bin[0] = "echo";
+	bin[1] = "cd";
+	bin[2] = "pwd";
+	bin[3] = "export";
+	bin[4] = "unset";
+	bin[5] = "env";
+	bin[6] = "exit";
+	i = 0;
+	while (i < 7)
+	{
+		if (ft_strcmp(name, bin[i]) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
 }
-//
-//int	main(void)
-//{
-//    int n = '|' & '|';
-//    int len = 32;
-//
-//    char* binary = toBinary(n, len);
-//    printf("The binary representation of %d is %s\n", n, binary);
-//    free(binary);
-//	return (0);
-//}
+
