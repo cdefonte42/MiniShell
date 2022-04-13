@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 12:48:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/13 17:49:00 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ typedef enum e_cmde_type {buidlin, executable}	t_cmde_type;
 typedef struct s_cmde {
 	char			*name;
 	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				fdin;
-	int				fdout;
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
 	int				piped; // 0 = NO 1 = YES;
+	int				pipe[2];
 	t_cmde_type		type;
 	struct s_cmde	*next;
+	struct s_cmde	*prev;
 }	t_cmde;
 
 typedef struct s_var {
