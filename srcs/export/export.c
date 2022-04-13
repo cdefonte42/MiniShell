@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/09 11:05:27 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:54:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 void	ft_print_export(t_var *lst)
 {
 	if (!lst || lst->type)
+		return ;
+	if (lst->type == shellvar)
 		return ;
 	if (lst->value == NULL)
 		printf("export %s\n", lst->key);

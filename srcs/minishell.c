@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/11 15:37:22 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/13 12:41:51 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		g_status = 130;
@@ -66,7 +66,9 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 	{
 		type = envvar;
 		splited = ft_split(envp[i], '=');
-		if (ft_strcmp(splited[1], "_") == 0)
+		if (!splited)
+			return (perror("ft_init_envlst failed split"), FAILURE);
+		if (ft_strcmp(splited[0], "_") == 0)
 			type = shellvar;
 		if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
 			return (ft_free_tabtab(splited), FAILURE);
