@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/11 15:33:51 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/13 12:45:02 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 # include <stdbool.h>
 
+# include "tokens.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -54,21 +55,21 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-enum e_quote_type {doubleq = 1, singleq = 2};
-enum e_var_type {envvar, shellvar};
+//typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
+typedef enum e_var_type {envvar, shellvar} t_var_type;
 
 typedef struct s_cmde {
 	char			*name;
 	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				infile;
-	int				outfile;
+	int				fdin;
+	int				fdout;
 	struct s_cmde	*next;
 }	t_cmde;
 
 typedef struct s_var {
 	char			*key;
 	char			*value;
-	enum e_var_type	type;
+	t_var_type		type;
 	struct s_var	*next;
 }	t_var;
 
@@ -100,9 +101,16 @@ int		ft_isoperator(char c);
 int		ft_isname(char *str);
 int		ft_cisname(char c);
 int		ft_islast_chstr_ch(char *str, char c);
-void	ft_free_tabtab(char **tab);
 
-/*_______ PARSER _______*/
-int		ft_get_tokens(t_list **token_lst, char *s);
+/*________ MSH __________*/
+int	ft_init_envlst(t_minishell *msh, char **envp);
+
+/*________ UTILS __________*/
+int		ft_isname(char *str);
+int		ft_isset(char c, char *set);
+int		ft_isblank(char c);
+void	ft_free_tabtab(char **tab);
+char* toBinary(int n, int len);
+
 
 #endif
