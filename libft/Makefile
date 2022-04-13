@@ -36,6 +36,7 @@ str/ft_strnstr.c \
 str/ft_strrchr.c \
 str/ft_strtrim.c \
 str/ft_strcmp.c \
+str/ft_stris.c \
 char/ft_tolower.c \
 char/ft_toupper.c
 SRCS_B 	= list/ft_lstadd_back.c \

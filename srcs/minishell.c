@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 12:45:06 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/13 13:12:28 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,17 @@ void	builtin_exec(t_minishell *msh)
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
-			g_status = ft_atoi(msh->raw_cmd[1]);
-		msh->loop = 0;
+		{
+			if (msh->raw_cmd[2])
+				ft_putendl_fd("bash: too many arguments", 2);
+			if (ft_stris(msh->raw_cmd[0], ft_isdigit))
+				g_status = ft_atoi(msh->raw_cmd[1]);
+			else
+				ft_putendl_fd("bash: numeric argument required", 2);
+				
+		}
 		ft_putendl_fd("exit", 1);
+		msh->loop = 0;
 		// fexit(msh);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
