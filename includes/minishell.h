@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 17:49:00 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/14 12:15:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,12 @@ tgetnum, tgetstr, tgoto, tputs
 
 //typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
-typedef enum e_cmde_type {buidlin, executable}	t_cmde_type;
 
 typedef struct s_cmde {
+	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
 	char			*name;
 	char			**argv; // [0]=cmde name, reste = options et arguments
-	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	int				piped; // 0 = NO 1 = YES;
 	int				pipe[2];
-	t_cmde_type		type;
 	struct s_cmde	*next;
 	struct s_cmde	*prev;
 }	t_cmde;
