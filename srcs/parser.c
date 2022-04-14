@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/14 11:50:59 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/14 12:56:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_token	*ft_split_tokens(t_token **token_lst)
 		if ((*token_lst)->type == spipe)
 		{
 			reach_pipe = 1;
+		// FAIRE PIPE ICI ////
 			tmp = *token_lst;
 			*token_lst = (*token_lst)->next;
 			tmp->next = NULL;
@@ -87,58 +88,30 @@ t_token	*ft_split_tokens(t_token **token_lst)
 	return (cmde_line);
 }
 
-int	ft_get_cmdelinelst(t_list **lst, t_token **token_lst)
+int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 {
-	t_token	*cmde_line;
-	t_list	*new;
-	void	(*del)(void *);
+	t_cmde	*new_cmde;
 	
-	del = &ft_tokenlst_free;
-	while (token_lst && *token_lst)
+	while (token_lst)
 	{
-		cmde_line = ft_split_tokens(token_lst);
-		if (cmde_line)
-		{
-			new = ft_lstnew(cmde_line);
-			if (!new)
-				return (perror("malloc failed getcmdelinelst"), ft_lstclear(lst, del), FAILURE);
-			ft_lstadd_back(lst, new);
-		}
+		new_cmde = malloc(sizeof(t_cmde));
+		if (!new_cmde)
+			return (FAILURE);
+		new_cmde->cmde_line = ft_split_tokens(&token_lst);
+		new_cmde->argv = ft_lst_to_char(new_cmde->cmde_line);
+		ft_add_cmde_bask(alst, new_cmde);
 	}
-	return (SUCCESS);
-}
-
-int	ft_exec(t_token *cmde_line)
-{
-	t_cmde	cmde;
-
-// ATTENTION CEST LA QUON DOIT FAIRE LEXPANSION DES WORDS DE LA CMDE !!!!///
-	cmde.argv = ft_lst_to_char(cmde_line);
-	if (cmde.argv == NULL)
-		printf("no name results so FORK to redirs\n");
-	else if (ft_isbin(cmde.argv[0]))
-	{
-		if (ft_tokenlst_last(cmde_line)->type == spipe)
-			printf("Fork puis exec bin\n");	
-		else
-			printf("Exec bin dans env courant\n");	
-	}
-	else
-		printf("fork la commande et execve\n");
-	return (SUCCESS);
 }
 
 int	main(int ac, char **av)
 {
 	t_token	*token_lst;
-	t_list		*lst;
-	t_list		*new;
+	t_cmde	*cmde_lst;
 
 	(void)ac;
 	(void)av;
 	token_lst = NULL;
-	lst = NULL;
-	new = NULL;
+	cmde_lst = NULL;
 	if (!av[1])
 		return (printf("Need 1 argument str pour tester debile\n"), 1);
 	printf("Readline return equivqlent AV[1]=%s\n", av[1]);
@@ -154,27 +127,9 @@ int	main(int ac, char **av)
 //	for (t_token *head = token_lst; head != NULL; head = head->next)
 //		printf("%s; type=%d\n", head->str, head->type);
 
-	if (ft_get_cmdelinelst(&lst, &token_lst) == FAILURE)
-	{
-		printf("Failure de ft_get_cmdelinelst\n");
-		ft_tokenlst_free(&token_lst);
-		return (1);	
-	}
+	if (ft_fill_cmdelst(&cmde_lst, token_lst) == FAILURE)
+		return (ft_tokenlst_free(&token_lst), 1);
 
-	while (lst)
-	{
-		t_token	*cmde;
-
-		cmde = (t_token *)lst->content;
-		ft_exec(cmde);
-		lst = lst->next;
-	}
-//	for (t_list *pouet = lst; pouet; pouet = pouet->next)
-//	{
-//		printf("___CMDE LINE___\n");
-//		for (t_token *line = (t_token *)(pouet->content); line; line = line->next)
-//			printf("%s; type=%d\n", line->str, line->type);
-//	}
 
 	return (0);
 }
