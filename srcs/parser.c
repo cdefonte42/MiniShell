@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/13 23:16:17 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/14 11:50:59 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,70 +17,74 @@
 
 typedef struct s_token	t_cmde_line;
 
-///* retourne le nombre de oken ayant pour type 'type' */
-//int	ft_count_tokens_type(t_token *lst, t_token_type type)
-//{
-//	int	nbelem;
-//
-//	nbelem = 0;
-//	while (lst)
-//	{
-//		if (lst->type == type)
-//			nbelem++;
-//		lst = lst->next;
-//	}
-//	return (nbelem);
-//}
-//
-///* Transforme la liste cmde line en char **tab en ne prenant QUE ses words*/
-//char	**ft_lst_to_char(t_token *lst)
-//{
-//	char	**argv;
-//	int		i;
-//	int		nbword;
-//
-//	i = 0;
-//	nbword = ft_count_tokens_type(lst, word);
-//	argv = malloc(sizeof(char *) * (nbword + 1));
-//	if (!argv)
-//		return (perror("malloc failed in ft_token_to_argv"), NULL);
-//	while (lst && lst->type != spipe)
-//	{
-//		if (lst->type == word)
-//		{
-//			argv[i] = lst->str;
-//			i++;
-//			lst = lst->next;
-//		}
-//		else if (lst->type >= op)
-//			lst = lst->next->next;
-//	}
-//	return (argv);
-//}
+/* retourne le nombre de oken ayant pour type 'type' */
+int	ft_count_tokens_type(t_token *lst, t_token_type type)
+{
+	int	nbelem;
+
+	nbelem = 0;
+	while (lst)
+	{
+		if (lst->type == type)
+			nbelem++;
+		else if (type == word && lst->type >= op && lst->next)
+			lst = lst->next;
+		lst = lst->next;
+	}
+	return (nbelem);
+}
+
+/* Transforme la liste cmde line en char **tab en ne prenant QUE ses words*/
+char	**ft_lst_to_char(t_token *lst)
+{
+	char	**argv;
+	int		i;
+	int		nbword;
+
+
+	i = 0;
+	nbword = ft_count_tokens_type(lst, word);
+	argv = malloc(sizeof(char *) * (nbword + 1));
+	if (!argv)
+		return (perror("malloc failed in ft_token_to_argv"), NULL);
+	while (lst && lst->type != spipe)
+	{
+		if (lst->type == word)
+		{
+			argv[i] = lst->str;
+			i++;
+			lst = lst->next;
+		}
+		else if (lst->type >= op)
+			lst = lst->next->next;
+	}
+	return (argv);
+}
 
 /* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
 token_lst jusqu'a l'operator control '|' COMPRIS (permet de realiser le pipe
 avant de lancer l'exec de la commande). La token_lst doit etre propre*/
-int	ft_get_cmdeline(t_token **token_lst, t_token **cmde_line)
+t_token	*ft_split_tokens(t_token **token_lst)
 {
-	t_token	*token_toadd;
+	t_token	*cmde_line;
 	int		reach_pipe;
 	t_token	*tmp;
 
 	reach_pipe = 0;
+	cmde_line = *token_lst;
 	while (token_lst && *token_lst && !reach_pipe)
 	{
-		token_toadd = ft_tokenlst_new((*token_lst)->str, (*token_lst)->type);
-		if (!token_toadd)
-			return (perror("malloc failed getcmdeline"), ft_tokenlst_free(cmde_line), FAILURE);
-		ft_tokenlst_addback(cmde_line, token_toadd);
 		if ((*token_lst)->type == spipe)
+		{
 			reach_pipe = 1;
-		tmp = *token_lst;
-		*token_lst = (*token_lst)->next;
-		free(tmp);
+			tmp = *token_lst;
+			*token_lst = (*token_lst)->next;
+			tmp->next = NULL;
+		}
+		else
+			*token_lst = (*token_lst)->next;
 	}
-	return (SUCCESS);
+	return (cmde_line);
 }
 
 int	ft_get_cmdelinelst(t_list **lst, t_token **token_lst)
@@ -92,15 +96,35 @@ int	ft_get_cmdelinelst(t_list **lst, t_token **token_lst)
 	del = &ft_tokenlst_free;
 	while (token_lst && *token_lst)
 	{
-		cmde_line = NULL;
-		if (ft_get_cmdeline(token_lst, &cmde_line) == FAILURE)
-			return (perror("malloc failed getcmdelinelst"), ft_lstclear(lst, del), FAILURE);
-		new = ft_lstnew(cmde_line);
-		if (!new)
-			return (perror("malloc failed getcmdelinelst"), ft_lstclear(lst, del), FAILURE);
-		ft_lstadd_back(lst, new);
-
+		cmde_line = ft_split_tokens(token_lst);
+		if (cmde_line)
+		{
+			new = ft_lstnew(cmde_line);
+			if (!new)
+				return (perror("malloc failed getcmdelinelst"), ft_lstclear(lst, del), FAILURE);
+			ft_lstadd_back(lst, new);
+		}
 	}
+	return (SUCCESS);
+}
+
+int	ft_exec(t_token *cmde_line)
+{
+	t_cmde	cmde;
+
+// ATTENTION CEST LA QUON DOIT FAIRE LEXPANSION DES WORDS DE LA CMDE !!!!///
+	cmde.argv = ft_lst_to_char(cmde_line);
+	if (cmde.argv == NULL)
+		printf("no name results so FORK to redirs\n");
+	else if (ft_isbin(cmde.argv[0]))
+	{
+		if (ft_tokenlst_last(cmde_line)->type == spipe)
+			printf("Fork puis exec bin\n");	
+		else
+			printf("Exec bin dans env courant\n");	
+	}
+	else
+		printf("fork la commande et execve\n");
 	return (SUCCESS);
 }
 
@@ -137,12 +161,20 @@ int	main(int ac, char **av)
 		return (1);	
 	}
 
-	for (t_list *pouet = lst; pouet; pouet = pouet->next)
+	while (lst)
 	{
-		printf("___CMDE LINE___\n");
-		for (t_token *line = (t_token *)(pouet->content); line; line = line->next)
-			printf("%s; type=%d\n", line->str, line->type);
+		t_token	*cmde;
+
+		cmde = (t_token *)lst->content;
+		ft_exec(cmde);
+		lst = lst->next;
 	}
+//	for (t_list *pouet = lst; pouet; pouet = pouet->next)
+//	{
+//		printf("___CMDE LINE___\n");
+//		for (t_token *line = (t_token *)(pouet->content); line; line = line->next)
+//			printf("%s; type=%d\n", line->str, line->type);
+//	}
 
 	return (0);
 }
