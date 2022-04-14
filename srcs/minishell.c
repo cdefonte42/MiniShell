@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 13:12:28 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/14 21:43:05 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,43 +22,13 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
+	//	rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		g_status = 130;
 	}
 	if (signalid == SIGQUIT || signalid == SIGTSTP)
 		write(1, "\b\b  \b\b", 6);
-}
-
-void	builtin_exec(t_minishell *msh)
-{
-	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
-	{
-		if (msh->raw_cmd[1] != NULL)
-		{
-			if (msh->raw_cmd[2])
-				ft_putendl_fd("bash: too many arguments", 2);
-			if (ft_stris(msh->raw_cmd[0], ft_isdigit))
-				g_status = ft_atoi(msh->raw_cmd[1]);
-			else
-				ft_putendl_fd("bash: numeric argument required", 2);
-				
-		}
-		ft_putendl_fd("exit", 1);
-		msh->loop = 0;
-		// fexit(msh);
-	}
-	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
-		msh->status = minishell_echo(msh, msh->raw_cmd);
-	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
-		msh->status = ft_cd(&msh->vars, msh->raw_cmd);
-	if ((ft_strcmp(msh->raw_cmd[0], "pwd") == 0))
-		msh->status = ft_pwd();
-	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
-		ft_export(&msh->vars, msh->raw_cmd);
-	if ((ft_strcmp(msh->raw_cmd[0], "unset") == 0))
-		ft_unset(&msh->vars, msh->raw_cmd);
 }
 
 int	ft_init_envlst(t_minishell *msh, char **envp)
@@ -86,104 +56,6 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 	return (SUCCESS);
 }
 
-int	minishell_join_quote(t_minishell *msh)
-{
-	char				*tmp;
-	int					in_quote;
-	int					i;
-	int					j;
-	enum e_quote_type	quote_type;
-
-	in_quote = false;
-	quote_type = -1;
-	i = 0;
-	while (msh->raw_cmd[i])
-	{
-		j = 0;
-		while (msh->raw_cmd[i][j])
-		{
-			if (msh->raw_cmd[i][j] == '"')
-			{
-				in_quote = !in_quote;
-				quote_type = doubleq;
-			}
-			else if (msh->raw_cmd[i][j] == '\'')
-			{
-				in_quote = !in_quote;
-				quote_type = singleq;
-			}
-			j++;
-		}
-		j = 0;
-		while (in_quote == true && msh->raw_cmd[i + (++j)])
-		{
-			tmp = msh->raw_cmd[i];
-			msh->raw_cmd[i] = ft_strsjoin(msh->raw_cmd[i], " ", msh->raw_cmd[i + j]);
-			free(tmp);
-			free(msh->raw_cmd[i + j]);
-			j++;
-		}
-		i++;
-	}
-	// printf("JOIN QUOTE\n");
-	return (SUCCESS);
-}
-
-void	debug_print_msh_cmdes(t_minishell *msh)
-{
-	int		i;
-
-	i = 0;
-	while (msh && msh->raw_cmd && msh->raw_cmd[i])
-	{
-		printf("[%d]%s\n", i, msh->raw_cmd[i]);
-		i++;
-	}
-}
-
-int	minishell_parse_line(t_minishell *msh, char *s)
-{
-	char	*line;
-	int		i;
-	int		j;
-	int		len;
-	char	*tmp;
-
-	line = ft_strtrim(s, " \f\t\r\v");
-	msh->raw_cmd = ft_split(line, ' ');
-	// printf("___AVANT join quote\n");
-	// debug_print_msh_cmdes(msh);
-	minishell_join_quote(msh);
-	i = 0;
-	while (msh->raw_cmd[i])
-	{
-		j = 0;
-		while (msh->raw_cmd[i][j])
-		{
-			if (msh->raw_cmd[i][j] == '$')
-			{
-				len = 1;
-				while (ft_cisname(msh->raw_cmd[i][j + len]))
-					len++;
-				tmp = ft_substr(msh->raw_cmd[i], j + 1, len);
-				ft_strncmp(tmp, "?", len);
-			}
-			j++;
-		}
-		i++;
-	}
-	if (!msh->raw_cmd)
-		return (FAILURE);
-	// printf("___APRES join quote\n");
-	// debug_print_msh_cmdes(msh);
-	builtin_exec(msh);
-	if (line && *line)
-		add_history (line);
-	minishell_free_rawcmd(msh);
-	free(line);
-	return (SUCCESS);
-}
-
 int	minishell_loop(t_minishell *msh)
 {
 	char	*line;
@@ -198,8 +70,7 @@ int	minishell_loop(t_minishell *msh)
 		}
 		else
 		{
-			//ft_get_tokens(&msh->token, line);
-			minishell_parse_line(msh, line);
+			ft_parse_line(msh, line);
 		}
 		free(line);
 	}
@@ -207,35 +78,20 @@ int	minishell_loop(t_minishell *msh)
 	return (SUCCESS);
 }
 
-void	ft_print_envp(char **envp)
-{
-	int		i;
-	
-	i = 0;
-	while (envp && envp[i])
-	{
-		printf("off: %s\n", envp[i]);
-		i++;
-	}	
-}
-
-int	main(int ac, char *av[], char *envp[])
-{
-	(void)		ac;
-	(void)		av;
-	g_status = 0;
-	t_minishell	msh;
-	msh = (t_minishell){.loop = 42};
-	if (ft_init_envlst(&msh, envp) == FAILURE)
-		return (1);
-	signal(SIGINT, &signal_handler);
-	signal(SIGQUIT, &signal_handler);
-	signal(SIGTSTP, &signal_handler);
-	// printf("%p\n", &ac + 2);
-	// printf("%p\n", __builtin_frame_address(0));
-	printf("Welcome to my minishell.\n");
-	minishell_loop(&msh);
-	printf("Bye.\n");
-	minishell_free_env(&msh);
-	return (g_status);
-}
+//int	main(int ac, char *av[], char *envp[])
+//{
+//	(void)		ac;
+//	(void)		av;
+//	g_status = 0;
+//	t_minishell	msh;
+//	msh = (t_minishell){.loop = 42};
+//	if (ft_init_envlst(&msh, envp) == FAILURE)
+//		return (1);
+//	signal(SIGINT, &signal_handler);
+//	signal(SIGQUIT, &signal_handler);
+//	signal(SIGTSTP, &signal_handler);
+//	printf("Welcome to my minishell.\n");
+//	minishell_loop(&msh);
+//	printf("Bye.\n");
+//	return (g_status);
+//}

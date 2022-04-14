@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/13 15:11:10 by mbraets          ###   ########.fr        #
+#    Updated: 2022/04/14 21:38:40 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,11 +24,8 @@ LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/minishell.c \
 srcs/utils.c \
-srcs/free.c \
+srcs/parser.c \
 srcs/builtin/echo.c \
-srcs/builtin/cdbin.c \
-srcs/builtin/cd_cdpath.c \
-srcs/builtin/pwd.c \
 srcs/export/export.c \
 srcs/export/export_utils.c \
 srcs/unset/unset.c

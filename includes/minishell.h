@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 12:45:02 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/14 21:52:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,7 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-//typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
-
-typedef struct s_cmde {
-	char			*name;
-	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				fdin;
-	int				fdout;
-	struct s_cmde	*next;
-}	t_cmde;
 
 typedef struct s_var {
 	char			*key;
@@ -74,43 +65,25 @@ typedef struct s_var {
 }	t_var;
 
 typedef struct s_minishell {
-	char			**path;
-	char			***env;
-	char			**raw_cmd;
-	t_cmde			*cmde_lst;
 	t_var			*vars;
-	t_list			*token;
 	unsigned int	status;
 	bool			loop;
 }	t_minishell;
 
-// Free
-void	minishell_free_env(t_minishell *msh);
-void	minishell_free_rawcmd(t_minishell *msh);
 
-
-/* A FAIRE pour etre propre : un .h avec que les fcts utilities sur les structures
-t_var, et comme ca les bin include ce point h et ici on met que les proto des fcts
-principales des bins */
-int		minishell_echo(t_minishell *msh, char **av);
-int		ft_cd(t_var **var_lst, char **directory);
-int		ft_pwd(void); //devrait avoir meme proto que tous les bin
-int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
-int		ft_ismetachar(char c);
-int		ft_isoperator(char c);
-int		ft_isname(char *str);
-int		ft_cisname(char c);
-int		ft_islast_chstr_ch(char *str, char c);
 
 /*________ MSH __________*/
 int	ft_init_envlst(t_minishell *msh, char **envp);
 
 /*________ UTILS __________*/
 int		ft_isname(char *str);
+int		ft_cisname(char c);
 int		ft_isset(char c, char *set);
 int		ft_isblank(char c);
 void	ft_free_tabtab(char **tab);
-char* toBinary(int n, int len);
+
+/*_______ PARSER ________*/
+int		ft_parse_line(t_minishell *msh, char *line);
 
 
 #endif

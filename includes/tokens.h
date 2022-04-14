@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 19:38:52 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/14 21:51:58 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_token {
 	char			*str;
 	t_token_type	type;
 	struct s_token	*next;
-}	t_token;
+}	t_token, t_cmde_words, t_redir_lst;
 
 /*__________ T_TOKEN LISTES FCTS___________*/
 t_token	*ft_tokenlst_new(char *str, int type);

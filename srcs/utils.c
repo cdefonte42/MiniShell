@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/13 12:45:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/14 21:23:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,25 +79,3 @@ int	ft_isset(char c, char *set)
 	}
 	return (0);
 }
-
-char* toBinary(int n, int len)
-{
-    char* binary = (char*)malloc(sizeof(char) * len);
-    int k = 0;
-    for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2) {
-        binary[k++] = (n & i) ? '1' : '0';
-    }
-    binary[k] = '\0';
-    return binary;
-}
-//
-//int	main(void)
-//{
-//    int n = '|' & '|';
-//    int len = 32;
-//
-//    char* binary = toBinary(n, len);
-//    printf("The binary representation of %d is %s\n", n, binary);
-//    free(binary);
-//	return (0);
-//}
