@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 18:45:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 12:33:42 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_token	*ft_create_token(char *line, int start, int len, int type)
 	new_token->str = ft_substr(line, start, len);
 	if (!new_token->str)
 	{
-		ft_tokenlst_free(&new_token);
+		ft_tokenlst_free(new_token);
 		return (perror("token_delimiter malloc failed"), NULL);
 	}
 	return (new_token);
@@ -93,7 +93,7 @@ int	ft_tokener(t_token **token_lst, char *line)
 			new_token = ft_create_token(line, start, len, curr_type);
 			if (!new_token)
 			{
-				ft_tokenlst_free(token_lst);
+				ft_tokenlst_free(*token_lst);
 				return (perror("token_delimiter malloc failed"), FAILURE);
 			}
 			ft_tokenlst_addback(token_lst, new_token);

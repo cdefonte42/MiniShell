@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 12:24:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 12:36:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,14 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 		{
 			new_cmde = ft_cmdelst_new(cmde_line);
 			if (!new_cmde)
-				return (FAILURE);
+				return (ft_cmdelst_free(*alst), ft_tokenlst_free(cmde_line), FAILURE);
 			ft_cmdelst_addback(alst, new_cmde);
 		}
 	}
 	return (SUCCESS);
 }
+
+void	ft_print_cmdelst(t_cmde *cmde_lst);
 
 int	main(int ac, char **av)
 {
@@ -122,24 +124,36 @@ int	main(int ac, char **av)
 
 	if (ft_tokener(&token_lst, av[1]) == FAILURE)
 		return (1);
-	if (!token_lst)	
-		return (printf("Raw token list empty\n"), 0); //en gros line vide rien a faire
+	else if (!token_lst)	
+		return (printf("Raw token list empty\n"), 0);
 	if (ft_check_tokens(token_lst) == FAILURE)
-		return (ft_tokenlst_free(&token_lst), 1);
+		return (ft_tokenlst_free(token_lst), 1);
 
-//	printf("___RAW TOKENs LISTE__\n");
-//	for (t_token *head = token_lst; head != NULL; head = head->next)
-//		printf("%s; type=%d\n", head->str, head->type);
 
 	if (ft_fill_cmdelst(&cmde_lst, token_lst) == FAILURE)
-		return (ft_tokenlst_free(&token_lst), 1);
+		return (ft_tokenlst_free(token_lst), 1);
 
+	ft_print_cmdelst(cmde_lst);
+
+	ft_cmdelst_free(cmde_lst);
+	return (0);
+}
+
+/*__________ DEBUG FCTS ________*/
+
+void	ft_print_rawtokenlst(t_token *token_lst)
+{
+	printf("___RAW TOKENs LISTE__\n");
+	for (t_token *head = token_lst; head != NULL; head = head->next)
+		printf("%s; type=%d\n", head->str, head->type);
+}
+
+void	ft_print_cmdelst(t_cmde *cmde_lst)
+{
 	for (t_cmde *head = cmde_lst; head; head = head->next)
 	{
 		printf("___CMDE LINE ____\n");
 		for (t_token *tokens = head->cmde_line; tokens; tokens = tokens->next)
 			printf("%s\n", tokens->str);
 	}
-
-	return (0);
 }
