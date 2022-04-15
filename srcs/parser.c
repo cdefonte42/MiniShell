@@ -6,11 +6,12 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 11:33:39 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 12:24:05 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
+#include "cmdes.h"
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
@@ -64,7 +65,7 @@ char	**ft_lst_to_char(t_token *lst)
 /* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
 token_lst jusqu'a l'operator control '|' COMPRIS (permet de realiser le pipe
 avant de lancer l'exec de la commande). La token_lst doit etre propre*/
-t_token	*ft_split_tokens(t_token **token_lst)
+t_token	*ft_extract_cmdeline(t_token **token_lst)
 {
 	t_token	*cmde_line;
 	int		reach_pipe;
@@ -77,7 +78,6 @@ t_token	*ft_split_tokens(t_token **token_lst)
 		if ((*token_lst)->type == spipe)
 		{
 			reach_pipe = 1;
-		// FAIRE PIPE ICI ////
 			tmp = *token_lst;
 			*token_lst = (*token_lst)->next;
 			tmp->next = NULL;
@@ -88,26 +88,21 @@ t_token	*ft_split_tokens(t_token **token_lst)
 	return (cmde_line);
 }
 
-int	ft_fill_cmdelst(t_list **alst, t_token *token_lst)
+int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 {
 	t_cmde	*new_cmde;
-	t_list	*new_elem;
+	t_token	*cmde_line;
 	
-	new_cmde = malloc(sizeof(t_cmde));
-	if (!new_cmde)
-		return (FAILURE);
 	while (token_lst)
 	{
-		new_cmde->cmde_line = ft_split_tokens(&token_lst);
-		if (new_cmde->cmde_line != NULL)
+		cmde_line = ft_extract_cmdeline(&token_lst);
+		if (cmde_line)
 		{
-			new_elem = ft_lstnew(new_cmde);
-			if (!new_elem)
+			new_cmde = ft_cmdelst_new(cmde_line);
+			if (!new_cmde)
 				return (FAILURE);
-			ft_lstadd_back(alst, new_elem);
+			ft_cmdelst_addback(alst, new_cmde);
 		}
-		else
-			free(new_cmde);
 	}
 	return (SUCCESS);
 }
@@ -115,7 +110,7 @@ int	ft_fill_cmdelst(t_list **alst, t_token *token_lst)
 int	main(int ac, char **av)
 {
 	t_token	*token_lst;
-	t_list	*cmde_lst;
+	t_cmde	*cmde_lst;
 
 	(void)ac;
 	(void)av;
@@ -139,12 +134,12 @@ int	main(int ac, char **av)
 	if (ft_fill_cmdelst(&cmde_lst, token_lst) == FAILURE)
 		return (ft_tokenlst_free(&token_lst), 1);
 
-	for (t_list *headlst = cmde_lst; headlst; headlst = headlst->next)
+	for (t_cmde *head = cmde_lst; head; head = head->next)
 	{
-		for (t_cmde *cmde = (t_cmde *)headlst->content; cmde; cmde = cmde->next)
-				printf("%s\n", cmde->cmde_line->str);
+		printf("___CMDE LINE ____\n");
+		for (t_token *tokens = head->cmde_line; tokens; tokens = tokens->next)
+			printf("%s\n", tokens->str);
 	}
-
 
 	return (0);
 }

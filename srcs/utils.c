@@ -6,11 +6,13 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/13 12:48:06 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 12:01:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokens.h"
+#include "cmdes.h"
 
 /* In the shell command language, a word consisting solely of underscores, 
 digits, and alphabetics from the portable character set. 

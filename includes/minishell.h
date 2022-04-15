@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/15 11:35:10 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 12:17:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <stdbool.h>
 
 # include "tokens.h"
+# include "cmdes.h"
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -57,14 +59,6 @@ tgetnum, tgetstr, tgoto, tputs
 
 //typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
-
-typedef struct s_cmde {
-	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				pipe[2];
-	struct s_cmde	*next;
-	struct s_cmde	*prev;
-}	t_cmde;
 
 typedef struct s_var {
 	char			*key;
