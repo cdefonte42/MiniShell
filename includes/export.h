@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:17:05 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 16:59:25 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:31:31 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_var	*var_getfromkey(t_var *var_list, char *key);
 t_var	*ft_get_minkey(t_var *var_lst);
 t_var	*ft_get_minkey_prev(t_var *var_lst, t_var *prev);
 void	ft_lst_clear(t_var *lst);
-int		ft_count_vars(t_var *var_lst);
+int		ft_varlst_size(t_var *var_lst);
 
 int		ft_export(t_var **var_lst, char **argv);
 void	ft_lst_clear(t_var *lst);

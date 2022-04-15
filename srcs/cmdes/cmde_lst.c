@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 12:20:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:15:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 		return (NULL);
 	new_cmde->cmde_line = cmde_line;
 	new_cmde->argv = NULL;
-	new_cmde->pipe[0] = -1;
-	new_cmde->pipe[1] = -1;
+	new_cmde->pipefd[in] = stdin;
+	new_cmde->pipefd[out] = stdout;
+	new_cmde->pid = 0;
 	new_cmde->prev = NULL;	
 	new_cmde->next = NULL;	
 	return (new_cmde);

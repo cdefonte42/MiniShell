@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 16:53:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:31:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "export.h"
 
 /* Retourne le nombre d'elements dans la liste 'var_lst' */
-int	ft_count_vars(t_var *var_lst)
+int	ft_varlst_size(t_var *var_lst)
 {
 	t_var	*head;
 	int		i;

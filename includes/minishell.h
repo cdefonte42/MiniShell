@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/15 12:17:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 13:07:40 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ typedef struct s_minishell {
 	char			**raw_cmd;
 	t_cmde			*cmde_lst;
 	t_var			*vars;
-	t_list			*token;
 	unsigned int	status;
 	bool			loop;
 }	t_minishell;

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 12:23:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:02:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,15 @@
 # define SUCCESS 1
 
 # include "tokens.h"
+# include "unistd.h"
+
+enum e_fd_type(in = 0, out = 1);
 
 typedef struct s_cmde {
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
 	char			**argv; // [0]=cmde name, reste = options et arguments
-	int				pipe[2];
+	int				pipefd[2]; //0=read(in) 1=write(out)
+	pid_t			pid;
 	struct s_cmde	*prev;
 	struct s_cmde	*next;
 }	t_cmde;
