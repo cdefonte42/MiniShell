@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/14 12:15:06 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 11:35:10 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef enum e_var_type {envvar, shellvar} t_var_type;
 
 typedef struct s_cmde {
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	char			*name;
 	char			**argv; // [0]=cmde name, reste = options et arguments
 	int				pipe[2];
 	struct s_cmde	*next;
