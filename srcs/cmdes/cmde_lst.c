@@ -6,12 +6,13 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:15:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:40:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmdes.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 static void	ft_free_tabtab(char **tab)
 {
@@ -36,8 +37,8 @@ t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 		return (NULL);
 	new_cmde->cmde_line = cmde_line;
 	new_cmde->argv = NULL;
-	new_cmde->pipefd[in] = stdin;
-	new_cmde->pipefd[out] = stdout;
+	new_cmde->pipefd[in] = 0;
+	new_cmde->pipefd[out] = 1;
 	new_cmde->pid = 0;
 	new_cmde->prev = NULL;	
 	new_cmde->next = NULL;	

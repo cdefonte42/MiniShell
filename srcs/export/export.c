@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 16:54:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:41:35 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	ft_put_export(t_var *var_lst)
 	t_var	*curr_kmin;
 	int		end;
 
-	end = ft_count_vars(var_lst);
+	end = ft_varlst_size(var_lst);
 	if (!var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:02:23 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:39:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "tokens.h"
 # include "unistd.h"
 
-enum e_fd_type(in = 0, out = 1);
+enum e_fd_type {in = 0, out = 1};
 
 typedef struct s_cmde {
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus

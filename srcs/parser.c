@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:38:06 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/15 14:39:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ int	ft_exec(t_var **vars, t_cmde **cmde_lst)
 	if (cmde->next || !ft_isbin(cmde->cmde_line->str))
 		cmde->pid = fork();
 	if (cmde->pid == -1)
-		return (peror("fork failed ft_exec"), FAILURE);
+		return (perror("fork failed ft_exec"), FAILURE);
 	if (cmde->pid == 0)
 	{
 		if (ft_isbin(cmde->cmde_line->str))
