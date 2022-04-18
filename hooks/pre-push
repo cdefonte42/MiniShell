@@ -1,27 +1,16 @@
 #!/bin/bash
-# ########################################################################## #
-#                                                                            #
-#                                                        :::      ::::::::   #
-#   pre-push                                           :+:      :+:    :+:   #
-#                                                    +:+ +:+         +:+     #
-#   By: GlaceCoding <github.com/GlaceCoding>       +#+  +:+       +#+        #
-#                                                +#+#+#+#+#+   +#+           #
-#   Created: 2021/10/10 15:42:36 by GlaceCoding       #+#    #+#             #
-#   Updated: 2021/10/10 16:04:56 by GlaceCoding      ###   ########.fr       #
-#                                                                            #
-# ########################################################################## #
 
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
-if [ $current_branch == 'master' ]; then
-	echo "Impossible de push en master branch !"
+if [ $current_branch == 'main' ]; then
+	echo "Impossible de push en main branch !"
 	exit 1
 fi
 
-if [ $current_branch != 'main' ]; then
+if [ $current_branch != 'master' ]; then
  	exit 0
 fi
 
-echo -e "N'oublie pas de déployer le rendu sur la vogsphere !\nAvec : sh hooks/deploy\n\nPushing……\n"
+echo -e "N'oublie pas de déployer le rendu sur la vogsphere !\nAvec : bash hooks/deploy\n\nPushing...\n"
 
 exit 0
