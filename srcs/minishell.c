@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 13:12:28 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/18 09:20:22 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,9 @@ int	main(int ac, char *av[], char *envp[])
 	(void)		av;
 	g_status = 0;
 	t_minishell	msh;
-	msh = (t_minishell){.loop = 42};
+	// msh = (t_minishell){.loop = 42};
+	ft_memset(&msh, 0, sizeof(t_minishell));
+	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
