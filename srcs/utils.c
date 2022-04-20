@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 12:01:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:07:15 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,17 @@ int	ft_isname(char *str)
 	return (1);
 }
 
+int	ft_cisname(char c)
+{
+	if (!c)
+		return (0);
+	if (c >= '0' && c <= '9')
+		return (0);
+	if (!ft_isalnum(c) && c != '_')
+		return (0);
+	return (1);
+}
+
 void	ft_free_tabtab(char **tab)
 {
 	int		i;
@@ -43,7 +54,7 @@ void	ft_free_tabtab(char **tab)
 	while (tab && tab[i])
 	{
 		free(tab[i]);
-		i++;	
+		i++;
 	}
 	free(tab);
 }

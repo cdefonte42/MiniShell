@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:26:30 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/12 10:54:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:07:08 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,17 @@ void	builtin_exec(t_minishell *msh)
 	if ((ft_strcmp(msh->raw_cmd[0], "exit") == 0))
 	{
 		if (msh->raw_cmd[1] != NULL)
-			g_status = ft_atoi(msh->raw_cmd[1]);
-		msh->loop = 0;
+		{
+			if (msh->raw_cmd[2])
+				ft_putendl_fd("bash: too many arguments", 2);
+			if (ft_stris(msh->raw_cmd[0], ft_isdigit))
+				g_status = ft_atoi(msh->raw_cmd[1]);
+			else
+				ft_putendl_fd("bash: numeric argument required", 2);
+				
+		}
 		ft_putendl_fd("exit", 1);
+		msh->loop = 0;
 		// fexit(msh);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
@@ -136,12 +144,34 @@ void	debug_print_msh_cmdes(t_minishell *msh)
 int	minishell_parse_line(t_minishell *msh, char *s)
 {
 	char	*line;
+	int		i;
+	int		j;
+	int		len;
+	char	*tmp;
 
 	line = ft_strtrim(s, " \f\t\r\v");
 	msh->raw_cmd = ft_split(line, ' ');
 	// printf("___AVANT join quote\n");
 	// debug_print_msh_cmdes(msh);
 	minishell_join_quote(msh);
+	i = 0;
+	while (msh->raw_cmd[i])
+	{
+		j = 0;
+		while (msh->raw_cmd[i][j])
+		{
+			if (msh->raw_cmd[i][j] == '$')
+			{
+				len = 1;
+				while (ft_cisname(msh->raw_cmd[i][j + len]))
+					len++;
+				tmp = ft_substr(msh->raw_cmd[i], j + 1, len);
+				ft_strncmp(tmp, "?", len);
+			}
+			j++;
+		}
+		i++;
+	}
 	if (!msh->raw_cmd)
 		return (FAILURE);
 	// printf("___APRES join quote\n");
@@ -196,7 +226,9 @@ int	main(int ac, char *av[], char *envp[])
 	(void)		av;
 	g_status = 0;
 	t_minishell	msh;
-	msh = (t_minishell){.loop = 42};
+	// msh = (t_minishell){.loop = 42};
+	ft_memset(&msh, 0, sizeof(t_minishell));
+	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	signal(SIGINT, &signal_handler);
