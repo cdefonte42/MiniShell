@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:39:49 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/20 18:16:34 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,65 @@ int	ft_exec(t_var **vars, t_cmde **cmde_lst)
 	return (SUCCESS);
 }
 
+/**
+ * @brief replace every $(name rules) by is variable
+ *  
+ * @param cmde_lst 
+ * @return int 
+ */
+int	ft_expansion(t_cmde **cmde_lst)
+{
+	t_cmde	*head_cmd;
+	t_token	*head_token;
+	int		i;
+	int		len_var;
+	char	*temp;
+	char	*temp2;
+
+	head_cmd = *cmde_lst;
+	while (head_cmd)
+	{
+		if (head_cmd->cmde_line)
+		{
+			head_token = head_cmd->cmde_line;
+			while (head_token)
+			{
+				printf("[%d]: %s\n", head_token->type, head_token->str);
+				if (head_token->type == 2 && ft_strchr(head_token->str, '$'))
+				{
+					i = 0;
+					while (head_token->str[i])
+					{
+						if (head_token->str[i] == '$')
+						{
+							len_var = 1;
+							while (ft_cisname(head_token->str[i + len_var]))
+								len_var++;
+							if (len_var == 1 && ++i)
+								continue ;
+							temp = ft_substr(head_token->str, i, len_var);
+							if (!temp)
+								return (FAILURE);
+							char *TEST = "TEST";
+							temp2 = ft_replacestr(head_token->str, temp, TEST);
+							if (!temp2)
+								return (free(temp), FAILURE);
+							free(head_token->str);
+							head_token->str = temp2;
+							printf("pff %d %d %s %s\n", i, len_var, temp, head_token->str);
+						}
+						i++;
+					}
+				}
+				head_token = head_token->next;
+			}
+		}
+		head_cmd = head_cmd->next;
+	}
+	// ft_replacestr();
+	return (SUCCESS);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_token	*token_lst;
@@ -253,15 +312,15 @@ int	main(int ac, char **av, char **envp)
 
 	if (ft_tokener(&token_lst, av[1]) == FAILURE)
 		return (1);
-	else if (!token_lst)	
+	else if (!token_lst)
 		return (printf("Raw token list empty\n"), 0);
 	if (ft_check_tokens(token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), 1);
-
-
+		
 	if (ft_fill_cmdelst(&cmde_lst, token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), 1);
-	msh.cmde_lst = cmde_lst;
+	// msh.cmde_lst = cmde_lst;
+	ft_expansion(&cmde_lst);
 	ft_exec(&(msh.vars), &cmde_lst);
 	ft_print_cmdelst(cmde_lst);
 
