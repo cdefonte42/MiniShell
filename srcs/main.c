@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 19:35:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:32:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,12 @@ char	**ft_lst_to_char(t_token *lst)
 	int		i;
 	int		nbword;
 
-
 	i = 0;
 	nbword = ft_count_tokens_type(lst, word);
 	argv = malloc(sizeof(char *) * (nbword + 1));
 	if (!argv)
 		return (perror("malloc failed in ft_token_to_argv"), NULL);
-	while (lst && lst->type != spipe)
+	while (lst && lst->str && lst->type != spipe)
 	{
 		if (lst->type == word)
 		{
@@ -72,9 +71,10 @@ char	**ft_lst_to_char(t_token *lst)
 			i++;
 			lst = lst->next;
 		}
-		else if (lst->type >= op)
+		else if (lst->type >= op && lst->next)
 			lst = lst->next->next;
 	}
+	argv[i] = 0;
 	return (argv);
 }
 
@@ -85,7 +85,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 
 	printf("DANS EXEC BIN\n");
 	ret_stat = 0;
-	raw_cmde = NULL;
+	if (!cmde || !cmde->cmde_line)
+		return (ret_stat);
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
@@ -100,6 +101,7 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	else if ((ft_strcmp(raw_cmde[0], "echo") == 0))
 		ret_stat = minishell_echo(msh, raw_cmde);
 	free(raw_cmde);
+	raw_cmde = NULL;
 	return (ret_stat);
 }
 
@@ -134,6 +136,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	char	**envp;
 	int		ret_status;
 
+	printf("ENTRE DANS FT_FORK\n");
 	cmde->pid = fork();
 	if (cmde->pid == -1)
 		return (FAILURE);
@@ -161,7 +164,8 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 
 int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
-	if (!cmde)
+	printf("FT_EXEC\n");
+	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
 	if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
 		return (FAILURE);
@@ -171,8 +175,9 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 			return (FAILURE);
 	}
 	else
-		if (ft_exec_bin(msh, cmde) == FAILURE)
-			return (FAILURE);
+		ft_exec_bin(msh, cmde); //ATTENTION nedd return status MAIS pas utiliser FAILURE ni SUCCESS
+//		if (ft_exec_bin(msh, cmde) == FAILURE)
+//			return (FAILURE);
 	return (SUCCESS);
 }
 
@@ -254,6 +259,7 @@ void	signal_handler(int signalid)
 int	minishell_loop(t_minishell *msh)
 {
 	char	*line;
+	t_cmde	*curr_cmde;
 
 	while (msh->loop)
 	{
@@ -268,22 +274,20 @@ int	minishell_loop(t_minishell *msh)
 			if (ft_parse(msh, line) != FAILURE)
 			{
 				//ft_expansion(&(msh->cmde_lst), msh->vars);
-				while (msh->cmde_lst)
+				curr_cmde = msh->cmde_lst;
+				while (curr_cmde)
 				{
-					ft_print_cmdelst(msh->cmde_lst);
-					ft_exec(msh, msh->cmde_lst);
-					t_cmde	*tmp;
-					tmp = msh->cmde_lst;
-					msh->cmde_lst = msh->cmde_lst->next;
-					free(tmp->cmde_line->str);
-					free(tmp->cmde_line);
-					free(tmp);
+					ft_print_cmdelst(curr_cmde);
+					ft_exec(msh, curr_cmde);
+					curr_cmde = curr_cmde->next;
+					printf("THE END\n");
 				}
-				//ft_cmdelst_clear(msh->cmde_lst);
+				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
 		}
 		free(line);
+		line = NULL;
 	}
 	clear_history();
 	return (SUCCESS);
