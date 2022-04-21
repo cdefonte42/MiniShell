@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 20:32:48 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:48:59 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	char	**raw_cmde;
 	int		ret_stat;
 
-	printf("DANS EXEC BIN\n");
 	ret_stat = 0;
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
@@ -136,7 +135,6 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	char	**envp;
 	int		ret_status;
 
-	printf("ENTRE DANS FT_FORK\n");
 	cmde->pid = fork();
 	if (cmde->pid == -1)
 		return (FAILURE);
@@ -164,7 +162,6 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 
 int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
-	printf("FT_EXEC\n");
 	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
 	if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
@@ -187,6 +184,8 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
  * @param cmde_lst 
  * @return int 
  */
+/* ATTENTION l'expansion se fait commande par commande, donc ici PAS BIEN 
+puisque expansion se fait sur toute la comde_lst */
 int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 {
 	t_cmde	*head_cmd;
@@ -273,14 +272,13 @@ int	minishell_loop(t_minishell *msh)
 		{
 			if (ft_parse(msh, line) != FAILURE)
 			{
-				//ft_expansion(&(msh->cmde_lst), msh->vars);
+				ft_expansion(&(msh->cmde_lst), msh->vars);
 				curr_cmde = msh->cmde_lst;
 				while (curr_cmde)
 				{
-					ft_print_cmdelst(curr_cmde);
+					//ft_print_cmdelst(curr_cmde);
 					ft_exec(msh, curr_cmde);
 					curr_cmde = curr_cmde->next;
-					printf("THE END\n");
 				}
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
