@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 18:00:29 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:35:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
+
+int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
+{
+	int	pipefd[2];
+
+	if (!c1 || !c2)
+		return (SUCCESS);
+	if (pipe(pipefd) == -1)
+		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);	
+	c1->pipefd[out] = pipefd[out];
+	c2->pipefd[in] = pipefd[in];
+	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
+		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
+	return (SUCCESS);
+}
 
 /* retourne le nombre de oken ayant pour type 'type' */
 int	ft_count_tokens_type(t_token *lst, t_token_type type)
@@ -34,6 +49,7 @@ int	ft_count_tokens_type(t_token *lst, t_token_type type)
 	}
 	return (nbelem);
 }
+
 
 /* Transforme la liste cmde line en char **tab en ne prenant QUE ses words*/
 char	**ft_lst_to_char(t_token *lst)
@@ -60,66 +76,6 @@ char	**ft_lst_to_char(t_token *lst)
 			lst = lst->next->next;
 	}
 	return (argv);
-}
-
-/* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
-token_lst jusqu'a l'operator control '|' COMPRIS (permet de realiser le pipe
-avant de lancer l'exec de la commande). La token_lst doit etre propre*/
-t_token	*ft_extract_cmdeline(t_token **token_lst)
-{
-	t_token	*cmde_line;
-	int		reach_pipe;
-	t_token	*tmp;
-
-	reach_pipe = 0;
-	cmde_line = *token_lst;
-	while (token_lst && *token_lst && !reach_pipe)
-	{
-		if ((*token_lst)->type == spipe)
-		{
-			reach_pipe = 1;
-			tmp = *token_lst;
-			*token_lst = (*token_lst)->next;
-			tmp->next = NULL;
-		}
-		else
-			*token_lst = (*token_lst)->next;
-	}
-	return (cmde_line);
-}
-
-int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
-{
-	t_cmde	*new_cmde;
-	t_token	*cmde_line;
-	
-	while (token_lst)
-	{
-		cmde_line = ft_extract_cmdeline(&token_lst);
-		if (cmde_line)
-		{
-			new_cmde = ft_cmdelst_new(cmde_line);
-			if (!new_cmde)
-				return (ft_cmdelst_clear(*alst), ft_tokenlst_free(cmde_line), FAILURE);
-			ft_cmdelst_addback(alst, new_cmde);
-		}
-	}
-	return (SUCCESS);
-}
-
-int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
-{
-	int	pipefd[2];
-
-	if (!c1 || !c2)
-		return (SUCCESS);
-	if (pipe(pipefd) == -1)
-		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);	
-	c1->pipefd[out] = pipefd[out];
-	c2->pipefd[in] = pipefd[in];
-	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
-		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
-	return (SUCCESS);
 }
 
 int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
@@ -279,58 +235,76 @@ int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 	return (SUCCESS);
 }
 
-void	ft_print_cmdelst(t_cmde *cmde_lst);
+int	g_status;
+
+void	signal_handler(int signalid)
+{
+	if (signalid == SIGINT)
+	{
+		write(1, "\n", 1);
+		//rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+		g_status = 130;
+	}
+	if (signalid == SIGQUIT || signalid == SIGTSTP)
+		write(1, "\b\b  \b\b", 6);
+}
+
+int	minishell_loop(t_minishell *msh)
+{
+	char	*line;
+
+	while (msh->loop)
+	{
+		line = readline(C_BLUE"minishell-"VERSION C_RESET"$ ");
+		if (line == NULL)
+		{
+			ft_putendl_fd("exit", 1);
+			break ;
+		}
+		else
+		{
+			if (ft_parse(msh, line) != FAILURE)
+			{
+				//ft_expansion(&(msh->cmde_lst), msh->vars);
+				while (msh->cmde_lst)
+				{
+					ft_print_cmdelst(msh->cmde_lst);
+					ft_exec(msh, msh->cmde_lst);
+					t_cmde	*tmp;
+					tmp = msh->cmde_lst;
+					msh->cmde_lst = msh->cmde_lst->next;
+					free(tmp->cmde_line->str);
+					free(tmp->cmde_line);
+					free(tmp);
+				}
+				//ft_cmdelst_clear(msh->cmde_lst);
+				msh->cmde_lst = NULL;
+			}
+		}
+		free(line);
+	}
+	clear_history();
+	return (SUCCESS);
+}
 
 int	main(int ac, char **av, char **envp)
 {
-	t_token	*token_lst;
 	t_minishell msh;
+	g_status = 0;
 
 	(void)ac;
 	(void)av;
-	token_lst = NULL;
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
-	if (!av[1])
-		return (printf("Need 1 argument str pour tester debile\n"), 1);
-
-	printf("Readline return equivqlent AV[1]=%s\n", av[1]);
-
-	if (ft_tokener(&token_lst, av[1]) == FAILURE)
-		return (1);
-	else if (!token_lst)
-		return (printf("Raw token list empty\n"), 0);
-	if (ft_check_tokens(token_lst) == FAILURE)
-		return (ft_tokenlst_free(token_lst), 1);
-		
-	if (ft_fill_cmdelst(&(msh.cmde_lst), token_lst) == FAILURE)
-		return (ft_tokenlst_free(token_lst), ft_msh_clear(&msh), 1);
-
-	ft_expansion(&(msh.cmde_lst), msh.vars);
-	for (t_cmde *head = msh.cmde_lst; head; head = head->next)
-		ft_exec(&msh, head);
-	ft_msh_clear(&msh);
-	return (0);
-}
-
-/*__________ DEBUG FCTS ________*/
-
-void	ft_print_rawtokenlst(t_token *token_lst)
-{
-	printf("___RAW TOKENs LISTE__\n");
-	for (t_token *head = token_lst; head != NULL; head = head->next)
-		printf("%s; type=%d\n", head->str, head->type);
-}
-
-void	ft_print_cmdelst(t_cmde *cmde_lst)
-{
-	for (t_cmde *head = cmde_lst; head; head = head->next)
-	{
-		printf("___CMDE LINE ____\n");
-		for (t_token *tokens = head->cmde_line; tokens; tokens = tokens->next)
-			printf("%s\n", tokens->str);
-		printf("___END CMDE LINE ____\n");
-	}
+	signal(SIGINT, &signal_handler);
+	signal(SIGQUIT, &signal_handler);
+	signal(SIGTSTP, &signal_handler);
+	printf("Welcome to my minishell.\n");
+	minishell_loop(&msh);
+	printf("Bye.\n");
+	return (g_status);
 }

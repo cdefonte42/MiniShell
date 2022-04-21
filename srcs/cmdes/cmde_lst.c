@@ -6,11 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 17:17:48 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:18:04 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmdes.h"
+#include "tokens.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -63,11 +64,12 @@ void	ft_cmdelst_clear(t_cmde *lst)
 
 	while (lst)
 	{
-		free(lst->prev);
-		free(lst->cmde_line->str);
-		free(lst->cmde_line);
+		//free(lst->prev);
+		//free(lst->cmde_line->str);
+		//free(lst->cmde_line);
 		last = lst;
 		lst = lst->next;
+		ft_tokenlst_free(last->cmde_line);
 	}
 	free(last);
 }
