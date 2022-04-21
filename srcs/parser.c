@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 15:27:45 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 17:29:08 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
-
-typedef struct s_token	t_cmde_line;
 
 /* retourne le nombre de oken ayant pour type 'type' */
 int	ft_count_tokens_type(t_token *lst, t_token_type type)
@@ -101,23 +99,11 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 		{
 			new_cmde = ft_cmdelst_new(cmde_line);
 			if (!new_cmde)
-				return (ft_cmdelst_free(*alst), ft_tokenlst_free(cmde_line), FAILURE);
+				return (ft_cmdelst_clear(*alst), ft_tokenlst_free(cmde_line), FAILURE);
 			ft_cmdelst_addback(alst, new_cmde);
 		}
 	}
 	return (SUCCESS);
-}
-
-void	ft_print_cmdelst(t_cmde *cmde_lst);
-
-void	init_env_fail(t_minishell *msh, char *splited[2])
-{
-	if (splited[0])
-		free(splited[0]);
-	if (splited[1])
-		free(splited[1]);
-	if (msh->vars)
-		ft_varlst_clear(msh->vars);
 }
 
 int	ft_init_envlst(t_minishell *msh, char **envp)
@@ -139,14 +125,14 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 			j++;
 		splited[0] = ft_strdup_until_i(envp[i], j);
 		if (!splited[0])
-			return (init_env_fail(msh, splited), perror("ft_init_envlst failed split"), FAILURE);
+			return (perror("ft_init_envlst failed"), FAILURE);
 		splited[1] = ft_strdup_until_i(envp[i] + j, ft_strlen(envp[i] + j));
 		if (!splited[1])
-			return (init_env_fail(msh, splited), perror("ft_init_envlst failed split"), FAILURE);
+			return (free(splited[0]), perror("ft_init_envlst failed"), FAILURE);
 		if (ft_strcmp(splited[0], "_") == 0)
 			type = shellvar;
 		if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
-			return (init_env_fail(msh, splited), FAILURE);
+			return (FAILURE);
 		i++;
 	}
 	return (SUCCESS);
@@ -189,7 +175,6 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	return (ret_stat);
 }
 
-
 char **ft_varlst_tochar(t_var *varlst)
 {
 	char	**env;
@@ -217,7 +202,7 @@ char **ft_varlst_tochar(t_var *varlst)
 	return (env);
 }
 
-void	ft_cmdslst_clear(t_cmde *lst)
+void	ft_cmdslst_free(t_cmde *lst)
 {
 	t_cmde	*tmp;
 
@@ -227,12 +212,6 @@ void	ft_cmdslst_clear(t_cmde *lst)
 		lst = lst->next;
 		free(tmp);
 	}
-}
-
-void	ft_mshfree(t_minishell *msh)
-{
-	ft_varlst_clear(msh->vars);
-	ft_cmdslst_clear(msh->cmde_lst);
 }
 
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
@@ -249,7 +228,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		if (ft_isbin(cmde->cmde_line->str))
 		{
 			ret_status = ft_exec_bin(msh, cmde);
-			ft_mshfree(msh);
+			ft_msh_clear(msh);
 			exit(ret_status);
 		}
 		argv = ft_lst_to_char(cmde->cmde_line);
@@ -386,7 +365,7 @@ int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 	return (SUCCESS);
 }
 
-
+void	ft_print_cmdelst(t_cmde *cmde_lst);
 
 int	main(int ac, char **av, char **envp)
 {
@@ -401,7 +380,7 @@ int	main(int ac, char **av, char **envp)
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
-		return (1);
+		return (ft_msh_clear(&msh), 1);
 	if (!av[1])
 		return (printf("Need 1 argument str pour tester debile\n"), 1);
 	printf("Readline return equivqlent AV[1]=%s\n", av[1]);
@@ -420,9 +399,7 @@ int	main(int ac, char **av, char **envp)
 	ft_print_cmdelst(cmde_lst);
 	for (t_cmde *head = cmde_lst; head; head = head->next)
 		ft_exec(&msh, head);
-	// ft_cmdelst_free(cmde_lst);
-	ft_varlst_clear(msh.vars);
-	ft_cmdslst_clear(cmde_lst);
+	ft_msh_clear(&msh);
 	return (0);
 }
 

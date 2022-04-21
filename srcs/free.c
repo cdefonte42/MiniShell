@@ -6,39 +6,12 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:16:14 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/21 13:04:49 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 17:23:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
-
-void	minishell_free_env(t_minishell *msh)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	if (msh->env)
-	{
-		while (msh->env[i] != NULL)
-		{
-			j = 0;
-			while (msh->env[i][j] != NULL)
-			{
-				free(msh->env[i][j]);
-				j++;
-			}
-			// free(msh->env[i][j]);
-			free(msh->env[i]);
-			i++;
-		}
-			free(msh->env[i]);
-		free(msh->env);
-	}
-	if (msh->vars != NULL)
-		ft_varlst_clear(msh->vars);
-}
 
 void	minishell_free_rawcmd(t_minishell *msh)
 {
@@ -54,4 +27,11 @@ void	minishell_free_rawcmd(t_minishell *msh)
 		}
 		free(msh->raw_cmd);
 	}
+}
+
+/* Free tous les elements et leur CONTENU */
+void	ft_msh_clear(t_minishell *msh)
+{
+	ft_varlst_clear(msh->vars);
+	ft_cmdelst_clear(msh->cmde_lst);
 }

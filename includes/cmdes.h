@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 13:09:40 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 17:22:41 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_cmde {
 t_cmde	*ft_cmdelst_new(t_token *cmde_line);
 void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new);
 t_cmde	*ft_cmdelst_last(t_cmde *lst);
-void	ft_cmdelst_free(t_cmde *lst);
+void	ft_cmdelst_clear(t_cmde *lst);
 int		ft_cmdelst_size(t_cmde *lst);
 
 #endif

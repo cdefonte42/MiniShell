@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 13:10:17 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 17:17:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new)
 	new->prev = last;
 }
 
-void	ft_cmdelst_free(t_cmde *lst)
+/* Free le CONTENU et les ELEMENTS de la liste de cmdes 'lst'*/ 
+void	ft_cmdelst_clear(t_cmde *lst)
 {
 	t_cmde	*last;
 
