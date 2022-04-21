@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/20 15:06:58 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 14:17:31 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ typedef struct s_var {
 }	t_var;
 
 typedef struct s_minishell {
-	char			**path;
-	char			***env;
 	char			**raw_cmd;
 	t_cmde			*cmde_lst;
 	t_var			*vars;

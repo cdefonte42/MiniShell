@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/20 15:07:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 10:50:04 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	ft_free_tabtab(char **tab)
 		free(tab[i]);
 		i++;
 	}
-	free(tab);
+	if (tab)
+		free(tab);
 }
 
 int	ft_isblank(char c)
@@ -77,7 +78,7 @@ int	ft_isset(char c, char *set)
 	{
 		if (c == set[i])
 			return (1);
-		i++;	
+		i++;
 	}
 	return (0);
 }

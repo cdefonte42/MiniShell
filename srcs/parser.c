@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/20 18:16:34 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 15:27:45 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,26 +110,43 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 
+void	init_env_fail(t_minishell *msh, char *splited[2])
+{
+	if (splited[0])
+		free(splited[0]);
+	if (splited[1])
+		free(splited[1]);
+	if (msh->vars)
+		ft_varlst_clear(msh->vars);
+}
+
 int	ft_init_envlst(t_minishell *msh, char **envp)
 {
 	int			i;
-	char		**splited;
+	char		*splited[2];
 	t_var_type	type;
+	int			j;
 
 	i = 0;
+	ft_memset(splited, 0, sizeof(char *) * 2);
 	if (!envp)
 		return (FAILURE);
 	while (envp && envp[i])
 	{
 		type = envvar;
-		splited = ft_split(envp[i], '=');
-		if (!splited)
-			return (perror("ft_init_envlst failed split"), FAILURE);
+		j = 0;
+		while (envp[i] && envp[i][j] != '=')
+			j++;
+		splited[0] = ft_strdup_until_i(envp[i], j);
+		if (!splited[0])
+			return (init_env_fail(msh, splited), perror("ft_init_envlst failed split"), FAILURE);
+		splited[1] = ft_strdup_until_i(envp[i] + j, ft_strlen(envp[i] + j));
+		if (!splited[1])
+			return (init_env_fail(msh, splited), perror("ft_init_envlst failed split"), FAILURE);
 		if (ft_strcmp(splited[0], "_") == 0)
 			type = shellvar;
 		if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
-			return (ft_free_tabtab(splited), FAILURE);
-		free(splited);
+			return (init_env_fail(msh, splited), FAILURE);
 		i++;
 	}
 	return (SUCCESS);
@@ -150,23 +167,25 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 	return (SUCCESS);
 }
 
-int	ft_exec_bin(t_var **vars, t_cmde *cmde)
+int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 {
 	char	**raw_cmde;
 	int		ret_stat;
 
 	ret_stat = 0;
+	raw_cmde = NULL;
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
 	if ((ft_strcmp(raw_cmde[0], "cd") == 0))
-		ret_stat = ft_cd(vars, raw_cmde);
+		ret_stat = ft_cd(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "pwd") == 0))
 		ret_stat = ft_pwd();
 	else if ((ft_strcmp(raw_cmde[0], "export") == 0))
-		ret_stat = ft_export(vars, raw_cmde);
+		ret_stat = ft_export(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "unset") == 0))
-		ret_stat = ft_unset(vars, raw_cmde);
+		ret_stat = ft_unset(&(msh->vars), raw_cmde);
+	free(raw_cmde);
 	return (ret_stat);
 }
 
@@ -180,59 +199,133 @@ char **ft_varlst_tochar(t_var *varlst)
 	if (!varlst)
 		return (NULL);
 	nbvar = ft_varlst_size(varlst);
+	printf("LAAAAAAAAAAAAAA nb=%d\n", nbvar);
 	env = malloc(sizeof(char *) * (nbvar + 1));
 	if (!env)
 		return (NULL);
 	i = 0;
 	while (i < nbvar)
 	{
-		env[i] = ft_strjoin(varlst->key, varlst->value);
+		env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
+		printf(":%s\n", env[i]);
 		if (!env[i])
 			return (perror("ft_varlst_tochar failed"), ft_free_tabtab(env), NULL);
 		i++;
+		varlst = varlst->next;
 	}
 	env[i] = NULL;
 	return (env);
 }
 
-int	ft_exec(t_var **vars, t_cmde **cmde_lst)
+void	ft_cmdslst_clear(t_cmde *lst)
 {
-	t_cmde	*cmde;
-	
-	cmde = *cmde_lst;
+	t_cmde	*tmp;
+
+	while (lst)
+	{
+		tmp = lst;
+		lst = lst->next;
+		free(tmp);
+	}
+}
+
+void	ft_mshfree(t_minishell *msh)
+{
+	ft_varlst_clear(msh->vars);
+	ft_cmdslst_clear(msh->cmde_lst);
+}
+
+int	ft_fork(t_minishell *msh, t_cmde *cmde)
+{
+	char	**argv;
+	char	**envp;
+	int		ret_status;
+
+	cmde->pid = fork();
+	if (cmde->pid == -1)
+		return (FAILURE);
+	if (cmde->pid == 0)
+	{
+		if (ft_isbin(cmde->cmde_line->str))
+		{
+			ret_status = ft_exec_bin(msh, cmde);
+			ft_mshfree(msh);
+			exit(ret_status);
+		}
+		argv = ft_lst_to_char(cmde->cmde_line);
+		if (!argv)
+			exit(EXIT_FAILURE);
+		envp = ft_varlst_tochar(msh->vars);
+		if (!envp)
+			exit(EXIT_FAILURE);
+		printf("333 %s %s", argv[0], envp[0]);
+		// execve();
+		free(argv);
+		ft_free_tabtab(envp);
+		exit(FAILURE);
+	}
+	return (SUCCESS);
+}
+
+int	ft_exec(t_minishell *msh, t_cmde *cmde)
+{
 	if (!cmde)
 		return (SUCCESS);
 	if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
 		return (FAILURE);
-	if (cmde->next || !ft_isbin(cmde->cmde_line->str))
-		cmde->pid = fork();
-	if (cmde->pid == -1)
-		return (perror("fork failed ft_exec"), FAILURE);
-	if (cmde->pid == 0)
+	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
 	{
-		if (ft_isbin(cmde->cmde_line->str))
-			return (ft_exec_bin(vars, cmde));
-		else
-		{
-			char	**raw;
-			char	**env;
-			raw = ft_lst_to_char(cmde->cmde_line);
-			if (!raw)
-				exit (EXIT_FAILURE);
-			env = ft_varlst_tochar(*vars);
-			if (!env)
-				exit (EXIT_FAILURE);
-			if (execve(raw[0], raw, env) == -1)
-			{
-				ft_free_tabtab(raw);
-				ft_free_tabtab(env);
-				ft_putstr_fd("Execve failed pour ft_exec\n", 2);
-				exit (EXIT_FAILURE);	
-			}
-		}
+		if (ft_fork(msh, cmde) == FAILURE)
+			return (FAILURE);
 	}
+	else
+		if (ft_exec_bin(msh, cmde) == FAILURE)
+			return (FAILURE);
 	return (SUCCESS);
 }
+
+
+// int	ft_exec(t_var **vars, t_cmde **cmde_lst)
+// {
+// 	t_cmde	*cmde;
+	
+// 	cmde = *cmde_lst;
+// 	if (!cmde)
+// 		return (SUCCESS);
+// 	if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
+// 		return (FAILURE);
+	// if (cmde->pid != 0 && ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str)))
+	// 	cmde->pid = fork();
+// 	if (cmde->pid == -1)
+// 		return (perror("fork failed ft_exec"), FAILURE);
+// 	if (cmde->pid == 0)
+// 	{
+// 		if (ft_isbin(cmde->cmde_line->str))
+// 			return (ft_exec_bin(vars, cmde));
+// 		else
+// 		{
+// 			printf("Hi%s\n", cmde->cmde_line->str);
+// 			char	**raw;
+// 			char	**env;
+// 			raw = ft_lst_to_char(cmde->cmde_line);
+// 			if (!raw)
+// 				exit (EXIT_FAILURE);
+// 			env = ft_varlst_tochar(*vars);
+// 			if (!env)
+// 				exit (EXIT_FAILURE);
+// 			if (execve(raw[0], raw, env) == -1)
+// 			{
+// 				ft_free_tabtab(raw);
+// 				ft_free_tabtab(env);
+// 				ft_putstr_fd("Execve failed pour ft_exec\n", 2);
+// 				exit (EXIT_FAILURE);	
+// 			}
+// 		}
+// 	}
+// 	else
+// 		printf("%d %d %d\n", (cmde->next || cmde->prev) , !ft_isbin(cmde->cmde_line->str), cmde->pid);
+// 	return (SUCCESS);
+// }
 
 /**
  * @brief replace every $(name rules) by is variable
@@ -240,14 +333,14 @@ int	ft_exec(t_var **vars, t_cmde **cmde_lst)
  * @param cmde_lst 
  * @return int 
  */
-int	ft_expansion(t_cmde **cmde_lst)
+int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 {
 	t_cmde	*head_cmd;
 	t_token	*head_token;
 	int		i;
 	int		len_var;
-	char	*temp;
-	char	*temp2;
+	char	*key;
+	char	*newstr;
 
 	head_cmd = *cmde_lst;
 	while (head_cmd)
@@ -258,10 +351,10 @@ int	ft_expansion(t_cmde **cmde_lst)
 			while (head_token)
 			{
 				printf("[%d]: %s\n", head_token->type, head_token->str);
-				if (head_token->type == 2 && ft_strchr(head_token->str, '$'))
+				if (head_token->type == word && ft_strchr(head_token->str, '$'))
 				{
 					i = 0;
-					while (head_token->str[i])
+					while (head_token->str && head_token->str[i])
 					{
 						if (head_token->str[i] == '$')
 						{
@@ -270,16 +363,16 @@ int	ft_expansion(t_cmde **cmde_lst)
 								len_var++;
 							if (len_var == 1 && ++i)
 								continue ;
-							temp = ft_substr(head_token->str, i, len_var);
-							if (!temp)
+							key = ft_substr(head_token->str, i, len_var);
+							if (!key)
 								return (FAILURE);
-							char *TEST = "TEST";
-							temp2 = ft_replacestr(head_token->str, temp, TEST);
-							if (!temp2)
-								return (free(temp), FAILURE);
+							char *value = var_getvaluefromkey(vars_lst, key + 1);
+							newstr = ft_replacestr(head_token->str, key, value);
+							if (!newstr)
+								return (free(key), FAILURE);
 							free(head_token->str);
-							head_token->str = temp2;
-							printf("pff %d %d %s %s\n", i, len_var, temp, head_token->str);
+							head_token->str = newstr;
+							printf("pff %d %d %s %s\n", i, len_var, key, head_token->str);
 						}
 						i++;
 					}
@@ -293,6 +386,8 @@ int	ft_expansion(t_cmde **cmde_lst)
 	return (SUCCESS);
 }
 
+
+
 int	main(int ac, char **av, char **envp)
 {
 	t_token	*token_lst;
@@ -303,7 +398,8 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	token_lst = NULL;
 	cmde_lst = NULL;
-	msh = (t_minishell){.loop = 42};
+	ft_memset(&msh, 0, sizeof(t_minishell));
+	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
 	if (!av[1])
@@ -319,12 +415,14 @@ int	main(int ac, char **av, char **envp)
 		
 	if (ft_fill_cmdelst(&cmde_lst, token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), 1);
-	// msh.cmde_lst = cmde_lst;
-	ft_expansion(&cmde_lst);
-	ft_exec(&(msh.vars), &cmde_lst);
+	msh.cmde_lst = cmde_lst;
+	ft_expansion(&cmde_lst, msh.vars);
 	ft_print_cmdelst(cmde_lst);
-
-	ft_cmdelst_free(cmde_lst);
+	for (t_cmde *head = cmde_lst; head; head = head->next)
+		ft_exec(&msh, head);
+	// ft_cmdelst_free(cmde_lst);
+	ft_varlst_clear(msh.vars);
+	ft_cmdslst_clear(cmde_lst);
 	return (0);
 }
 

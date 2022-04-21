@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmde_lst.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:40:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 13:10:17 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmdes.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-static void	ft_free_tabtab(char **tab)
-{
-	int		i;
-
-	i = 0;
-	while (tab && tab[i])
-	{
-		free(tab[i]);
-		i++;	
-	}
-	free(tab);
-}
 
 t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 {
@@ -36,7 +23,6 @@ t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 	if (!new_cmde)
 		return (NULL);
 	new_cmde->cmde_line = cmde_line;
-	new_cmde->argv = NULL;
 	new_cmde->pipefd[in] = 0;
 	new_cmde->pipefd[out] = 1;
 	new_cmde->pid = 0;
@@ -77,8 +63,8 @@ void	ft_cmdelst_free(t_cmde *lst)
 	while (lst)
 	{
 		free(lst->prev);
+		free(lst->cmde_line->str);
 		free(lst->cmde_line);
-		ft_free_tabtab(lst->argv);
 		last = lst;
 		lst = lst->next;
 	}

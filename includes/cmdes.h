@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmdes.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 14:39:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 13:09:40 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ enum e_fd_type {in = 0, out = 1};
 
 typedef struct s_cmde {
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	char			**argv; // [0]=cmde name, reste = options et arguments
 	int				pipefd[2]; //0=read(in) 1=write(out)
 	pid_t			pid;
 	struct s_cmde	*prev;

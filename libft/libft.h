@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 10:49:41 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/13 13:06:27 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 14:43:25 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_itoa(int c);
 char	**ft_split(char const *s, char c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-char	*ft_strsjoin(char const *s1, char const *s2, char const *s3);
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 void	ft_putchar_fd(char c, int fd);
@@ -85,7 +84,10 @@ int		ft_strcmp(const char *s1, const char *s2);
 int		ft_stris(char *s, int (*f)(int));
 
 // Malloc
-char	*ft_strdup_until(const char *src, char stop);
+char	*ft_strdup_until_i(const char *src, size_t stop);
+char	*ft_strdup_until_c(const char *src, char stop);
+
 char	*ft_replacestr(char *dst, const char *t_replace, const char *replace_w);
+char	*ft_strsjoin(char const *s1, char const *s2, char const *s3);
 
 #endif

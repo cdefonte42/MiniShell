@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:16:14 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/07 15:27:38 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 13:04:49 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	minishell_free_env(t_minishell *msh)
 		free(msh->env);
 	}
 	if (msh->vars != NULL)
-		ft_lst_clear(msh->vars);
+		ft_varlst_clear(msh->vars);
 }
 
 void	minishell_free_rawcmd(t_minishell *msh)
