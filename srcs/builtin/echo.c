@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:39:43 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/21 18:27:11 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 20:42:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int	minishell_echo(t_minishell *msh, char **av)
 	int	i;
 
 	(void) msh;
-	av = av + 1;
-	i = 0;
+	i = 1;
 	if (!av)
 		return (SUCCESS);
 	option = check_option(av);
-	printf("DANS ECHO BIN\n");
+	if (option == true)
+		i = 2;
 	while (av && av[i])
 	{
 		ft_putstr_fd(av[i++], 1);
