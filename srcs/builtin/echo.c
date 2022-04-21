@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:39:43 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/23 14:23:57 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 17:37:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,5 @@ int	minishell_echo(t_minishell *msh, char **av)
 	}
 	if (option == false)
 		ft_putchar_fd('\n', 1);
-	return (EXIT_SUCCESS);
+	return (SUCCESS);
 }

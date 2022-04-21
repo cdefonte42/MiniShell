@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 17:29:08 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 17:37:32 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	char	**raw_cmde;
 	int		ret_stat;
 
+	printf("DANS EXEC BIN\n");
 	ret_stat = 0;
 	raw_cmde = NULL;
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
@@ -171,6 +172,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		ret_stat = ft_export(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmde);
+	else if ((ft_strcmp(raw_cmde[0], "echo") == 0))
+		ret_stat = minishell_echo(msh, raw_cmde);
 	free(raw_cmde);
 	return (ret_stat);
 }
