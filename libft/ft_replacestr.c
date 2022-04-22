@@ -6,12 +6,14 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:37:54 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/21 10:35:11 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 11:57:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+/* PAS BON car peut retourner NULL si la valeur est nulle et a ce moment la on
+enleve un token de la cmde_line. Donc proto a modifier */
 char	*ft_replacestr(char *dst, const char *t_replace, const char *replace_w)
 {
 	int		i;
