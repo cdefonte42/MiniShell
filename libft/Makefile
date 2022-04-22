@@ -6,6 +6,8 @@ ft_palloc.c \
 ft_itoa.c \
 ft_split.c \
 ft_substr.c \
+ft_replacestr.c \
+ft_atoilong.c \
 char/ft_isalnum.c \
 char/ft_isalpha.c \
 char/ft_isascii.c \
@@ -35,6 +37,7 @@ str/ft_strnstr.c \
 str/ft_strrchr.c \
 str/ft_strtrim.c \
 str/ft_strcmp.c \
+str/ft_stris.c \
 char/ft_tolower.c \
 char/ft_toupper.c
 SRCS_B 	= list/ft_lstadd_back.c \
