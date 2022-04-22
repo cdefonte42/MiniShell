@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/22 10:05:53 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/04/22 14:10:42 by mbraets          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,8 @@ srcs/parsing.c \
 srcs/grammar.c \
 srcs/utils.c \
 srcs/free.c \
-srcs/init_msh.c
+srcs/init_msh.c \
+srcs/expansion.c
 
 OBJS		=	$(SRCS:.c=.o)
 

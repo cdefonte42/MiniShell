@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 12:39:10 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:36:27 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 	if (!c1 || !c2)
 		return (SUCCESS);
 	if (pipe(pipefd) == -1)
-		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);	
+		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);
 	c1->pipefd[out] = pipefd[out];
 	c2->pipefd[in] = pipefd[in];
 	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
@@ -49,7 +49,6 @@ int	ft_count_tokens_type(t_token *lst, t_token_type type)
 	}
 	return (nbelem);
 }
-
 
 /* Transforme la liste cmde line en char **tab en ne prenant QUE ses words*/
 char	**ft_lst_to_char(t_token *lst)
@@ -104,12 +103,12 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	return (ret_stat);
 }
 
-char **ft_varlst_tochar(t_var *varlst)
+char	**ft_varlst_tochar(t_var *varlst)
 {
 	char	**env;
 	int		i;
 	int		nbvar;
-	
+
 	if (!varlst)
 		return (NULL);
 	nbvar = ft_varlst_size(varlst);
@@ -121,13 +120,34 @@ char **ft_varlst_tochar(t_var *varlst)
 	{
 		env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
 		if (!env[i])
-			return (perror("ft_varlst_tochar failed"), ft_free_tabtab(env), NULL);
+			return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
 		i++;
 		varlst = varlst->next;
 	}
 	env[i] = NULL;
 	return (env);
 }
+
+int	ft_token_isredir(t_token_type type)
+{
+	if (type == redirin || type == redirout || type == redirapp)
+		return (1);
+	return (0);
+}
+
+// int	ft_redir(t_cmde *cmde)
+// {
+// 	t_token *head_token;
+
+// 	if (!cmde || !cmde->cmde_line)
+// 		return (SUCCESS);
+// 	head_token = cmde->cmde_line;
+// 	while (head_token)
+// 	{
+// 		if (head_token->type == 
+// 		head_token = head_token->next;
+// 	}
+// }
 
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
 {
@@ -140,6 +160,8 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		return (FAILURE);
 	if (cmde->pid == 0)
 	{
+		// if (ft_redir(cmde) == FAILURE)
+		// 	exit (FAILURE);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
 			ret_status = ft_exec_bin(msh, cmde);
@@ -154,6 +176,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			exit(EXIT_FAILURE);
 		// execve();
 		free(argv);
+		ft_msh_clear(msh);
 		ft_free_tabtab(envp);
 		exit(FAILURE);
 	}
@@ -178,58 +201,6 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 	return (SUCCESS);
 }
 
-int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
-{
-	char	*dolls;
-	char	*value;
-	int		len_var;
-	char	*newstr;
-
-	len_var = 2;
-	if (!token || !token->str || !token->str[start])
-		return (SUCCESS);
-	while (token->str[start] && token->str[start] != '$')
-		start++;
-	if (!token->str[start])
-		return (SUCCESS);
-	else if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
-		ft_expand_token(token, vars_lst, start + 1);
-	while (ft_cisname(token->str[start + len_var]))
-		len_var++;
-	dolls = ft_substr(token->str, start, len_var);
-	if (!dolls)
-		return (FAILURE);
-	value = var_getvaluefromkey(vars_lst, dolls + 1);
-	newstr = ft_replacestr(token->str, dolls, value);
-	free(dolls);
-	if (!newstr)
-		return (FAILURE);
-	free(token->str);
-	token->str = newstr;
-	return (ft_expand_token(token, vars_lst, 0));
-}
-
-/* L'expansion est faite APRES les pipes ET APRES les redirections */
-/* AUTRE pb: il peut y avoir PLUSIEURS $var dans un seul token! */
-int	ft_expansion_bis(t_cmde *cmde_elem, t_var *vars_lst)
-{
-	t_token	*head_token;
-
-	if (!cmde_elem || !cmde_elem->cmde_line)
-		return (SUCCESS);
-	head_token = cmde_elem->cmde_line;
-	while (head_token)
-	{
-		if (head_token->type == word && ft_strchr(head_token->str, '$'))
-		{
-			if (ft_expand_token(head_token, vars_lst, 0) == FAILURE)
-				return (FAILURE);
-		}
-		head_token = head_token->next;
-	}
-	return (SUCCESS);
-}
-
 int	g_status;
 
 void	signal_handler(int signalid)
@@ -237,7 +208,7 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		g_status = 130;
@@ -267,7 +238,7 @@ int	minishell_loop(t_minishell *msh)
 				while (curr_cmde)
 				{
 					//ft_print_cmdelst(curr_cmde);
-					ft_expansion_bis(curr_cmde, msh->vars);
+					ft_expansion(curr_cmde, msh->vars);
 					ft_exec(msh, curr_cmde);
 					curr_cmde = curr_cmde->next;
 				}
@@ -275,6 +246,8 @@ int	minishell_loop(t_minishell *msh)
 				msh->cmde_lst = NULL;
 			}
 		}
+		if (line && *line)
+			add_history (line);
 		free(line);
 		line = NULL;
 	}

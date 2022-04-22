@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:37:54 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 12:21:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:32:58 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ char	*ft_replacestr(char *dst, const char *t_replace, const char *replace_w)
 	if (ft_strnstr(dst, t_replace, ft_strlen(dst)) == NULL)
 		return (NULL);
 	t_rep_len = ft_strlen(t_replace);
-	printf("replace =%s/n", replace_w);
 	len_final = (ft_strlen(replace_w) + (ft_strlen(dst) - t_rep_len)) + 1;
 	final = ft_calloc(len_final, sizeof(char));
 	if (!final)

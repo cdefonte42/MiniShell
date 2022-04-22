@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 10:38:33 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:11:31 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,11 @@ int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_islast_chstr_ch(char *str, char c);
+
+// Expansion
+int	ft_expand_token(t_token *token, t_var *vars_lst, int start);
+int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst);
+
 
 /*________ MSH __________*/
 int	ft_init_envlst(t_minishell *msh, char **envp);

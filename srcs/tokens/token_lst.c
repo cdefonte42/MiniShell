@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/15 12:32:18 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:20:48 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_token	*ft_tokenlst_new(char *str, int type)
 		return (NULL);
 	new_token->str = str;
 	new_token->type = type;
+	new_token->qtype = nil;
 	new_token->next = NULL;	
 	return (new_token);
 }
@@ -65,11 +66,11 @@ void	ft_tokenlst_free(t_token *lst)
 	}
 }
 
-int	ft_tokenlst_iteri(t_token *lst, int (*f)(char *))
+int	ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *))
 {
 	while (lst)
 	{
-		if ((*f)(lst->str) == FAILURE)
+		if ((*f)(lst) == FAILURE)
 			return (FAILURE);
 		lst = lst->next;
 	}

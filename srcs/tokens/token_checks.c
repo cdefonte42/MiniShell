@@ -3,28 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   token_checks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 12:40:01 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:31:35 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
 #include "libft.h"
+#include <stdio.h>
 
-int	ft_quotes_check(char *str)
+int	ft_quotes_check(t_token *lst)
 {
 	int				i;
 	t_quote_type	inquote;
+	char			*str;
 
 	i = 0;
-	inquote = 0;
+	inquote = nil;
+	str = lst->str;
 	while (str && str[i])
 	{
-		if (str[i] == '"' && (inquote != singleq || inquote == 0))
+		if (str[i] == '"' && (inquote != singleq || inquote == nil))
 			inquote = inquote ^ doubleq;
-		if (str[i] == '\'' && (inquote != doubleq || inquote == 0))
+		if (str[i] == '\'' && (inquote != doubleq || inquote == nil))
 			inquote = inquote ^ singleq;
 		i++;
 	}
@@ -73,7 +76,7 @@ int	ft_operator_order(t_token *lst)
 	}
 	return (SUCCESS);
 }
-
+int	remove_quote(t_token *lst);
 int	ft_check_tokens(t_token *lst)
 {
 	t_token	*tmp;
@@ -88,5 +91,71 @@ int	ft_check_tokens(t_token *lst)
 	}
 	if (ft_operator_order(lst) == FAILURE)
 		return (FAILURE);
+	if (ft_tokenlst_iteri(lst, &remove_quote) == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
+char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *replace_w)
+{
+	int		t_rep_len;
+	int		len_final;
+	char	*final;
+
+	if (!dst || !t_replace)
+		return (NULL);
+	if (ft_strnstr(dst, t_replace, ft_strlen(dst)) == NULL)
+		return (NULL);
+	t_rep_len = ft_strlen(t_replace);
+	len_final = (ft_strlen(replace_w) + (ft_strlen(dst) - t_rep_len)) + 1;
+	final = ft_calloc(len_final, sizeof(char));
+	if (!final)
+		return (NULL);
+	i = 0;
+	while (ft_strncmp(dst + i, t_replace, t_rep_len) != 0)
+		i++;
+	ft_strlcpy(final, dst, i + 1);
+	if (replace_w)
+		ft_strlcat(final, replace_w, len_final);
+	ft_strlcat(final, dst + i + t_rep_len, len_final);
+	return (final);
+}
+
+
+int	remove_quote(t_token *lst)
+{
+	int				i;
+	t_quote_type	inquote;
+	char			*newstr;
+	char			*str;
+	
+	i = 0;
+	inquote = nil;
+	str = lst->str;
+	while (str && str[i])
+	{
+		if (str[i] == '"' && (inquote != singleq || inquote == nil))
+		{
+			inquote = inquote ^ doubleq;
+			newstr = ft_replacestr_i(i, str, "\"", NULL);
+			if (!newstr)
+				return (perror("remove_quote"), FAILURE);
+			free(str);
+			str = newstr;
+			printf("1%s\n", str);
+		}
+		if (str[i] == '\'' && (inquote != doubleq || inquote == nil))
+		{
+			inquote = inquote ^ singleq;
+			newstr = ft_replacestr_i(i, str, "\'", NULL);
+			if (!newstr)
+				return (perror("remove_quote"), FAILURE);
+			free(str);
+			str = newstr;
+			printf("2%s\n", str);
+		}
+		i++;
+	}
+	lst->str = str;
 	return (SUCCESS);
 }

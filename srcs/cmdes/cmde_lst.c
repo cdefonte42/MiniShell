@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 19:18:04 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:33:46 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 		return (NULL);
 	new_cmde->cmde_line = cmde_line;
 	new_cmde->pipefd[in] = 0;
-	new_cmde->pipefd[out] = 1;
+	new_cmde->pipefd[out] = 0;
 	new_cmde->pid = 0;
+	new_cmde->fdin = 0;
+	new_cmde->fdout = 1;
 	new_cmde->prev = NULL;	
 	new_cmde->next = NULL;	
 	return (new_cmde);
