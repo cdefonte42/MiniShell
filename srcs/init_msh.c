@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_msh.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 17:45:23 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 17:52:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 17:55:19 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 		splited[0] = ft_strdup_until_i(envp[i], j);
 		if (!splited[0])
 			return (perror("ft_init_envlst failed"), FAILURE);
-		splited[1] = ft_strdup_until_i(envp[i] + j, ft_strlen(envp[i] + j));
+		splited[1] = ft_strdup_until_i(envp[i] + j + 1, ft_strlen(envp[i] + j));
 		if (!splited[1])
 			return (free(splited[0]), perror("ft_init_envlst failed"), FAILURE);
 		if (ft_strcmp(splited[0], "_") == 0)

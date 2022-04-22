@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 16:55:32 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 18:11:29 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,31 @@
 
 int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
 {
-	char	*dolls;
-	char	*value;
-	int		len_var;
-	char	*newstr;
+	char			*dolls;
+	char			*value;
+	int				len_var;
+	t_quote_type	inquote;
+	char			*newstr;
 
+	inquote = nil;
 	len_var = 2;
 	if (!token || !token->str || !token->str[start])
 		return (SUCCESS);
-	while (token->str[start] && token->str[start] != '$')
+	while (token->str[start] && (inquote == singleq || token->str[start] != '$'))
+	{
+		if (token->str[start] == '"' && (inquote != singleq || inquote == 0))
+		{
+			inquote = inquote ^ doubleq;
+		}
+		else if (token->str[start] == '\'' && (inquote != doubleq || inquote == 0))
+		{
+			inquote = inquote ^ singleq;
+		}
 		start++;
+	}
 	if (!token->str[start])
 		return (SUCCESS);
-	else if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
+	else if ((token->str[start] == '$' && inquote != nil) && !ft_fcisname(token->str[start + 1]))
 		ft_expand_token(token, vars_lst, start + 1);
 	while (ft_cisname(token->str[start + len_var]))
 		len_var++;
