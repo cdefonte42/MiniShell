@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/22 14:10:42 by mbraets          ###   ########.fr        #
+#    Updated: 2022/04/22 19:07:50 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRCS		=	srcs/main.c \
 srcs/tokens/token_checks.c \
 srcs/tokens/token_cuts.c \
 srcs/tokens/token_lst.c \
+srcs/tokens/token_utils.c \
 srcs/cmdes/cmde_lst.c \
 srcs/export/export.c \
 srcs/export/export_utils.c \
@@ -39,6 +40,7 @@ srcs/parsing.c \
 srcs/grammar.c \
 srcs/utils.c \
 srcs/free.c \
+srcs/redir.c \
 srcs/init_msh.c \
 srcs/expansion.c
 

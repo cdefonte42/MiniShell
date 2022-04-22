@@ -6,32 +6,14 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 18:13:24 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 19:24:07 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokens.h"
-#include "cmdes.h"
 #include "export.h"
-//#include "varenv.h"
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
-
-int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
-{
-	int	pipefd[2];
-
-	if (!c1 || !c2)
-		return (SUCCESS);
-	if (pipe(pipefd) == -1)
-		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);
-	c1->pipefd[out] = pipefd[out];
-	c2->pipefd[in] = pipefd[in];
-	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
-		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
-	return (SUCCESS);
-}
 
 /* retourne le nombre de oken ayant pour type 'type' */
 int	ft_count_tokens_type(t_token *lst, t_token_type type)
@@ -85,6 +67,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	ret_stat = 0;
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
+	if (ft_redir(cmde) == FAILURE)
+		return (FAILURE);
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
@@ -126,60 +110,6 @@ char	**ft_varlst_tochar(t_var *varlst)
 	}
 	env[i] = NULL;
 	return (env);
-}
-
-int	ft_token_isredir(t_token_type type)
-{
-	if (type == redirin || type == redirout || type == redirapp)
-		return (1);
-	return (0);
-}
-/*
-heredoc = , O_CREAT | O_WRONLY | O_TRUNC, 00644		=> Pour readline
-heredoc = O_RDONLY, 00644							=> pour le lire
-out		= , O_WRONLY | O_CREAT | O_TRUNC = 01101
- S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH = 00644
-in		= , O_RDONLY
-app		= O_APPEND | O_CREAT | O_WRONLY = 02101
-*/
-
-int	ft_open(int *fd, char *pathname, int flags, int mode)
-{
-	*fd = open(pathname, flags, mode);
-	if (*fd == -1)
-		return (ft_perror(NULL, pathname), FAILURE);
-	return (SUCCESS);
-
-}
-int	ft_redir(t_cmde *cmde)
-{
-	t_token *head_token;
-	char	*file;
-
-	if (!cmde || !cmde->cmde_line)
-		return (SUCCESS);
-	head_token = cmde->cmde_line;
-	while (head_token)
-	{
-		if (ft_token_isredir(head_token->type))
-			file = head_token->next->str;
-		if (file && *file == 0)
-			return (ft_error(file, "ambiguous redirect\n"), FAILURE);
-		else
-		{
-			if (head_token->type == redirin)
-				if (ft_open(&(cmde->fdin), file, O_RDONLY, 0) == FAILURE)
-					return (FAILURE);
-			if (head_token->type == redirout)
-				if (ft_open(&(cmde->fdout), file, 01101, 00644) == FAILURE)
-					return (FAILURE);			
-			if (head_token->type == redirapp)
-				if (ft_open(&(cmde->fdout), file, 02101, 00644) == FAILURE)
-					return (FAILURE);
-		}
-		head_token = head_token->next;
-	}
-	return (SUCCESS);
 }
 
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
@@ -273,8 +203,10 @@ int	minishell_loop(t_minishell *msh)
 					//ft_print_cmdelst(curr_cmde);
 					ft_expansion(curr_cmde, msh->vars);
 					if (ft_tokenlst_iteri(curr_cmde->cmde_line, &remove_quote) == FAILURE)
-						return (FAILURE);
+						return (FAILURE); //NON
 					ft_exec(msh, curr_cmde);
+//					if (ft_exec(msh, curr_cmde) == FAILURE)
+//						return (CLEAR TOUT niahniahniah);
 					curr_cmde = curr_cmde->next;
 				}
 				ft_cmdelst_clear(msh->cmde_lst);

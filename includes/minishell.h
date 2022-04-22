@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 17:10:38 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 19:22:59 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,13 @@ int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_islast_chstr_ch(char *str, char c);
 
-// Expansion
-int	ft_expand_token(t_token *token, t_var *vars_lst, int start);
-int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst);
+/*________ EXPANSION __________*/
+int		ft_expand_token(t_token *token, t_var *vars_lst, int start);
+int		ft_expansion(t_cmde *cmde_elem, t_var *vars_lst);
 
+/*________ REDIRECTION __________*/
+int		ft_pipe_cmdes(t_cmde *c1, t_cmde *c2);
+int		ft_redir(t_cmde *cmde);
 
 /*________ MSH __________*/
 int	ft_init_envlst(t_minishell *msh, char **envp);
