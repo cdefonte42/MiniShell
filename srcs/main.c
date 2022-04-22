@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 11:42:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 12:02:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,20 +241,34 @@ int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 
 int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
 {
-	char	*var;
-	char	*key;
+	char	*dolls;
 	char	*value;
 	int		len_var;
 	char	*newstr;
 
-	len_var = 0;
+	len_var = 2;
 	if (!token || !token->str || !token->str[start])
 		return (SUCCESS);
 	while (token->str[start] && token->str[start] != '$')
 		start++;
-	if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
-		ft_expand_token(token, vars_lst, ++start);
-	else
+	if (!token->str[start])
+		return (SUCCESS);
+	else if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
+		ft_expand_token(token, vars_lst, start + 1);
+	while (ft_cisname(token->str[start + len_var]))
+		len_var++;
+	dolls = ft_substr(token->str, start, len_var);
+	if (!dolls)
+		return (FAILURE);
+	value = var_getvaluefromkey(vars_lst, dolls + 1);
+	newstr = ft_replacestr(token->str, dolls, value);
+	if (!newstr) //PAS BOOOON
+		return (free(dolls), FAILURE);
+	/* If replace == SUCCESS && newstr == NULL => rebrancher prochain toekn sur
+	le prev token */
+	free(token->str);
+	token->str = newstr;
+	return (ft_expand_token(token, vars_lst, 0));
 }
 
 /* L'expansion est faite APRES les pipes ET APRES les redirections */
