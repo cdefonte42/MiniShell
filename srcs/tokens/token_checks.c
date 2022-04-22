@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 18:12:36 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 18:55:25 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *repla
 	return (final);
 }
 
-
 int	remove_quote(t_token *lst)
 {
 	int				i;
@@ -132,7 +131,8 @@ int	remove_quote(t_token *lst)
 	str = lst->str;
 	while (str && str[i])
 	{
-		if (str[i] == '"' && (inquote != singleq || inquote == nil))
+		printf("ICI %s\n", str);
+		if (str[i] == '"' && inquote != singleq)
 		{
 			inquote = inquote ^ doubleq;
 			newstr = ft_replacestr_i(i, str, "\"", NULL);
@@ -141,7 +141,7 @@ int	remove_quote(t_token *lst)
 			free(str);
 			str = newstr;
 		}
-		if (str[i] == '\'' && (inquote != doubleq || inquote == nil))
+		else if (str[i] == '\'' && inquote != doubleq)
 		{
 			inquote = inquote ^ singleq;
 			newstr = ft_replacestr_i(i, str, "\'", NULL);
@@ -150,7 +150,8 @@ int	remove_quote(t_token *lst)
 			free(str);
 			str = newstr;
 		}
-		i++;
+		else
+			i++;
 	}
 	lst->str = str;
 	return (SUCCESS);
