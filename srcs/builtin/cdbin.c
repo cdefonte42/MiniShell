@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cdbin.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 15:41:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 16:39:16 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,6 @@
 #include "unistd.h"
 #include "stdio.h"
 #include <fcntl.h>
-
-/* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
-pour return exit status = 128 + errno */
-static void	ft_error_handler(char *directory)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd("cd: ", 2);
-	if (directory && *directory)
-	{
-		ft_putstr_fd(directory, 2);
-		ft_putstr_fd(": ", 2);
-	}
-	perror(NULL);
-}
 
 /* Fait cd sans aucun. Retourne 0 si tout s'est bien passe et set la val de
 curpath a envoyer a chdir apres appel de ft_cd_home. Attention peut renvoyer 0
@@ -109,7 +95,7 @@ int	ft_cd(t_var **var_lst, char **directory)
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
 		return (free(oldpwd), perror("supp PATH_MAX"), FAILURE);
 	if (curpath && chdir(curpath) != 0)
-		return (free(oldpwd), ft_error_handler(directory[1]), FAILURE);
+		return (free(oldpwd), ft_perror("cd", directory[1]), FAILURE);
 	free(curpath);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)

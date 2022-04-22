@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 11:15:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 17:24:21 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,28 @@ int	ft_isbin(char *name)
 		i++;
 	}
 	return (0);
+}
+
+/* Print le message d'erreur. Peut etre change en return int
+pour return exit status = 128 + errno */
+void	ft_perror(char *cmd, char *suffix)
+{
+	ft_putstr_fd("minishell: ", 2);
+	if (cmd)
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	perror(suffix);
+}
+
+/* Print le message d'erreur. Peut etre change en return int
+pour return exit status = 128 + errno */
+void	ft_error(char *prefix, char *suffix)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(prefix, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(suffix, 2);
 }
 

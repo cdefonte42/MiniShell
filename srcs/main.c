@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 15:36:27 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 17:28:36 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,20 +134,53 @@ int	ft_token_isredir(t_token_type type)
 		return (1);
 	return (0);
 }
+/*
+heredoc = , O_CREAT | O_WRONLY | O_TRUNC, 00644		=> Pour readline
+heredoc = O_RDONLY, 00644							=> pour le lire
+out		= , O_WRONLY | O_CREAT | O_TRUNC = 01101
+ S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH = 00644
+in		= , O_RDONLY
+app		= O_APPEND | O_CREAT | O_WRONLY = 02101
+*/
 
-// int	ft_redir(t_cmde *cmde)
-// {
-// 	t_token *head_token;
+int	ft_open(int *fd, char *pathname, int flags, int mode)
+{
+	*fd = open(pathname, flags, mode);
+	if (*fd == -1)
+		return (ft_perror(NULL, pathname), FAILURE);
+	return (SUCCESS);
 
-// 	if (!cmde || !cmde->cmde_line)
-// 		return (SUCCESS);
-// 	head_token = cmde->cmde_line;
-// 	while (head_token)
-// 	{
-// 		if (head_token->type == 
-// 		head_token = head_token->next;
-// 	}
-// }
+}
+int	ft_redir(t_cmde *cmde)
+{
+	t_token *head_token;
+	char	*file;
+
+	if (!cmde || !cmde->cmde_line)
+		return (SUCCESS);
+	head_token = cmde->cmde_line;
+	while (head_token)
+	{
+		if (ft_token_isredir(head_token->type))
+			file = head_token->next->str;
+		if (file && *file == 0)
+			return (ft_error(file, "ambiguous redirect\n"), FAILURE);
+		else
+		{
+			if (head_token->type == redirin)
+				if (ft_open(&(cmde->fdin), file, O_RDONLY, 0) == FAILURE)
+					return (FAILURE);
+			if (head_token->type == redirout)
+				if (ft_open(&(cmde->fdout), file, 01101, 00644) == FAILURE)
+					return (FAILURE);			
+			if (head_token->type == redirapp)
+				if (ft_open(&(cmde->fdout), file, 02101, 00644) == FAILURE)
+					return (FAILURE);
+		}
+		head_token = head_token->next;
+	}
+	return (SUCCESS);
+}
 
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
 {
@@ -160,8 +193,8 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		return (FAILURE);
 	if (cmde->pid == 0)
 	{
-		// if (ft_redir(cmde) == FAILURE)
-		// 	exit (FAILURE);
+		if (ft_redir(cmde) == FAILURE)
+			exit(FAILURE);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
 			ret_status = ft_exec_bin(msh, cmde);

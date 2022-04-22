@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 15:31:35 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 16:30:39 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,6 @@ int	remove_quote(t_token *lst)
 				return (perror("remove_quote"), FAILURE);
 			free(str);
 			str = newstr;
-			printf("1%s\n", str);
 		}
 		if (str[i] == '\'' && (inquote != doubleq || inquote == nil))
 		{
@@ -152,7 +151,6 @@ int	remove_quote(t_token *lst)
 				return (perror("remove_quote"), FAILURE);
 			free(str);
 			str = newstr;
-			printf("2%s\n", str);
 		}
 		i++;
 	}

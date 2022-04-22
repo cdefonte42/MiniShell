@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 14:11:31 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 17:10:38 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void	ft_free_tabtab(char **tab);
 int		ft_isblank(char c);
 int		ft_isset(char c, char *set);
 int		ft_isbin(char *name);
+void	ft_perror(char *cmd, char *suffix);
+void	ft_error(char *prefix, char *suffix);
 
 /*________ PARSE __________*/
 int		ft_parse(t_minishell *msh, char *line);
