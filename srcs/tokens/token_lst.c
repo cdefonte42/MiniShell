@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_lst.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 15:20:48 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/22 19:11:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 t_token	*ft_tokenlst_new(char *str, int type)
 {
 	t_token	*new_token;
-	
+
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return (NULL);
 	new_token->str = str;
 	new_token->type = type;
 	new_token->qtype = nil;
-	new_token->next = NULL;	
+	new_token->next = NULL;
 	return (new_token);
 }
 
@@ -33,7 +33,7 @@ t_token	*ft_tokenlst_last(t_token *lst)
 		return (NULL);
 	while (lst->next != NULL)
 		lst = lst->next;
-	return (lst);	
+	return (lst);
 }
 
 void	ft_tokenlst_addback(t_token **alst, t_token *new)
@@ -65,28 +65,3 @@ void	ft_tokenlst_free(t_token *lst)
 		prev = NULL;
 	}
 }
-
-int	ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *))
-{
-	while (lst)
-	{
-		if ((*f)(lst) == FAILURE)
-			return (FAILURE);
-		lst = lst->next;
-	}
-	return (SUCCESS);
-}
-
-int	ft_tokenlst_size(t_token *lst)
-{
-	int	size;
-
-	size = 0;
-	while (lst)
-	{
-		size++;
-		lst = lst->next;
-	}
-	return (size);
-}
-

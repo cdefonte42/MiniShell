@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 18:55:25 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 18:58:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ int	remove_quote(t_token *lst)
 	str = lst->str;
 	while (str && str[i])
 	{
-		printf("ICI %s\n", str);
 		if (str[i] == '"' && inquote != singleq)
 		{
 			inquote = inquote ^ doubleq;
