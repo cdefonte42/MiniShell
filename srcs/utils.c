@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 10:03:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 10:38:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,18 @@ int	ft_cisname(char c)
 {
 	if (!c)
 		return (0);
-	if (c >= '0' && c <= '9')
-		return (0);
 	if (!ft_isalnum(c) && c != '_')
+		return (0);
+	return (1);
+}
+
+int	ft_fcisname(char c)
+{
+	if (!c)
+		return (0);
+	if (ft_isnum(c))
+		return (0);
+	else if (!ft_isalpha(c) && c != '_')
 		return (0);
 	return (1);
 }

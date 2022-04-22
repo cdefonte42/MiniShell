@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 10:03:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 10:38:33 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ int		ft_pwd(void); //devrait avoir meme proto que tous les bin
 int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
-int		ft_isname(char *str);
-int		ft_cisname(char c);
 int		ft_islast_chstr_ch(char *str, char c);
 
 /*________ MSH __________*/
@@ -98,9 +96,11 @@ int	ft_init_envlst(t_minishell *msh, char **envp);
 
 /*________ UTILS __________*/
 int		ft_isname(char *str);
-int		ft_isset(char c, char *set);
-int		ft_isblank(char c);
+int		ft_cisname(char c);
+int		ft_fcisname(char c);
 void	ft_free_tabtab(char **tab);
+int		ft_isblank(char c);
+int		ft_isset(char c, char *set);
 int		ft_isbin(char *name);
 
 /*________ PARSE __________*/
