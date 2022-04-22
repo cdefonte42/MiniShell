@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 12:23:30 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 12:39:10 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,9 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
 		return (FAILURE);
 	value = var_getvaluefromkey(vars_lst, dolls + 1);
 	newstr = ft_replacestr(token->str, dolls, value);
+	free(dolls);
 	if (!newstr)
-		return (printf("LALALA/n"), free(dolls), FAILURE);
+		return (FAILURE);
 	free(token->str);
 	token->str = newstr;
 	return (ft_expand_token(token, vars_lst, 0));
@@ -262,7 +263,6 @@ int	minishell_loop(t_minishell *msh)
 		{
 			if (ft_parse(msh, line) != FAILURE)
 			{
-				//ft_expansion(&(msh->cmde_lst), msh->vars);
 				curr_cmde = msh->cmde_lst;
 				while (curr_cmde)
 				{
@@ -299,5 +299,6 @@ int	main(int ac, char **av, char **envp)
 	printf("Welcome to my minishell.\n");
 	minishell_loop(&msh);
 	printf("Bye.\n");
+	ft_msh_clear(&msh);
 	return (g_status);
 }
