@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 10:39:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 11:42:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,43 +239,39 @@ int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
 	return (SUCCESS);
 }
 
+int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
+{
+	char	*var;
+	char	*key;
+	char	*value;
+	int		len_var;
+	char	*newstr;
+
+	len_var = 0;
+	if (!token || !token->str || !token->str[start])
+		return (SUCCESS);
+	while (token->str[start] && token->str[start] != '$')
+		start++;
+	if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
+		ft_expand_token(token, vars_lst, ++start);
+	else
+}
+
 /* L'expansion est faite APRES les pipes ET APRES les redirections */
 /* AUTRE pb: il peut y avoir PLUSIEURS $var dans un seul token! */
 int	ft_expansion_bis(t_cmde *cmde_elem, t_var *vars_lst)
 {
 	t_token	*head_token;
-	int		i;
-	char	*var;
-	int		len_var;
-	char	*key;
-	char	*newstr;
 
 	if (!cmde_elem || !cmde_elem->cmde_line)
 		return (SUCCESS);
 	head_token = cmde_elem->cmde_line;
 	while (head_token)
 	{
-		var = ft_strchr(head_token->str, '$');
-		if (head_token->type == word && var && *(++var) && ft_fcisname(*var))
+		if (head_token->type == word && ft_strchr(head_token->str, '$'))
 		{
-			if (head_token->str[i] == '$')
-			{
-				len_var = 1;
-				while (ft_cisname(head_token->str[i + len_var]))
-					len_var++;
-				if (len_var == 1 && ++i)
-					continue ;
-				key = ft_substr(head_token->str, i, len_var);
-				if (!key)
-					return (FAILURE);
-				char *value = var_getvaluefromkey(vars_lst, key + 1);
-				newstr = ft_replacestr(head_token->str, key, value);
-				if (!newstr)
-					return (free(key), FAILURE);
-				free(head_token->str);
-				head_token->str = newstr;
-				printf("pff %d %d %s %s\n", i, len_var, key, head_token->str);
-			}
+			if (ft_expand_token(head_token, vars_lst, 0) == FAILURE)
+				return (FAILURE);
 		}
 		head_token = head_token->next;
 	}
@@ -320,7 +316,7 @@ int	minishell_loop(t_minishell *msh)
 				while (curr_cmde)
 				{
 					//ft_print_cmdelst(curr_cmde);
-					ft_expansion(curr_cmde, msh->vars);
+					ft_expansion_bis(curr_cmde, msh->vars);
 					ft_exec(msh, curr_cmde);
 					curr_cmde = curr_cmde->next;
 				}

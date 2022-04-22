@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 10:38:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 11:15:05 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ft_fcisname(char c)
 {
 	if (!c)
 		return (0);
-	if (ft_isnum(c))
+	if (ft_isdigit(c))
 		return (0);
 	else if (!ft_isalpha(c) && c != '_')
 		return (0);
