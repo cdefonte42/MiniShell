@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/08 16:53:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 13:04:26 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "export.h"
 
 /* Retourne le nombre d'elements dans la liste 'var_lst' */
-int	ft_count_vars(t_var *var_lst)
+int	ft_varlst_size(t_var *var_lst)
 {
 	t_var	*head;
 	int		i;
@@ -23,7 +23,7 @@ int	ft_count_vars(t_var *var_lst)
 	head = var_lst;
 	while (head)
 	{
-		head = head->next; 
+		head = head->next;
 		++i;
 	}
 	return (i);
@@ -40,6 +40,21 @@ t_var	*var_getfromkey(t_var *var_list, char *key)
 	while (head != NULL && head->key != NULL && ft_strcmp(head->key, key) != 0)
 		head = head->next;
 	return (head);
+}
+
+/* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
+char	*var_getvaluefromkey(t_var *var_list, char *key)
+{
+	t_var	*head;
+
+	if (var_list == NULL || !key)
+		return (NULL);
+	head = var_list;
+	while (head != NULL && head->key != NULL && ft_strcmp(head->key, key) != 0)
+		head = head->next;
+	if (head == NULL)
+		return (NULL);
+	return (head->value);
 }
 
 /*
@@ -105,7 +120,7 @@ t_var	*ft_get_minkey_prev(t_var *var_lst, t_var *prev)
 }
 
 /* Free tous les elements de struct t_var et la liste */
-void	ft_lst_clear(t_var *lst)
+void	ft_varlst_clear(t_var *lst)
 {
 	t_var	*tmp;
 

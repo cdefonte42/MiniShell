@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:39:43 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/23 14:23:57 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/21 20:42:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ static int	check_option(char **av)
 
 	i = 0;
 	option = 0;
-	if ((*av)[i] == '-')
+	if (!av || !av[0] || !av[1])
+		return (0);
+	if (av[1][i] == '-')
 	{
 		i++;
-		while ((*av)[i])
+		while (av[1][i])
 		{
-			if ((*av)[i] == 'n')
+			if (av[1][i] == 'n')
 				option = true;
 			else
 				return (false);
@@ -40,12 +42,13 @@ int	minishell_echo(t_minishell *msh, char **av)
 	int	i;
 
 	(void) msh;
-	av = av + 1;
-	i = 0;
-	option = check_option(av + i);
-	while (check_option(av + i))
-		i++;
-	while (av[i])
+	i = 1;
+	if (!av)
+		return (SUCCESS);
+	option = check_option(av);
+	if (option == true)
+		i = 2;
+	while (av && av[i])
 	{
 		ft_putstr_fd(av[i++], 1);
 		if (av[i] != NULL)
@@ -53,5 +56,5 @@ int	minishell_echo(t_minishell *msh, char **av)
 	}
 	if (option == false)
 		ft_putchar_fd('\n', 1);
-	return (EXIT_SUCCESS);
+	return (SUCCESS);
 }

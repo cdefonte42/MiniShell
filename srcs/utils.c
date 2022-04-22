@@ -6,11 +6,13 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 09:58:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 10:03:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokens.h"
+#include "cmdes.h"
 
 /* In the shell command language, a word consisting solely of underscores, 
 digits, and alphabetics from the portable character set. 
@@ -54,7 +56,8 @@ void	ft_free_tabtab(char **tab)
 		free(tab[i]);
 		i++;
 	}
-	free(tab);
+	if (tab)
+		free(tab);
 }
 
 int	ft_isblank(char c)
@@ -75,7 +78,7 @@ int	ft_isset(char c, char *set)
 	{
 		if (c == set[i])
 			return (1);
-		i++;	
+		i++;
 	}
 	return (0);
 }

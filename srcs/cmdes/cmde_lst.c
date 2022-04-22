@@ -1,32 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_lst.c                                        :+:      :+:    :+:   */
+/*   cmde_lst.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/12 14:39:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 19:18:04 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cmdes.h"
 #include "tokens.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-t_token	*ft_tokenlst_new(char *str, int type)
+t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 {
-	t_token	*new_token;
+	t_cmde	*new_cmde;
 	
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
+	new_cmde = NULL;
+	new_cmde = malloc(sizeof(t_cmde));
+	if (!new_cmde)
 		return (NULL);
-	new_token->str = str;
-	new_token->type = type;
-	new_token->next = NULL;	
-	return (new_token);
+	new_cmde->cmde_line = cmde_line;
+	new_cmde->pipefd[in] = 0;
+	new_cmde->pipefd[out] = 1;
+	new_cmde->pid = 0;
+	new_cmde->prev = NULL;	
+	new_cmde->next = NULL;	
+	return (new_cmde);
 }
 
-t_token	*ft_tokenlst_last(t_token *lst)
+t_cmde	*ft_cmdelst_last(t_cmde *lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -35,9 +41,9 @@ t_token	*ft_tokenlst_last(t_token *lst)
 	return (lst);	
 }
 
-void	ft_tokenlst_addback(t_token **alst, t_token *new)
+void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new)
 {
-	t_token	*last;
+	t_cmde	*last;
 
 	if (alst == NULL || new == NULL)
 		return ;
@@ -46,40 +52,29 @@ void	ft_tokenlst_addback(t_token **alst, t_token *new)
 		*alst = new;
 		return ;
 	}
-	last = ft_tokenlst_last(*alst);
+	last = ft_cmdelst_last(*alst);
 	last->next = new;
+	new->prev = last;
 }
 
-void	ft_tokenlst_free(t_token **lst)
+/* Free le CONTENU et les ELEMENTS de la liste de cmdes 'lst'*/ 
+void	ft_cmdelst_clear(t_cmde *lst)
 {
-	t_token	*prev;
-	t_token *list;
+	t_cmde	*last;
 
-	list = *lst;
-	while (list)
-	{
-		prev = list;
-		list = list->next;
-		free(prev->str);
-		prev->str = NULL;
-		free(prev);
-		prev = NULL;
-	}
-	*lst = NULL;
-}
-
-int	ft_tokenlst_iteri(t_token *lst, int (*f)(char *))
-{
 	while (lst)
 	{
-		if ((*f)(lst->str) == FAILURE)
-			return (FAILURE);
+		//free(lst->prev);
+		//free(lst->cmde_line->str);
+		//free(lst->cmde_line);
+		last = lst;
 		lst = lst->next;
+		ft_tokenlst_free(last->cmde_line);
 	}
-	return (SUCCESS);
+	free(last);
 }
 
-int	ft_tokenlst_size(t_token *lst)
+int	ft_cmdelst_size(t_cmde *lst)
 {
 	int	size;
 
@@ -91,4 +86,3 @@ int	ft_tokenlst_size(t_token *lst)
 	}
 	return (size);
 }
-

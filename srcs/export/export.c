@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/11 16:54:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/21 14:20:10 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
 	new_var = ft_calloc(1, sizeof(t_var));
 	if (!new_var)
 		return (FAILURE);
-	*new_var = (t_var){.key = key, .value = value, .type = type};
+	new_var->key = key;
+	new_var->value = value;
+	new_var->type = type;
 	var_add_back(var_lst, new_var);
 	return (SUCCESS);
 }
@@ -114,7 +116,7 @@ int	ft_put_export(t_var *var_lst)
 	t_var	*curr_kmin;
 	int		end;
 
-	end = ft_count_vars(var_lst);
+	end = ft_varlst_size(var_lst);
 	if (!var_lst)
 		return (0);
 	curr_kmin = ft_get_minkey(var_lst);
@@ -223,6 +225,6 @@ int	ft_export(t_var **var_lst, char **argv)
 // 	ft_export(&var, "D=""");
 // 	ft_export(&var, "E=");
 // 	ft_export(&var, NULL);
-// 	ft_lst_clear(var);
+// 	ft_varlst_clear(var);
 // 	return (0);
 // }

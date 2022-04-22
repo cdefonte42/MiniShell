@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 09:59:39 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 10:03:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <stdbool.h>
 
 # include "tokens.h"
+# include "cmdes.h"
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -57,18 +59,6 @@ tgetnum, tgetstr, tgoto, tputs
 
 //typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
 typedef enum e_var_type {envvar, shellvar} t_var_type;
-typedef enum e_cmde_type {buidlin, executable}	t_cmde_type;
-
-typedef struct s_cmde {
-	char			*name;
-	char			**argv; // [0]=cmde name, reste = options et arguments
-	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	int				piped; // 0 = NO 1 = YES;
-	int				pipe[2];
-	t_cmde_type		type;
-	struct s_cmde	*next;
-	struct s_cmde	*prev;
-}	t_cmde;
 
 typedef struct s_var {
 	char			*key;
@@ -78,18 +68,15 @@ typedef struct s_var {
 }	t_var;
 
 typedef struct s_minishell {
-	char			**path;
-	char			***env;
 	char			**raw_cmd;
 	t_cmde			*cmde_lst;
 	t_var			*vars;
-	t_list			*token;
 	unsigned int	status;
 	bool			loop;
 }	t_minishell;
 
 // Free
-void	minishell_free_env(t_minishell *msh);
+void	ft_msh_clear(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
 
 
@@ -115,6 +102,10 @@ int		ft_isset(char c, char *set);
 int		ft_isblank(char c);
 void	ft_free_tabtab(char **tab);
 int		ft_isbin(char *name);
+
+/*________ PARSE __________*/
+int		ft_parse(t_minishell *msh, char *line);
+void	ft_print_cmdelst(t_cmde *cmde_lst);
 
 
 #endif

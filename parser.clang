@@ -1,0 +1,2 @@
+#!/bin/bash
+clang -Wall -Werror -Wextra -g srcs/parser.c srcs/cmdes/*.c  srcs/utils.c srcs/grammar.c srcs/builtin/*.c srcs/tokens/*.c srcs/export/*.c libft/libft.a -Iincludes/ -Ilibft/ srcs/unset/unset.c libft/libft.a
