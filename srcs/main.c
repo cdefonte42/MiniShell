@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 12:02:39 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/22 12:23:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,67 +178,6 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 	return (SUCCESS);
 }
 
-/**
- * @brief replace every $(name rules) by is variable
- *  
- * @param cmde_lst 
- * @return int 
- */
-/* ATTENTION l'expansion se fait commande par commande, donc ici PAS BIEN 
-puisque expansion se fait sur toute la comde_lst */
-int	ft_expansion(t_cmde **cmde_lst, t_var *vars_lst)
-{
-	t_cmde	*head_cmd;
-	t_token	*head_token;
-	int		i;
-	int		len_var;
-	char	*key;
-	char	*newstr;
-
-	head_cmd = *cmde_lst;
-	while (head_cmd)
-	{
-		if (head_cmd->cmde_line)
-		{
-			head_token = head_cmd->cmde_line;
-			while (head_token)
-			{
-				printf("[%d]: %s\n", head_token->type, head_token->str);
-				if (head_token->type == word && ft_strchr(head_token->str, '$'))
-				{
-					i = 0;
-					while (head_token->str && head_token->str[i])
-					{
-						if (head_token->str[i] == '$')
-						{
-							len_var = 1;
-							while (ft_cisname(head_token->str[i + len_var]))
-								len_var++;
-							if (len_var == 1 && ++i)
-								continue ;
-							key = ft_substr(head_token->str, i, len_var);
-							if (!key)
-								return (FAILURE);
-							char *value = var_getvaluefromkey(vars_lst, key + 1);
-							newstr = ft_replacestr(head_token->str, key, value);
-							if (!newstr)
-								return (free(key), FAILURE);
-							free(head_token->str);
-							head_token->str = newstr;
-							printf("pff %d %d %s %s\n", i, len_var, key, head_token->str);
-						}
-						i++;
-					}
-				}
-				head_token = head_token->next;
-			}
-		}
-		head_cmd = head_cmd->next;
-	}
-	// ft_replacestr();
-	return (SUCCESS);
-}
-
 int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
 {
 	char	*dolls;
@@ -262,10 +201,8 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start)
 		return (FAILURE);
 	value = var_getvaluefromkey(vars_lst, dolls + 1);
 	newstr = ft_replacestr(token->str, dolls, value);
-	if (!newstr) //PAS BOOOON
-		return (free(dolls), FAILURE);
-	/* If replace == SUCCESS && newstr == NULL => rebrancher prochain toekn sur
-	le prev token */
+	if (!newstr)
+		return (printf("LALALA/n"), free(dolls), FAILURE);
 	free(token->str);
 	token->str = newstr;
 	return (ft_expand_token(token, vars_lst, 0));
