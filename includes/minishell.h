@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/23 12:46:31 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 17:35:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	minishell_free_rawcmd(t_minishell *msh);
 /* A FAIRE pour etre propre : un .h avec que les fcts utilities sur les structures
 t_var, et comme ca les bin include ce point h et ici on met que les proto des fcts
 principales des bins */
-int		minishell_echo(t_minishell *msh, char **av);
+int		minishell_echo(t_minishell *msh, char **av, int fdout);
 int		ft_cd(t_var **var_lst, char **directory);
 int		ft_pwd(void); //devrait avoir meme proto que tous les bin
 int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 16:28:32 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/23 17:28:03 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,21 +97,27 @@ int	ft_cat_var(t_var *var, char *key, char *value)
 }
 
 /* Print un element t_var selon le modele de export sans arg */
-void	ft_print_export(t_var *lst)
+void	ft_print_export(t_var *lst, int fdout)
 {
 	if (!lst || lst->type)
 		return ;
 	if (lst->type == shellvar)
 		return ;
-	if (lst->value == NULL)
-		printf("export %s\n", lst->key);
-	else
-		printf("export %s=\"%s\"\n", lst->key, lst->value);
+	ft_putstr_fd("export ", fdout);
+	ft_putstr_fd(lst->key, fdout);
+	if (lst->value)
+	{
+		ft_putstr_fd("=\"", fdout);
+		ft_putstr_fd(lst->value, fdout);
+		ft_putstr_fd("\"", fdout);
+		
+	}
+	ft_putstr_fd("\n", fdout);
 }
 
 /* Print les var d'env (et pas shell var) de la liste var_lst au format 
 d'export cad ds ordre alpha*/
-int	ft_put_export(t_var *var_lst)
+int	ft_put_export(t_var *var_lst, int fdout)
 {
 	t_var	*curr_kmin;
 	int		end;
@@ -123,7 +129,7 @@ int	ft_put_export(t_var *var_lst)
 	while (end--)
 	{
 		if (curr_kmin->type == envvar)
-			ft_print_export(curr_kmin);
+			ft_print_export(curr_kmin, fdout);
 		curr_kmin = ft_get_minkey_prev(var_lst, curr_kmin);
 	}
 	return (0);
@@ -181,7 +187,7 @@ int	ft_loop_export(t_var **var_lst, char *token)
 	return (SUCCESS);
 }
 
-int	ft_export(t_var **var_lst, char **argv)
+int	ft_export(t_var **var_lst, char **argv, int fdout)
 {
 	int		i;
 	int		ret_stat;
@@ -190,7 +196,7 @@ int	ft_export(t_var **var_lst, char **argv)
 	ret_stat = 0;
 	if (!argv || !*argv || !argv[1])
 	{
-		ft_put_export(*var_lst);
+		ft_put_export(*var_lst, fdout);
 		return (0);
 	}
 	while (argv[i])

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:39:43 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/21 20:42:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 17:36:07 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	check_option(char **av)
 	return (option);
 }
 
-int	minishell_echo(t_minishell *msh, char **av)
+int	minishell_echo(t_minishell *msh, char **av, int fdout)
 {
 	int	option;
 	int	i;
@@ -50,11 +50,11 @@ int	minishell_echo(t_minishell *msh, char **av)
 		i = 2;
 	while (av && av[i])
 	{
-		ft_putstr_fd(av[i++], 1);
+		ft_putstr_fd(av[i++], fdout);
 		if (av[i] != NULL)
-			ft_putchar_fd(' ', 1);
+			ft_putchar_fd(' ', fdout);
 	}
 	if (option == false)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', fdout);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 13:10:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 17:35:46 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	else if ((ft_strcmp(raw_cmde[0], "pwd") == 0))
 		ret_stat = ft_pwd();
 	else if ((ft_strcmp(raw_cmde[0], "export") == 0))
-		ret_stat = ft_export(&(msh->vars), raw_cmde);
+		ret_stat = ft_export(&(msh->vars), raw_cmde, cmde->pipefd[out]);
 	else if ((ft_strcmp(raw_cmde[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "echo") == 0))
-		ret_stat = minishell_echo(msh, raw_cmde);
+		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[out]);
 	free(raw_cmde);
 	raw_cmde = NULL;
 	return (ret_stat);

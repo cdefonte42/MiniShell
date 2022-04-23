@@ -6,13 +6,14 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 19:22:41 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 17:31:01 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
 
+/* Cree un pipe et set both curr cmde et next cmde 's pipes */
 int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 {
 	int	pipefd[2];
@@ -69,13 +70,13 @@ int	ft_redir(t_cmde *cmde)
 			else
 			{
 				if (head_token->type == redirin)
-					if (ft_open(&(cmde->fdin), file, O_RDONLY, 0) == FAILURE)
+					if (ft_open(&(cmde->pipefd[in]), file, O_RDONLY, 0) == FAILURE)
 						return (FAILURE);
 				if (head_token->type == redirout)
-					if (ft_open(&(cmde->fdout), file, 01101, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[out]), file, 01101, 00644) == FAILURE)
 						return (FAILURE);			
 				if (head_token->type == redirapp)
-					if (ft_open(&(cmde->fdout), file, 02101, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[out]), file, 02101, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}
