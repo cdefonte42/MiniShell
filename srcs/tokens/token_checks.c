@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 18:58:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 14:06:33 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	ft_check_tokens(t_token *lst)
 	return (SUCCESS);
 }
 
+
 char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *replace_w)
 {
 	int		t_rep_len;
@@ -109,9 +110,6 @@ char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *repla
 	final = ft_calloc(len_final, sizeof(char));
 	if (!final)
 		return (NULL);
-	i = 0;
-	while (ft_strncmp(dst + i, t_replace, t_rep_len) != 0)
-		i++;
 	ft_strlcpy(final, dst, i + 1);
 	if (replace_w)
 		ft_strlcat(final, replace_w, len_final);
