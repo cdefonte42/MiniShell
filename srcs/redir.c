@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 18:40:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:42:15 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ app		= O_APPEND | O_CREAT | O_WRONLY = 01011
 
 int	ft_open(int *fd, char *pathname, int flags, int mode)
 {
+	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
+		perror("closing fd failed ft_open");
 	*fd = open(pathname, flags, mode);
 	if (*fd == -1)
 		return (ft_perror(NULL, pathname), FAILURE);
