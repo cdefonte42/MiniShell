@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 18:13:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:18:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
 		return (FAILURE);
+	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
+		printf("NOPE CLODE PIPE IN\n");
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
@@ -84,7 +86,7 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[out]);
 	free(raw_cmde);
 	raw_cmde = NULL;
-	if (close(cmde->pipefd[out]) == -1)
+	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
 		printf("NOPE CLODE PIPE OUT\n");
 	return (ret_stat);
 }

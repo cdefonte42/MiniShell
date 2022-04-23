@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 17:31:01 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:35:01 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ heredoc = O_RDONLY, 00644							=> pour le lire
 out		= , O_WRONLY | O_CREAT | O_TRUNC = 01101
  S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH = 00644
 in		= , O_RDONLY
-app		= O_APPEND | O_CREAT | O_WRONLY = 02101
+app		= O_APPEND | O_CREAT | O_WRONLY = 01011
 */
 
 int	ft_open(int *fd, char *pathname, int flags, int mode)
@@ -76,7 +76,7 @@ int	ft_redir(t_cmde *cmde)
 					if (ft_open(&(cmde->pipefd[out]), file, 01101, 00644) == FAILURE)
 						return (FAILURE);			
 				if (head_token->type == redirapp)
-					if (ft_open(&(cmde->pipefd[out]), file, 02101, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[out]), file, 01011, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}
