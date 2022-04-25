@@ -1,4 +1,6 @@
 *.o
+filetest.txt
+bisfile.txt
 a.out
 M
 minishell
