@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 12:48:31 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 13:13:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,10 +146,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	if (cmde->pid == 0)
 	{
 		if (ft_redir(cmde) == FAILURE)
-		{
 			ft_exit_child(child, msh, cmde);
-			exit(FAILURE);
-		}
 		printf("cmde actuelle ds fork = %s\n", cmde->cmde_line->str);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
@@ -159,7 +156,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		}
 		child.argv = ft_lst_to_char(cmde->cmde_line);
 		if (!child.argv)
-			exit(EXIT_FAILURE);
+			ft_exit_child(child, msh, cmde);
 		child.envp = ft_varlst_tochar(msh->vars);
 		if (!child.envp)
 			ft_exit_child(child, msh, cmde);
@@ -169,6 +166,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		if (execve(child.pathname, child.argv, child.envp) == -1)
 			perror("execve failed\n");
 		ft_exit_child(child, msh, cmde);
+		exit(FAILURE);
 	}
 	return (SUCCESS);
 }
@@ -182,7 +180,7 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
 	{
 		if (ft_fork(msh, cmde) == FAILURE)
-			return (FAILURE);
+			return (perror("ft_fork failed ds ft_exec"), FAILURE);
 	}
 	else
 		ft_exec_bin(msh, cmde); //ATTENTION nedd return status MAIS pas utiliser FAILURE ni SUCCESS
@@ -209,7 +207,7 @@ int	minishell_loop(t_minishell *msh)
 {
 	char	*line;
 	t_cmde	*curr_cmde;
-
+	int i = 0;
 	while (msh->loop)
 	{
 		line = readline(C_BLUE"minishell-"VERSION C_RESET"$ ");
@@ -222,7 +220,9 @@ int	minishell_loop(t_minishell *msh)
 		{
 			if (ft_parse(msh, line) != FAILURE)
 			{
+		printf("%d: %s\n", i++,  line);
 				curr_cmde = msh->cmde_lst;
+		printf("%d: %s\n", i++,  line);
 				while (curr_cmde)
 				{
 					//ft_print_cmdelst(curr_cmde);
@@ -232,12 +232,16 @@ int	minishell_loop(t_minishell *msh)
 					ft_exec(msh, curr_cmde);
 //					if (ft_exec(msh, curr_cmde) == FAILURE)
 //						return (CLEAR TOUT niahniahniah);
+					if (curr_cmde->next == NULL)
+						waitpid(curr_cmde->pid, NULL, 0);
 					curr_cmde = curr_cmde->next;
 				}
+		printf("%d: %s\n", i++,  line);
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
 		}
+		printf("%d: %s\n", i++,  line);
 		if (line && *line)
 			add_history (line);
 		free(line);
