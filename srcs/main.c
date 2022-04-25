@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 18:02:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:23:10 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	char	**raw_cmde;
 	int		ret_stat;
 
-	printf("DANS EXC BIN\n");
 	ret_stat = 0;
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
@@ -121,11 +120,11 @@ char	**ft_varlst_tochar(t_var *varlst)
 
 void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
 {
+	ft_perror(cmde->cmde_line->str, NULL);
 	free(child.argv);
 	free(child.pathname);
 	ft_msh_clear(msh);
 	ft_free_tabtab(child.envp);
-	ft_perror(cmde->cmde_line->str, NULL);
 	if (errno == 13)
 		exit(127);
 	else if (errno == 2 || errno == 36)
@@ -150,8 +149,6 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			ft_exit_child(child, msh, cmde);
 		if (ft_redir(cmde) == FAILURE)
 			ft_exit_child(child, msh, cmde);
-		printf("cmde %s pipefd[in] = %d et out = %d\n", cmde->cmde_line->str, cmde->pipefd[in], cmde->pipefd[out]);
-		printf("cmde actuelle ds fork = %s\n", cmde->cmde_line->str);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
 			g_status = ft_exec_bin(msh, cmde);
@@ -187,7 +184,6 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 		return (FAILURE);
 	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
 	{
-		printf("FORK cmde %s\n", cmde->cmde_line->str);
 		if (ft_fork(msh, cmde) == FAILURE)
 			return (perror("ft_fork failed ds ft_exec"), FAILURE);
 	}

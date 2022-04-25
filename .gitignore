@@ -1,6 +1,6 @@
 *.o
-filetest.txt
-bisfile.txt
+filetest
+bisfile
 a.out
 M
 minishell

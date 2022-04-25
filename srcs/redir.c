@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 17:53:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:18:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 //		perror("closing prev pipefd in c2 failed ft_pipe_cmdes");
 	c1->pipefd[out] = pipefd[out];
 	c2->pipefd[in] = pipefd[in];
-	printf("c1 out = %d et c2 in = %d\n", c1->pipefd[out], c2->pipefd[in]);
 //	if (close(pipefd[in]) == -1 || close(pipefd[out]) == outt)
 //		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
 	return (SUCCESS);
@@ -46,7 +45,7 @@ heredoc = O_RDONLY, 00644							=> pour le lire
 out		= , O_WRONLY | O_CREAT | O_TRUNC = 01101
  S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH = 00644
 in		= , O_RDONLY
-app		= O_APPEND | O_CREAT | O_WRONLY = 01011
+app		= O_APPEND | O_CREAT | O_WRONLY = 01011 (MAC) OU 02101 (LINUX)
 */
 
 int	ft_open(int *fd, char *pathname, int flags, int mode)
@@ -83,7 +82,7 @@ int	ft_redir(t_cmde *cmde)
 					if (ft_open(&(cmde->pipefd[out]), file, 01101, 00644) == FAILURE)
 						return (FAILURE);			
 				if (head_token->type == redirapp)
-					if (ft_open(&(cmde->pipefd[out]), file, 01011, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[out]), file, 02101, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}
