@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/21 19:24:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:47:38 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,12 @@ int	ft_parse(t_minishell *msh, char *line)
 	t_token	*token_lst;
 
 	token_lst = NULL;
+	msh->cmde_lst = NULL;
+	if (*line == 0)
+	{
+		msh->cmde_lst = NULL;
+		return (SUCCESS);
+	}
 	if (ft_tokener(&token_lst, line) == FAILURE)
 		return (FAILURE);
 	else if (!token_lst)

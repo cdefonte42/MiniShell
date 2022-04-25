@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 15:10:08 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:37:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,14 @@ int	ft_redir(t_cmde *cmde)
 		}
 		head_token = head_token->next;
 	}
+	return (SUCCESS);
+}
+
+int	ft_dup(t_cmde *cmde)
+{
+	if (cmde->prev && dup2(0, cmde->pipefd[in]) == -1)
+		return (perror("ft_dup to in failed"), FAILURE);
+	if (cmde->next && dup2(1, cmde->pipefd[out]) == -1)
+		return (perror("ft_dup to out failed"), FAILURE);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 13:09:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:54:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	ft_cmdelst_clear(t_cmde *lst)
 {
 	t_cmde	*last;
 
+	last = lst;
 	while (lst)
 	{
 		//free(lst->prev);
@@ -70,8 +71,9 @@ void	ft_cmdelst_clear(t_cmde *lst)
 		last = lst;
 		lst = lst->next;
 		ft_tokenlst_free(last->cmde_line);
+		free(last);
+		last = NULL;
 	}
-	free(last);
 }
 
 int	ft_cmdelst_size(t_cmde *lst)
