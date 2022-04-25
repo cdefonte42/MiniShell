@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 10:30:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 10:55:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,9 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		envp = ft_varlst_tochar(msh->vars);
 		if (!envp)
 			exit(EXIT_FAILURE);
+		pathname = check_permission(msh, argv[0]);
+		if (!pathname)
+			exit(127);
 		if (execve(pathname, argv, envp) == -1)
 			perror("execve failed\n");
 		free(argv);

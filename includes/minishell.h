@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/23 18:07:40 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 10:37:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,7 @@ void	ft_error(char *prefix, char *suffix);
 int		ft_parse(t_minishell *msh, char *line);
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 
+/*_________ PATHNAME __________*/
+char	*check_permission(t_pipex *pipx, char *cmd);
 
 #endif

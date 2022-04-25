@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/23 16:13:52 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/04/25 10:37:11 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ srcs/parsing.c \
 srcs/grammar.c \
 srcs/utils.c \
 srcs/free.c \
+srcs/pathname.c \
 srcs/redir.c \
 srcs/init_msh.c \
 srcs/expansion.c
