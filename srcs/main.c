@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 11:05:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:48:31 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
+
+int	g_status;
 
 /* retourne le nombre de oken ayant pour type 'type' */
 int	ft_count_tokens_type(t_token *lst, t_token_type type)
@@ -116,53 +118,57 @@ char	**ft_varlst_tochar(t_var *varlst)
 	return (env);
 }
 
-void	ft_exit_child(char **argv, char **envp, char *pname, t_minishell *msh)
+void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
 {
-	free(argv);
-	free(pname);
+	free(child.argv);
+	free(child.pathname);
 	ft_msh_clear(msh);
-	ft_free_tabtab(envp);
+	ft_free_tabtab(child.envp);
+	ft_perror(cmde->cmde_line->str, NULL);
+	if (errno == 13)
+		exit(127);
+	else if (errno == 2 || errno == 36)
+		exit(126);
+	else if (errno == 5)
+		exit(254);
+	exit(EXIT_FAILURE);
 }
 
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
 {
-	char	**argv;
-	char	**envp;
-	char	*pathname;
-	int		ret_status;
+	t_child	child;
 
 	cmde->pid = fork();
 	if (cmde->pid == -1)
-		return (FAILURE);
-	argv = NULL;
-	envp = NULL;
-	pathname = NULL;
+		return (perror("fork failed"), FAILURE);
+	ft_memset(&child, 0, sizeof(t_child));
+	errno = 0;
 	if (cmde->pid == 0)
 	{
 		if (ft_redir(cmde) == FAILURE)
+		{
+			ft_exit_child(child, msh, cmde);
 			exit(FAILURE);
+		}
+		printf("cmde actuelle ds fork = %s\n", cmde->cmde_line->str);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
-			ret_status = ft_exec_bin(msh, cmde);
+			g_status = ft_exec_bin(msh, cmde);
 			ft_msh_clear(msh);
-			exit(ret_status);
+			exit(g_status);
 		}
-		argv = ft_lst_to_char(cmde->cmde_line);
-		if (!argv)
+		child.argv = ft_lst_to_char(cmde->cmde_line);
+		if (!child.argv)
 			exit(EXIT_FAILURE);
-		envp = ft_varlst_tochar(msh->vars);
-		if (!envp)
-			exit(EXIT_FAILURE);
-		pathname = check_permission(msh, argv[0]);
-		if (!pathname)
-		{
-			ft_exit_child(argv, envp, pathname, msh);
-			exit(127);
-		}
-		if (execve(pathname, argv, envp) == -1)
+		child.envp = ft_varlst_tochar(msh->vars);
+		if (!child.envp)
+			ft_exit_child(child, msh, cmde);
+		child.pathname = check_permission(msh, child.argv[0]);
+		if (!child.pathname)
+			ft_exit_child(child, msh, cmde);
+		if (execve(child.pathname, child.argv, child.envp) == -1)
 			perror("execve failed\n");
-		ft_exit_child(argv, envp, pathname, msh);
-		exit(FAILURE);
+		ft_exit_child(child, msh, cmde);
 	}
 	return (SUCCESS);
 }
@@ -184,8 +190,6 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 //			return (FAILURE);
 	return (SUCCESS);
 }
-
-int	g_status;
 
 void	signal_handler(int signalid)
 {

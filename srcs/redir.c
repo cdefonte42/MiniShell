@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 18:42:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:51:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 		perror("closing prev pipefd out c1 failed ft_pipe_cmdes");
 	if (c2->pipefd[in] != 1 && close(c2->pipefd[in]) == -1)
 		perror("closing prev pipefd in c2 failed ft_pipe_cmdes");
-	c1->pipefd[out] = pipefd[out];
-	c2->pipefd[in] = pipefd[in];
-	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
-		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
+	c1->pipefd[out] = pipefd[in];
+	c2->pipefd[in] = pipefd[out];
+//	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
+//		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
 	return (SUCCESS);
 }
 

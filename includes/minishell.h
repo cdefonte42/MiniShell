@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/25 10:37:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:11:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ typedef struct s_minishell {
 	bool			loop;
 }	t_minishell;
 
+typedef struct s_child {
+	char	**argv;
+	char	**envp;
+	char	*pathname;
+}	t_child;
+
 // Free
 void	ft_msh_clear(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
@@ -118,6 +124,6 @@ int		ft_parse(t_minishell *msh, char *line);
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 
 /*_________ PATHNAME __________*/
-char	*check_permission(t_pipex *pipx, char *cmd);
+char	*check_permission(t_minishell *msh, char *cmd);
 
 #endif

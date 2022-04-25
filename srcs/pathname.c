@@ -6,19 +6,19 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:31:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 10:53:32 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 12:31:45 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
+#include "export.h"
 
 char	**ft_split_paths(t_minishell *msh)
 {
 	char	**paths;
-	char	*val;
+	char	*var;
 
-	var = ft_getvaluefromkey(msh->vars, "PATHS");
+	var = var_getvaluefromkey(msh->vars, "PATH");
 	if (!var)
 		return (NULL);
 	paths = ft_split(var, ':');
@@ -32,20 +32,23 @@ static char    *get_cmd(t_minishell *msh, char *cmd)
     char    *temp;
     char    *command;
 	char	**paths;
+	int		i;
 
 	paths = ft_split_paths(msh);
 	if (!paths)
 		return (NULL);
-    while (paths && *paths)
+	i = 0;
+    while (paths && paths[i])
     {
-        temp = ft_strjoin(*paths, "/");
+        temp = ft_strjoin(paths[i], "/");
         command = ft_strjoin(temp, cmd);
         free(temp);
         if (access(command, 0) == 0)
             return (command);
         free(command);
-        paths++;
+        i++;
     }
+	ft_free_tabtab(paths);
     return (NULL);
 }
 
@@ -58,11 +61,7 @@ char    *check_permission(t_minishell *msh, char *cmd)
             if (access(cmd, R_OK | X_OK) == 0)
                 return (ft_strdup(cmd));
             else
-            {
-                ft_error(cmd, ERR_PERM);
-				ft_msh_clear(msh);
-                exit(126);
-            }
+				return (NULL);
         }
         else
             return (NULL);
