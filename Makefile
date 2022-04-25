@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/25 15:11:24 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/04/25 15:58:54 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,4 +75,5 @@ fun			: all
 	nm -uAl $(NAME)
 
 re			:	fclean all
+
 .PHONY: all clean run fclean
