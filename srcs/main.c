@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 10:55:27 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 11:05:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,14 @@ char	**ft_varlst_tochar(t_var *varlst)
 	return (env);
 }
 
+void	ft_exit_child(char **argv, char **envp, char *pname, t_minishell *msh)
+{
+	free(argv);
+	free(pname);
+	ft_msh_clear(msh);
+	ft_free_tabtab(envp);
+}
+
 int	ft_fork(t_minishell *msh, t_cmde *cmde)
 {
 	char	**argv;
@@ -126,6 +134,9 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	cmde->pid = fork();
 	if (cmde->pid == -1)
 		return (FAILURE);
+	argv = NULL;
+	envp = NULL;
+	pathname = NULL;
 	if (cmde->pid == 0)
 	{
 		if (ft_redir(cmde) == FAILURE)
@@ -144,12 +155,13 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			exit(EXIT_FAILURE);
 		pathname = check_permission(msh, argv[0]);
 		if (!pathname)
+		{
+			ft_exit_child(argv, envp, pathname, msh);
 			exit(127);
+		}
 		if (execve(pathname, argv, envp) == -1)
 			perror("execve failed\n");
-		free(argv);
-		ft_msh_clear(msh);
-		ft_free_tabtab(envp);
+		ft_exit_child(argv, envp, pathname, msh);
 		exit(FAILURE);
 	}
 	return (SUCCESS);
