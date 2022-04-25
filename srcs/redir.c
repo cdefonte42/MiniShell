@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 15:37:49 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 17:53:16 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 		return (SUCCESS);
 	if (pipe(pipefd) == -1)
 		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);
-	if (c1->pipefd[out] != 1 && close(c1->pipefd[out]) == -1)
-		perror("closing prev pipefd out c1 failed ft_pipe_cmdes");
-	if (c2->pipefd[in] != 0 && close(c2->pipefd[in]) == -1)
-		perror("closing prev pipefd in c2 failed ft_pipe_cmdes");
-	c1->pipefd[out] = pipefd[in];
-	c2->pipefd[in] = pipefd[out];
-//	if (close(pipefd[in]) == -1 || close(pipefd[out]) == -1)
+//	if (c1->pipefd[out] != 1 && close(c1->pipefd[out]) == -1)
+//		perror("closing prev pipefd out c1 failed ft_pipe_cmdes");
+//	if (c2->pipefd[in] != 0 && close(c2->pipefd[in]) == -1)
+//		perror("closing prev pipefd in c2 failed ft_pipe_cmdes");
+	c1->pipefd[out] = pipefd[out];
+	c2->pipefd[in] = pipefd[in];
+	printf("c1 out = %d et c2 in = %d\n", c1->pipefd[out], c2->pipefd[in]);
+//	if (close(pipefd[in]) == -1 || close(pipefd[out]) == outt)
 //		return (perror("closing pipes ft_pipe_cmdes"), FAILURE);
 	return (SUCCESS);
 }
@@ -93,9 +94,13 @@ int	ft_redir(t_cmde *cmde)
 
 int	ft_dup(t_cmde *cmde)
 {
-	if (cmde->prev && dup2(0, cmde->pipefd[in]) == -1)
+	if (cmde->prev && dup2(cmde->pipefd[in], 0) == -1)
 		return (perror("ft_dup to in failed"), FAILURE);
-	if (cmde->next && dup2(1, cmde->pipefd[out]) == -1)
+	if (cmde->next && dup2(cmde->pipefd[out], 1) == -1)
 		return (perror("ft_dup to out failed"), FAILURE);
+//	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
+//		return (perror("ft_dup close pipe in failed"), FAILURE);
+//	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
+//		return (perror("ft_dup close pipe in failed"), FAILURE);
 	return (SUCCESS);
 }

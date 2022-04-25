@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 15:34:07 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:02:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,14 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	char	**raw_cmde;
 	int		ret_stat;
 
+	printf("DANS EXC BIN\n");
 	ret_stat = 0;
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
 		return (FAILURE);
-	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
-		printf("NOPE CLODE PIPE IN\n");
+//	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
+//		printf("NOPE CLODE PIPE IN\n");
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
@@ -88,8 +89,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[out]);
 	free(raw_cmde);
 	raw_cmde = NULL;
-	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
-		printf("NOPE CLODE PIPE OUT\n");
+//	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
+//		printf("NOPE CLODE PIPE OUT\n");
 	return (ret_stat);
 }
 
@@ -149,6 +150,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			ft_exit_child(child, msh, cmde);
 		if (ft_redir(cmde) == FAILURE)
 			ft_exit_child(child, msh, cmde);
+		printf("cmde %s pipefd[in] = %d et out = %d\n", cmde->cmde_line->str, cmde->pipefd[in], cmde->pipefd[out]);
 		printf("cmde actuelle ds fork = %s\n", cmde->cmde_line->str);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
@@ -170,6 +172,10 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		ft_exit_child(child, msh, cmde);
 		exit(FAILURE);
 	}
+	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
+		perror("NIEH 1");
+	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
+		perror("NIEH 2");
 	return (SUCCESS);
 }
 
@@ -181,6 +187,7 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 		return (FAILURE);
 	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
 	{
+		printf("FORK cmde %s\n", cmde->cmde_line->str);
 		if (ft_fork(msh, cmde) == FAILURE)
 			return (perror("ft_fork failed ds ft_exec"), FAILURE);
 	}
