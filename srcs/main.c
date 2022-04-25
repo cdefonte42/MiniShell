@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 13:13:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:05:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,6 @@ int	minishell_loop(t_minishell *msh)
 {
 	char	*line;
 	t_cmde	*curr_cmde;
-	int i = 0;
 	while (msh->loop)
 	{
 		line = readline(C_BLUE"minishell-"VERSION C_RESET"$ ");
@@ -220,9 +219,7 @@ int	minishell_loop(t_minishell *msh)
 		{
 			if (ft_parse(msh, line) != FAILURE)
 			{
-		printf("%d: %s\n", i++,  line);
 				curr_cmde = msh->cmde_lst;
-		printf("%d: %s\n", i++,  line);
 				while (curr_cmde)
 				{
 					//ft_print_cmdelst(curr_cmde);
@@ -236,12 +233,10 @@ int	minishell_loop(t_minishell *msh)
 						waitpid(curr_cmde->pid, NULL, 0);
 					curr_cmde = curr_cmde->next;
 				}
-		printf("%d: %s\n", i++,  line);
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
 		}
-		printf("%d: %s\n", i++,  line);
 		if (line && *line)
 			add_history (line);
 		free(line);
