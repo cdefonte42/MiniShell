@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 17:45:23 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 17:55:19 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/25 18:28:01 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include "libft.h"
 #include <stdio.h>
 
-static int	init_defaultvar(t_minishell *msh, char *splited[2])
-{
-	return (SUCCESS);
-}
+//static int	init_defaultvar(t_minishell *msh, char *splited[2])
+//{
+//	return (SUCCESS);
+//}
 
 static int	new_var(t_minishell *msh, char *splited[2])
 {

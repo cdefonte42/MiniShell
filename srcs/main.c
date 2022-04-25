@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 18:23:10 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:54:03 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,9 +145,9 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	errno = 0;
 	if (cmde->pid == 0)
 	{
-		if (ft_dup(cmde) == FAILURE)
-			ft_exit_child(child, msh, cmde);
 		if (ft_redir(cmde) == FAILURE)
+			ft_exit_child(child, msh, cmde);
+		if (ft_dup(cmde) == FAILURE)
 			ft_exit_child(child, msh, cmde);
 		if (ft_isbin(cmde->cmde_line->str))
 		{

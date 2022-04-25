@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 18:18:39 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:53:56 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ int	ft_redir(t_cmde *cmde)
 
 int	ft_dup(t_cmde *cmde)
 {
-	if (cmde->prev && dup2(cmde->pipefd[in], 0) == -1)
+	if (dup2(cmde->pipefd[in], 0) == -1)
 		return (perror("ft_dup to in failed"), FAILURE);
-	if (cmde->next && dup2(cmde->pipefd[out], 1) == -1)
+	if (dup2(cmde->pipefd[out], 1) == -1)
 		return (perror("ft_dup to out failed"), FAILURE);
 //	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
 //		return (perror("ft_dup close pipe in failed"), FAILURE);
