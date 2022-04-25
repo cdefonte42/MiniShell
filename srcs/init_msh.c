@@ -16,11 +16,27 @@
 #include "libft.h"
 #include <stdio.h>
 
+static int	init_defaultvar(t_minishell *msh, char *splited[2])
+{
+	return (SUCCESS);
+}
+
+static int	new_var(t_minishell *msh, char *splited[2])
+{
+	t_var_type	type;
+
+	type = envvar;
+	if (ft_strcmp(splited[0], "_") == 0)
+		type = shellvar;
+	if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 int	ft_init_envlst(t_minishell *msh, char **envp)
 {
 	int			i;
 	char		*splited[2];
-	t_var_type	type;
 	int			j;
 
 	i = 0;
@@ -29,7 +45,6 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 		return (FAILURE);
 	while (envp && envp[i])
 	{
-		type = envvar;
 		j = 0;
 		while (envp[i] && envp[i][j] != '=')
 			j++;
@@ -39,9 +54,7 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 		splited[1] = ft_strdup_until_i(envp[i] + j + 1, ft_strlen(envp[i] + j));
 		if (!splited[1])
 			return (free(splited[0]), perror("ft_init_envlst failed"), FAILURE);
-		if (ft_strcmp(splited[0], "_") == 0)
-			type = shellvar;
-		if (ft_new_var(&(msh->vars), splited[0], splited[1], type) == FAILURE)
+		if (!new_var(msh, splited))
 			return (FAILURE);
 		i++;
 	}
