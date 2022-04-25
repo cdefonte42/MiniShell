@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 13:56:58 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 14:28:40 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/25 17:37:26 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,28 @@ static void	ft_put_error(char *token)
 void	ft_rm_varlst_elem(t_var **lst, char *key)
 {
 	t_var	*to_rm;
+	t_var	*prev;
 	t_var	*elem;
 
 	if (!lst)
 		return ;
 	elem = *lst;
+	prev = NULL;
 	while (elem)
 	{
-		if (elem->next && ft_strcmp(elem->next->key, key) == 0)
+		if (ft_strcmp(elem->key, key) == 0)
 		{
-			to_rm = elem->next;
+			to_rm = elem;
 			free(to_rm->key);
 			free(to_rm->value);
-			elem->next = to_rm->next;
+			if (prev)
+				prev->next = to_rm->next;
+			else
+				*lst = to_rm->next;
 			free(to_rm);
 			return ;
 		}
+		prev = elem;
 		elem = elem->next;
 	}
 }
