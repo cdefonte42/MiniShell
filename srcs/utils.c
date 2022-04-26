@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 17:24:21 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/26 10:37:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,14 @@ void	ft_free_tabtab(char **tab)
 	while (tab && tab[i])
 	{
 		free(tab[i]);
+		tab[i] = NULL;
 		i++;
 	}
 	if (tab)
+	{
 		free(tab);
+		tab = NULL;
+	}
 }
 
 int	ft_isblank(char c)
