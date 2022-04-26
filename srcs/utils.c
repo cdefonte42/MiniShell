@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 12:58:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:19:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,5 +144,6 @@ void	ft_error(char *prefix, char *suffix)
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(suffix, 2);
 	}
+	ft_putstr_fd("\n", 2);
 }
 
