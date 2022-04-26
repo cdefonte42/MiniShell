@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 19:08:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:21:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_token	*ft_tokenlst_new(char *str, int type);
 void	ft_tokenlst_addback(t_token **alst, t_token *new);
 t_token	*ft_tokenlst_last(t_token *lst);
 void	ft_tokenlst_free(t_token *lst);
+void	ft_tokenlst_pop(t_token **lst, int i);
 
 /*__________ TOKEN LST UTILS ___________*/
 int		ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *));
@@ -58,4 +59,7 @@ int		ft_check_tokens(t_token *lst);
 
 int		remove_quote(t_token *lst);
 char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *replace_w);
+
+/*__________ DEBUG ___________*/
+void	ft_print_tokenlst(t_token *lst);
 #endif

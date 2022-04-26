@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:31:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 12:31:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:54:29 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ char    *check_permission(t_minishell *msh, char *cmd)
         else
             return (NULL);
     }
+    else if (!cmd || *cmd == 0)
+        return (errno = 2, NULL);
     else
         return (get_cmd(msh, cmd));
     return (NULL);

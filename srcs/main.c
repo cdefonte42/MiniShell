@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 10:25:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:57:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 
 	if (!varlst)
 		return (NULL);
-	nbvar = ft_varlst_size(varlst);
+	nbvar = ft_varlst_size(varlst) - ft_varlst_size_empty(varlst);
 	env = malloc(sizeof(char *) * (nbvar + 1));
 	if (!env)
 		return (NULL);
@@ -114,12 +114,6 @@ char	**ft_varlst_tochar(t_var *varlst)
 			if (!env[i])
 				return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
 		}
-		else
-		{
-			env[i] = ft_strjoin(varlst->key, "=");
-			if (!env[i])
-				return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
-		}
 		i++;
 		varlst = varlst->next;
 	}
@@ -129,7 +123,10 @@ char	**ft_varlst_tochar(t_var *varlst)
 
 void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
 {
-	ft_perror(cmde->cmde_line->str, NULL);
+	if (errno != 2)
+		ft_perror(cmde->cmde_line->str, NULL);
+	else
+		ft_error(cmde->cmde_line->str, "command not found\n");
 	free(child.argv);
 	free(child.pathname);
 	ft_msh_clear(msh);
@@ -236,13 +233,11 @@ int	minishell_loop(t_minishell *msh)
 				curr_cmde = msh->cmde_lst;
 				while (curr_cmde)
 				{
-					//ft_print_cmdelst(curr_cmde);
 					ft_expansion(curr_cmde, msh->vars);
 					if (ft_tokenlst_iteri(curr_cmde->cmde_line, &remove_quote) == FAILURE)
 						return (FAILURE); //NON
-					ft_exec(msh, curr_cmde);
-//					if (ft_exec(msh, curr_cmde) == FAILURE)
-//						return (CLEAR TOUT niahniahniah);
+					if (ft_exec(msh, curr_cmde) == FAILURE)
+						return (free(line), clear_history(), FAILURE);
 					if (curr_cmde->next == NULL)
 						waitpid(curr_cmde->pid, NULL, 0);
 					curr_cmde = curr_cmde->next;

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 19:11:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:38:44 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,31 @@ void	ft_tokenlst_free(t_token *lst)
 		free(prev);
 		prev = NULL;
 	}
+}
+
+void	ft_tokenlst_pop(t_token **lst, int i)
+{
+	t_token	*prev;
+	t_token	*to_rm;
+	int		j;
+
+	j = 0;
+	to_rm = *lst;
+	prev = NULL;
+	while (to_rm && j < i)
+	{
+		prev = to_rm;
+		to_rm = to_rm->next;
+		j++;
+	}
+	if (to_rm == NULL)
+		return ;
+	if (prev == NULL)
+		*lst = to_rm->next;
+	else
+		prev->next = to_rm->next;
+	free(to_rm->str);
+	to_rm->str = NULL;
+	free(to_rm);
+	to_rm = NULL;
 }
