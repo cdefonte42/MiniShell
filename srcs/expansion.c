@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/23 14:06:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:43:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,31 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type inq
 	return (ft_expand_token(token, vars_lst, start, inquote));
 }
 
+/*Remove de la token_lst les elements dont la str est NULL ou str[0] == NULL */
+void	ft_remove_empty_token(t_token **token_lst)
+{
+	t_token	*head;
+	int		i;
+
+	head = *token_lst;
+	i = 0;
+	while (head)
+	{
+		if (head->str == NULL || head->str[0] == 0)
+		{
+			ft_tokenlst_pop(token_lst, i);
+			head = *token_lst;
+			i = 0;
+		}
+		else
+		{
+			i++;
+			head = head->next;
+		}
+	}
+}
+
 /* L'expansion est faite APRES les pipes ET APRES les redirections */
-/* AUTRE pb: il peut y avoir PLUSIEURS $var dans un seul token! */
 int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 {
 	t_token	*head_token;
@@ -72,5 +95,10 @@ int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 		}
 		head_token = head_token->next;
 	}
+	printf("AVANT\n");
+	ft_print_tokenlst(cmde_elem->cmde_line);
+	ft_remove_empty_token(&cmde_elem->cmde_line);
+	printf("APRES\n");
+	ft_print_tokenlst(cmde_elem->cmde_line);
 	return (SUCCESS);
 }

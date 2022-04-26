@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/25 15:58:54 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/04/26 12:22:57 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ srcs/tokens/token_checks.c \
 srcs/tokens/token_cuts.c \
 srcs/tokens/token_lst.c \
 srcs/tokens/token_utils.c \
+srcs/tokens/token_debug.c \
 srcs/cmdes/cmde_lst.c \
 srcs/export/export.c \
 srcs/export/export_utils.c \
