@@ -60,7 +60,7 @@ t_var	*var_getfromkey(t_var *var_list, char *key)
 	return (head);
 }
 
-/* Retourne l'element de la liste 'var_list' qui a comme key valeur 'key'. */
+/* Retourne le ptr de la valeur correspondant à la clé `key`. */
 char	*var_getvaluefromkey(t_var *var_list, char *key)
 {
 	t_var	*head;
