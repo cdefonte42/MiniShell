@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/26 13:55:58 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/26 14:13:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,6 @@ int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 		}
 		head_token = head_token->next;
 	}
-	ft_print_tokenlst(cmde_elem->cmde_line);
 	ft_remove_empty_token(&cmde_elem->cmde_line);
-	ft_print_tokenlst(cmde_elem->cmde_line);
 	return (SUCCESS);
 }
