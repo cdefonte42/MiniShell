@@ -55,8 +55,7 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
 	start = get_start(token, start, &iq);
 	if (!token->str[start])
 		return (SUCCESS);
-	if (token->str[start] == '$' && !token->str[start + 1] \
-	&& !ft_fcisname(token->str[start + 1]))
+	if ((token->str[start] == '$' && !ft_fcisname(token->str[start + 1])))
 		return (ft_expand_token(token, vars_lst, start + 1, iq));
 	while (ft_cisname(token->str[start + len]))
 		len++;
