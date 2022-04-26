@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/21 13:04:26 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/26 10:54:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,24 @@ int	ft_varlst_size(t_var *var_lst)
 	{
 		head = head->next;
 		++i;
+	}
+	return (i);
+}
+
+/* Retourne le nombre d'elements dans la liste 'var_lst' dont les values sont
+NON NULLES*/
+int	ft_varlst_size_empty(t_var *var_lst)
+{
+	t_var	*head;
+	int		i;
+
+	i = 0;
+	head = var_lst;
+	while (head)
+	{
+		if (head->value)
+			++i;
+		head = head->next;
 	}
 	return (i);
 }
