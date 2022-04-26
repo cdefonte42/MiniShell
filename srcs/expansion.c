@@ -6,42 +6,33 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/23 14:06:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 12:04:17 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
 
-int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type inquote)
+static int	get_start(t_token *token, int start, t_quote_type *iq)
 {
-	char			*dolls;
-	char			*value;
-	int				len_var;
-	char			*newstr;
-
-	len_var = 2;
-	if (!token || !token->str || !token->str[start])
-		return (SUCCESS);
-	while (token->str[start] && (inquote == singleq || token->str[start] != '$'))
+	while (token->str[start] && (*iq == singleq || token->str[start] != '$'))
 	{
-		if (token->str[start] == '"' && (inquote != singleq || inquote == 0))
-		{
-			inquote = inquote ^ doubleq;
-		}
-		else if (token->str[start] == '\'' && (inquote != doubleq || inquote == 0))
-		{
-			inquote = inquote ^ singleq;
-		}
+		if (token->str[start] == '"' && (*iq != singleq || *iq == 0))
+			*iq = *iq ^ doubleq;
+		else if (token->str[start] == '\'' && (*iq != doubleq || *iq == 0))
+			*iq = *iq ^ singleq;
 		start++;
 	}
-	if (!token->str[start])
-		return (SUCCESS);
-	else if (token->str[start] == '$' && !ft_fcisname(token->str[start + 1]))
-		ft_expand_token(token, vars_lst, start + 1, inquote);
-	while (ft_cisname(token->str[start + len_var]))
-		len_var++;
-	dolls = ft_substr(token->str, start, len_var);
+	return (start);
+}
+
+static int	replace(t_token *token, t_var *vars_lst, int start, int len)
+{
+	char	*dolls;
+	char	*value;
+	char	*newstr;
+
+	dolls = ft_substr(token->str, start, len);
 	if (!dolls)
 		return (FAILURE);
 	value = var_getvaluefromkey(vars_lst, dolls + 1);
@@ -51,7 +42,27 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type inq
 		return (FAILURE);
 	free(token->str);
 	token->str = newstr;
-	return (ft_expand_token(token, vars_lst, start, inquote));
+	return (SUCCESS);
+}
+
+int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
+{
+	int		len;
+
+	len = 2;
+	if (!token || !token->str || !token->str[start])
+		return (SUCCESS);
+	start = get_start(token, start, &iq);
+	if (!token->str[start])
+		return (SUCCESS);
+	if (token->str[start] == '$' && !token->str[start + 1] \
+	&& !ft_fcisname(token->str[start + 1]))
+		return (ft_expand_token(token, vars_lst, start + 1, iq));
+	while (ft_cisname(token->str[start + len]))
+		len++;
+	if (replace(token, vars_lst, start, len) == FAILURE)
+		return (FAILURE);
+	return (ft_expand_token(token, vars_lst, start, iq));
 }
 
 /* L'expansion est faite APRES les pipes ET APRES les redirections */
