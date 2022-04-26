@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 15:47:38 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:28:21 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,68 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 	return (SUCCESS);
 }
 
+int	ft_heredoc(char *delimiter, int *fdin)
+{
+	char	*tmp_name;
+	char	*line;
+
+	tmp_name = "./tmpfiletest";
+	if (*fdin != 0 && close(*fdin) == -1)
+		return (perror("ft_heredoc closing fd failed"), FAILURE);
+	*fdin = open(tmp_name, O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	if (*fdin == -1)
+		return (perror("ft_heredoc opening fd failed"), FAILURE);
+	ft_putstr_fd("> ", 1);
+	line = get_next_line(0);
+	while (line)
+	{
+		if (line[0] != '\n' && !ft_strncmp(line, delimiter, strlen(line) - 1))
+			break ;
+		ft_putstr_fd(line, *fdin);
+		free(line);
+		line = NULL;
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0);
+	}
+	free(line);
+	line = NULL;
+	close(*fdin);
+	*fdin = open(tmp_name, O_RDONLY);
+	return (SUCCESS);
+}
+
+int	ft_lala(t_cmde *cmd_lst)
+{
+	t_token_type	prev_type;
+	t_token			*tokens;
+
+	prev_type = none;
+	if (!cmd_lst || !cmd_lst->cmde_line)
+		return (SUCCESS);
+	tokens = cmd_lst->cmde_line;
+	if (tokens->type == spipe)
+	{
+		ft_error("syntax error near unexpected token", tokens->str);
+		return (FAILURE);
+	}
+	while (tokens)
+	{
+		if ((tokens->type >= op && prev_type >= op)
+			|| (tokens->type >= op && !tokens->next && !cmd_lst->next))
+		{
+			ft_error("syntax 2error near unexpected token", tokens->str);
+			return (FAILURE);
+		}
+		else if (tokens->type == heredoc)
+		{
+			if (ft_heredoc(tokens->next->str, &(cmd_lst->pipefd[in])) == FAILURE)
+				return (FAILURE);
+		}
+		tokens = tokens->next;
+	}
+	return (ft_lala(cmd_lst->next));
+}
+
 int	ft_parse(t_minishell *msh, char *line)
 {
 	t_token	*token_lst;
@@ -82,6 +144,15 @@ int	ft_parse(t_minishell *msh, char *line)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
+	if (ft_lala(msh->cmde_lst) == FAILURE)
+		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
+	
+// parcourir les tokens de la cmde (lst de tokens). Des aue tombe sur here doc fait.
+// des aue tombe sur unexpected, cad first token is pipe, ou after token->type >= op
+// on a un autreop, error unexpected token close les bordels et ciao. Attention a
+// faire catch le signal de ctrl + D.
+//	if (ft_operator_order(lst) == FAILURE)
+//		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
 	return (SUCCESS);
 }
 
