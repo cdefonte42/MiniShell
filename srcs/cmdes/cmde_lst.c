@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 17:42:04 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:33:56 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,6 @@ void	ft_cmdelst_clear(t_cmde *lst)
 		last = lst;
 		lst = lst->next;
 		ft_tokenlst_free(last->cmde_line);
-		if (last->pipefd[in] != 0 && close(last->pipefd[in]) == -1)
-			perror("ft_cmdelst_clear close pipe in failed");
-		if (last->pipefd[out] != 1 && close(last->pipefd[out]) == -1)
-			perror("ft_cmdelst_clear close pipe out failed");
 		free(last);
 		last = NULL;
 	}
