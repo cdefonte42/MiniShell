@@ -101,7 +101,8 @@ char	**ft_varlst_tochar(t_var *varlst)
 
 	if (!varlst)
 		return (NULL);
-	nbvar = ft_varlst_size(varlst) - ft_varlst_size_empty(varlst);
+	nbvar = ft_varlst_size_empty(varlst);
+	printf("%d, %d\n", ft_varlst_size(varlst) , ft_varlst_size_empty(varlst));
 	env = malloc(sizeof(char *) * (nbvar + 1));
 	if (!env)
 		return (NULL);
@@ -167,6 +168,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		child.envp = ft_varlst_tochar(msh->vars);
 		if (!child.envp)
 			ft_exit_child(child, msh, cmde);
+		printf("%s\n", child.envp[0]);
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
 			ft_exit_child(child, msh, cmde);

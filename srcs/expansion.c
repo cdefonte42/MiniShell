@@ -13,6 +13,8 @@
 #include "minishell.h"
 #include "export.h"
 
+extern int g_status;
+
 static int	get_start(t_token *token, int start, t_quote_type *iq)
 {
 	while (token->str[start] && (*iq == singleq || token->str[start] != '$'))
@@ -35,8 +37,17 @@ static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 	dolls = ft_substr(token->str, start, len);
 	if (!dolls)
 		return (FAILURE);
-	value = var_getvaluefromkey(vars_lst, dolls + 1);
+	if (dolls[len - 1] != '?')
+		value = var_getvaluefromkey(vars_lst, dolls + 1);
+	else
+	{
+		value = ft_itoa(g_status);
+		if (!value)
+			return (FAILURE);
+	}
 	newstr = ft_replacestr_i(start, token->str, dolls, value);
+	if (dolls[len - 1] == '?')
+		free(value);
 	free(dolls);
 	if (!newstr)
 		return (FAILURE);
@@ -55,9 +66,11 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
 	start = get_start(token, start, &iq);
 	if (!token->str[start])
 		return (SUCCESS);
-	if ((token->str[start] == '$' && !ft_fcisname(token->str[start + 1])))
+	if ((token->str[start] == '$' && !(ft_fcisname(token->str[start + 1]) ||\
+	token->str[start + 1] == '?')))
 		return (ft_expand_token(token, vars_lst, start + 1, iq));
-	while (ft_cisname(token->str[start + len]))
+	while (token->str[start + len - 1] != '?' &&\
+	ft_cisname(token->str[start + len]))
 		len++;
 	if (replace(token, vars_lst, start, len) == FAILURE)
 		return (FAILURE);
@@ -105,10 +118,8 @@ int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 		}
 		head_token = head_token->next;
 	}
-	printf("AVANT\n");
 	ft_print_tokenlst(cmde_elem->cmde_line);
 	ft_remove_empty_token(&cmde_elem->cmde_line);
-	printf("APRES\n");
 	ft_print_tokenlst(cmde_elem->cmde_line);
 	return (SUCCESS);
 }
