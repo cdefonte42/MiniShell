@@ -1,5 +1,6 @@
 istty on stderr and change prompt to stderr
-removes les tokens vides apres expansion (export ZA; cat $ZA > file != cat file > file)
 changer tous les comde->cmde_line->str en cmde->name; => peut etre modifier la structure t_cmde?? Avec une liste de word tokens (1=cmde name suite = args) et une liste de redir tokens.
-HEREDOC
+HEREDOC-> gerer le ctrl+C (new signal handler fct?)
+return status
+
 
