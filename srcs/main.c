@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/25 18:54:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 10:25:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,18 @@ char	**ft_varlst_tochar(t_var *varlst)
 	i = 0;
 	while (i < nbvar)
 	{
-		env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
-		if (!env[i])
-			return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
+		if (varlst->value)
+		{
+			env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
+			if (!env[i])
+				return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
+		}
+		else
+		{
+			env[i] = ft_strjoin(varlst->key, "=");
+			if (!env[i])
+				return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
+		}
 		i++;
 		varlst = varlst->next;
 	}
