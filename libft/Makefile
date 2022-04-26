@@ -78,10 +78,8 @@ bonus: ${OBJS} ${OBJS_B}
 	@ar rcs ${NAME} $^
 
 gnl: ${GNL_O} bonus
-	@echo $<
 	@echo Libft with gnl..
-	@ar rcs ${NAME} $<
-
+	ar rcs ${NAME} $(filter-out bonus,$^)
 clean:
 	@echo Deleting.. ${OBJS}
 	@${RM} ${OBJS}

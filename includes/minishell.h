@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/25 15:41:07 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/26 17:52:18 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # endif
 
 # include "libft.h" 
-
+# include "gnl/get_next_line.h"
 # include <stdbool.h>
 
 # include "tokens.h"
