@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 14:22:01 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:24:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 		return (SUCCESS);
 	if (pipe(pipefd) == -1)
 		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);
-	c1->pipefd[out] = pipefd[out];
-	c2->pipefd[in] = pipefd[in];
+	c1->pipefd[w_end] = pipefd[w_end];
+	c2->pipefd[r_end] = pipefd[r_end];
 	return (SUCCESS);
 }
 
@@ -70,13 +70,13 @@ int	ft_redir(t_cmde *cmde)
 			else
 			{
 				if (head_token->type == redirin)
-					if (ft_open(&(cmde->pipefd[in]), file, O_RDONLY, 0) == FAILURE)
+					if (ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0) == FAILURE)
 						return (FAILURE);
 				if (head_token->type == redirout)
-					if (ft_open(&(cmde->pipefd[out]), file, 01101, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644) == FAILURE)
 						return (FAILURE);			
 				if (head_token->type == redirapp)
-					if (ft_open(&(cmde->pipefd[out]), file, 02101, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}
@@ -87,9 +87,9 @@ int	ft_redir(t_cmde *cmde)
 
 int	ft_dup(t_cmde *cmde)
 {
-	if (dup2(cmde->pipefd[in], 0) == -1)
+	if (dup2(cmde->pipefd[r_end], 0) == -1)
 		return (perror("ft_dup to in failed"), FAILURE);
-	if (dup2(cmde->pipefd[out], 1) == -1)
+	if (dup2(cmde->pipefd[w_end], 1) == -1)
 		return (perror("ft_dup to out failed"), FAILURE);
 	return (SUCCESS);
 }

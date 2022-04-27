@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 15:33:45 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:24:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,25 +71,21 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
 		return (FAILURE);
-//	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
-//		printf("NOPE CLODE PIPE IN\n");
 	raw_cmde = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmde)
 		return (FAILURE);
 	if ((ft_strcmp(raw_cmde[0], "cd") == 0))
 		ret_stat = ft_cd(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "pwd") == 0))
-		ret_stat = ft_pwd(cmde->pipefd[out]);
+		ret_stat = ft_pwd(cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmde[0], "export") == 0))
-		ret_stat = ft_export(&(msh->vars), raw_cmde, cmde->pipefd[out]);
+		ret_stat = ft_export(&(msh->vars), raw_cmde, cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmde[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmde);
 	else if ((ft_strcmp(raw_cmde[0], "echo") == 0))
-		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[out]);
+		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[w_end]);
 	free(raw_cmde);
 	raw_cmde = NULL;
-//	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
-//		printf("NOPE CLODE PIPE OUT\n");
 	return (ret_stat);
 }
 
@@ -170,15 +166,17 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
 			ft_exit_child(child, msh, cmde);
+		if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
+			perror("_2_mope closing in ds fork");
 		if (execve(child.pathname, child.argv, child.envp) == -1)
 			perror("execve failed\n");
 		ft_exit_child(child, msh, cmde);
 		exit(FAILURE);
 	}
-	if (cmde->pipefd[in] != 0 && close(cmde->pipefd[in]) == -1)
-		perror("NIEH 1");
-	if (cmde->pipefd[out] != 1 && close(cmde->pipefd[out]) == -1)
-		perror("NIEH 2");
+	if (cmde->pipefd[w_end] != 1 && close(cmde->pipefd[w_end]) == -1)
+		perror("closing pipeout ft_forkout failed");
+	if (cmde->pipefd[r_end] != 0 && close(cmde->pipefd[r_end]) == -1)
+		perror("closing pipin ft_forkout failed");
 	return (SUCCESS);
 }
 
@@ -186,16 +184,15 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
 	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
-	if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
-		return (FAILURE);
 	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
 	{
+		if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
+			return (FAILURE);
 		if (ft_fork(msh, cmde) == FAILURE)
 			return (perror("ft_fork failed ds ft_exec"), FAILURE);
 	}
 	else
 		g_status = ft_exec_bin(msh, cmde);
-	printf("G_STATUS=%d\n", g_status);
 	return (SUCCESS);
 }
 
@@ -211,6 +208,22 @@ void	signal_handler(int signalid)
 	}
 	if (signalid == SIGQUIT || signalid == SIGTSTP)
 		write(1, "\b\b  \b\b", 6);
+}
+
+int	ft_wait_cmde(pid_t pid, int option)
+{
+	int		status;
+	pid_t	w;
+
+	status = 0;
+	w = waitpid(pid, &status, option);
+	if (w == -1)
+		return (perror("waipid failed"), -1);
+	if (WIFEXITED(status) && status != 0)
+		return (printf("pid %d exited with %d code\n", pid, WEXITSTATUS(status)), WEXITSTATUS(status));
+	else if (WIFSIGNALED(status) && status != 0)
+		return (printf("pid %d sigaled with %d code\n", pid, WTERMSIG(status)), WTERMSIG(status) + 128);
+	return (0);
 }
 
 int	minishell_loop(t_minishell *msh)
@@ -242,8 +255,14 @@ int	minishell_loop(t_minishell *msh)
 						return (free(line), clear_history(), FAILURE);
 					if (curr_cmde->next == NULL && curr_cmde->pid != -1)
 					{
-						waitpid(curr_cmde->pid, &g_status, 0);
-						g_status = (g_status & 0xff00) >> 8;
+						g_status = ft_wait_cmde(curr_cmde->pid, 0);
+						t_cmde	*prev;
+						prev = curr_cmde->prev;
+						while (prev)
+						{
+							ft_wait_cmde(prev->pid, 0);
+							prev = prev->prev;
+						}
 					}
 					curr_cmde = curr_cmde->next;
 				}
