@@ -70,10 +70,10 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
-		return (FAILURE);
+		return (-1);
 	raw_cmd = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmd)
-		return (FAILURE);
+		return (-1);
 	if ((ft_strcmp(raw_cmd[0], "exit") == 0))
 	{
 		if (raw_cmd[1] != NULL)
@@ -91,13 +91,13 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	else if ((ft_strcmp(raw_cmd[0], "cd") == 0))
 		ret_stat = ft_cd(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "pwd") == 0))
-		ret_stat = ft_pwd(cmde->pipefd[out]);
+		ret_stat = ft_pwd(cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "export") == 0))
-		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[out]);
+		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "echo") == 0))
-		ret_stat = minishell_echo(msh, raw_cmd, cmde->pipefd[out]);
+		ret_stat = minishell_echo(msh, raw_cmd, cmde->pipefd[w_end]);
 	free(raw_cmd);
 	raw_cmd = NULL;
 	return (ret_stat);
@@ -207,6 +207,8 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 	}
 	else
 		g_status = ft_exec_bin(msh, cmde);
+	if (g_status == -1)
+		return (FAILURE);
 	return (SUCCESS);
 }
 
