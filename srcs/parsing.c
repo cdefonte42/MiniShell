@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 11:56:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:27:03 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int	ft_heredoc(char *delimiter, int *fdin)
 	t_quote_type	quoted;
 
 	quoted = msh_isquoted(delimiter);
+	if (remove_quote(&delimiter) == FAILURE)
+		return (perror("ft_heredoc remove auote failed"), FAILURE);
 	signal(SIGINT, test);
 	tmp_name = "./tmpfiletest";
 	if (*fdin != 0 && close(*fdin) == -1)
@@ -105,8 +107,8 @@ int	ft_heredoc(char *delimiter, int *fdin)
 	{
 		if (ft_strlen(line) > ft_strlen(delimiter) && !ft_strncmp(line, delimiter, ft_strlen(line) - 1))
 			break ;
-		//if (quoted != nil)
-	//		ft_expand_str(());
+//		if (quoted != nil)
+//			ft_expand_str(());
 		ft_putstr_fd(line, *fdin);
 		free(line);
 		line = NULL;

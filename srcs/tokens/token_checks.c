@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 10:29:20 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:30:02 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_set_operator_type(t_token *elem)
 		elem->type = spipe;
 }
 
-int	remove_quote(char *s)
+int	remove_quote(char **s)
 {
 	int				i;
 	t_quote_type	inquote;
@@ -63,7 +63,7 @@ int	remove_quote(char *s)
 
 	i = 0;
 	inquote = nil;
-	str = s;
+	str = *s;
 	while (str && str[i])
 	{
 		if (str[i] == '"' && inquote != singleq)
@@ -87,7 +87,7 @@ int	remove_quote(char *s)
 		else
 			i++;
 	}
-	s = str;
+	*s = str;
 	return (SUCCESS);
 }
 

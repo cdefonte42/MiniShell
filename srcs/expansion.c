@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/26 14:13:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 13:02:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,15 @@ static int	get_start(t_token *token, int start, t_quote_type *iq)
 	while (token->str[start] && (*iq == singleq || token->str[start] != '$'))
 	{
 		if (token->str[start] == '"' && (*iq != singleq || *iq == 0))
+		{
 			*iq = *iq ^ doubleq;
+			token->qtype = doubleq;
+		}
 		else if (token->str[start] == '\'' && (*iq != doubleq || *iq == 0))
+		{
 			*iq = *iq ^ singleq;
+			token->qtype = singleq;
+		}
 		start++;
 	}
 	return (start);
@@ -56,6 +62,45 @@ static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 	return (SUCCESS);
 }
 
+static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
+{
+	char	*dolls;
+	char	*value;
+	char	*tmp;
+	char	*newstr;
+
+	dolls = ft_substr(token->str, start, len);
+	if (!dolls)
+		return (FAILURE);
+	if (dolls[len - 1] != '?')
+	{
+		value = ft_strdup(var_getvaluefromkey(vars_lst, dolls + 1));
+		if (!value)
+			return (FAILURE);
+		if (ft_isquoted(value))
+		{
+			tmp = value;
+			value = ft_strsjoin("\"", tmp, "\"");
+			if (!value)
+				return (free(tmp, FAILURE);
+		}
+	}
+	else
+	{
+		value = ft_itoa(g_status);
+		if (!value)
+			return (FAILURE);
+	}
+	newstr = ft_replacestr_i(start, token->str, dolls, value);
+	free(value);
+	free(dolls);
+	if (!newstr)
+		return (FAILURE);
+	free(token->str);
+	token->str = newstr;
+	return (SUCCESS);
+}
+
 int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
 {
 	int		len;
@@ -72,7 +117,9 @@ int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
 	while (token->str[start + len - 1] != '?' &&\
 	ft_cisname(token->str[start + len]))
 		len++;
-	if (replace(token, vars_lst, start, len) == FAILURE)
+	if (iq == doubleq && replace(token, vars_lst, start, len) == FAILURE)
+		return (FAILURE);
+	else if (iq == nil && replace_bis(token, vars_lst, start, len) == FAILURE)
 		return (FAILURE);
 	return (ft_expand_token(token, vars_lst, start, iq));
 }

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 10:32:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:48:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,23 @@ int	ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *))
 	return (SUCCESS);
 }
 
-int	ft_tokenlst_iteri_s(t_token *lst, int (*f)(char *))
+
+int	quote_ornot(t_token *lst, int (*f)(char **))
 {
 	while (lst)
 	{
-		if ((*f)(lst->str) == FAILURE)
+		if (lst->qtype != nil && (*f)(&(lst->str)) == FAILURE)
+			return (FAILURE);
+		lst = lst->next;
+	}
+	return (SUCCESS);
+}
+
+int	ft_tokenlst_iteri_s(t_token *lst, int (*f)(char **))
+{
+	while (lst)
+	{
+		if ((*f)(&(lst->str)) == FAILURE)
 			return (FAILURE);
 		lst = lst->next;
 	}

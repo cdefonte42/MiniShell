@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 10:28:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:36:32 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	ft_tokenlst_pop(t_token **lst, int i);
 
 /*__________ TOKEN LST UTILS ___________*/
 int		ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *));
-int		ft_tokenlst_iteri_s(t_token *lst, int (*f)(char *));
+int		quote_ornot(t_token *lst, int (*f)(char **));
+int		ft_tokenlst_iteri_s(t_token *lst, int (*f)(char **));
 int		ft_tokenlst_size(t_token *lst);
 
 /*__________ UTILS ___________*/
@@ -54,7 +55,7 @@ int		ft_tokener(t_token **token_lst, char *line);
 /*__________ CHECK TOKENS ___________*/
 int		ft_quotes_check(t_token *lst);
 void	ft_set_operator_type(t_token *elem); //sais pas ou la mettre
-int		remove_quote(char *s);
+int		remove_quote(char **s);
 int		ft_check_tokens(t_token *lst);
 
 /*__________ DEBUG ___________*/
