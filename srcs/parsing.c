@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 14:01:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:59:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int	ft_lala(t_cmde *cmd_lst)
 		}
 		else if (tokens->type == heredoc)
 		{
+			//if (heredoc_fork())
 			if (ft_heredoc(tokens->next->str, &(cmd_lst->pipefd[in])) == FAILURE)
 				return (FAILURE);
 		}

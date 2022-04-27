@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/27 14:02:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:59:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,9 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 		{
 			tmp = value;
 			value = ft_strsjoin("\"", tmp, "\"");
+			free(tmp);
 			if (!value)
-				return (free(tmp), FAILURE);
+				return (FAILURE);
 		}
 	}
 	else

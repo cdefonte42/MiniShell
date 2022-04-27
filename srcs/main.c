@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 12:49:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:55:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
 	if (errno != 2)
 		ft_perror(cmde->cmde_line->str, NULL);
 	else
-		ft_error(cmde->cmde_line->str, "command not found\n");
+		ft_error(cmde->cmde_line->str, "command not found");
 	free(child.argv);
 	free(child.pathname);
 	ft_msh_clear(msh);
@@ -242,7 +242,10 @@ int	minishell_loop(t_minishell *msh)
 					if (ft_exec(msh, curr_cmde) == FAILURE)
 						return (free(line), clear_history(), FAILURE);
 					if (curr_cmde->next == NULL)
-						waitpid(curr_cmde->pid, NULL, 0);
+					{
+						waitpid(curr_cmde->pid, &g_status, 0);
+						g_status = (g_status & 0xff00) >> 8;
+					}
 					curr_cmde = curr_cmde->next;
 				}
 				ft_cmdelst_clear(msh->cmde_lst);
