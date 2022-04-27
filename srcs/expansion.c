@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/27 13:02:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:02:16 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,21 +68,25 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 	char	*value;
 	char	*tmp;
 	char	*newstr;
+	char	*getval;
 
 	dolls = ft_substr(token->str, start, len);
 	if (!dolls)
 		return (FAILURE);
 	if (dolls[len - 1] != '?')
 	{
-		value = ft_strdup(var_getvaluefromkey(vars_lst, dolls + 1));
+		getval = var_getvaluefromkey(vars_lst, dolls + 1);
+		if (!getval)
+			return (SUCCESS);
+		value = ft_strdup(getval);
 		if (!value)
 			return (FAILURE);
-		if (ft_isquoted(value))
+		if (msh_isquoted(value))
 		{
 			tmp = value;
 			value = ft_strsjoin("\"", tmp, "\"");
 			if (!value)
-				return (free(tmp, FAILURE);
+				return (free(tmp), FAILURE);
 		}
 	}
 	else

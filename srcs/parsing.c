@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 12:27:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:01:42 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void test(int q)
 	printf("%d\n", q);
 }
 
-t_quote_type	msh_isquoted(char *str)
+int	msh_isquoted(char *str)
 {
 	int	i;
 
