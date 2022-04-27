@@ -24,6 +24,17 @@ int	ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *))
 	return (SUCCESS);
 }
 
+int	ft_tokenlst_iteri_s(t_token *lst, int (*f)(char *))
+{
+	while (lst)
+	{
+		if ((*f)(lst->str) == FAILURE)
+			return (FAILURE);
+		lst = lst->next;
+	}
+	return (SUCCESS);
+}
+
 int	ft_tokenlst_size(t_token *lst)
 {
 	int	size;

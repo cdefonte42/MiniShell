@@ -76,7 +76,7 @@ int	ft_operator_order(t_token *lst)
 	}
 	return (SUCCESS);
 }
-int	remove_quote(t_token *lst);
+int	remove_quote(char *s);
 int	ft_check_tokens(t_token *lst)
 {
 	t_token	*tmp;
@@ -115,7 +115,7 @@ char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *repla
 	return (final);
 }
 
-int	remove_quote(t_token *lst)
+int	remove_quote(char *s)
 {
 	int				i;
 	t_quote_type	inquote;
@@ -124,7 +124,7 @@ int	remove_quote(t_token *lst)
 	
 	i = 0;
 	inquote = nil;
-	str = lst->str;
+	str = s;
 	while (str && str[i])
 	{
 		if (str[i] == '"' && inquote != singleq)
@@ -148,6 +148,6 @@ int	remove_quote(t_token *lst)
 		else
 			i++;
 	}
-	lst->str = str;
+	s = str;
 	return (SUCCESS);
 }
