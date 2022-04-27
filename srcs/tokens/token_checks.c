@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 18:36:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:29:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,74 +54,13 @@ void	ft_set_operator_type(t_token *elem)
 		elem->type = spipe;
 }
 
-/* Verifie que'il n'y ai pas 2 operateurs consecutifs. */
-int	ft_operator_order(t_token *lst)
-{
-	t_token_type	prev_type;
-
-	prev_type = none;
-	while (lst)
-	{
-		if ((lst->type >= op && prev_type >= op && prev_type != spipe) 
-			|| (lst->next == NULL && lst->type == op)
-			|| (lst->type == spipe && prev_type == spipe))
-		{
-			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-			ft_putstr_fd(lst->str, 2);
-			ft_putstr_fd("'\n", 2);
-			return (FAILURE);
-		}
-		prev_type = lst->type;
-		lst = lst->next;
-	}
-	return (SUCCESS);
-}
-int	remove_quote(t_token *lst);
-int	ft_check_tokens(t_token *lst)
-{
-	t_token	*tmp;
-
-	tmp = lst;
-	if (ft_tokenlst_iteri(lst, &ft_quotes_check) == FAILURE)
-		return (FAILURE);
-	while (tmp)
-	{
-		ft_set_operator_type(tmp);
-		tmp = tmp->next;
-	}
-	return (SUCCESS);
-}
-
-
-char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *replace_w)
-{
-	int		t_rep_len;
-	int		len_final;
-	char	*final;
-
-	if (!dst || !t_replace)
-		return (NULL);
-	if (ft_strnstr(dst, t_replace, ft_strlen(dst)) == NULL)
-		return (NULL);
-	t_rep_len = ft_strlen(t_replace);
-	len_final = (ft_strlen(replace_w) + (ft_strlen(dst) - t_rep_len)) + 1;
-	final = ft_calloc(len_final, sizeof(char));
-	if (!final)
-		return (NULL);
-	ft_strlcpy(final, dst, i + 1);
-	if (replace_w)
-		ft_strlcat(final, replace_w, len_final);
-	ft_strlcat(final, dst + i + t_rep_len, len_final);
-	return (final);
-}
-
 int	remove_quote(t_token *lst)
 {
 	int				i;
 	t_quote_type	inquote;
 	char			*newstr;
 	char			*str;
-	
+
 	i = 0;
 	inquote = nil;
 	str = lst->str;
@@ -149,5 +88,20 @@ int	remove_quote(t_token *lst)
 			i++;
 	}
 	lst->str = str;
+	return (SUCCESS);
+}
+
+int	ft_check_tokens(t_token *lst)
+{
+	t_token	*tmp;
+
+	tmp = lst;
+	if (ft_tokenlst_iteri(lst, &ft_quotes_check) == FAILURE)
+		return (FAILURE);
+	while (tmp)
+	{
+		ft_set_operator_type(tmp);
+		tmp = tmp->next;
+	}
 	return (SUCCESS);
 }

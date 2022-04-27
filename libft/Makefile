@@ -7,6 +7,7 @@ ft_itoa.c \
 ft_split.c \
 ft_substr.c \
 ft_replacestr.c \
+ft_replacestr_i.c \
 ft_atoilong.c \
 char/ft_isalnum.c \
 char/ft_isalpha.c \

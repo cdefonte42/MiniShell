@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 18:28:21 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:56:42 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,36 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 	return (SUCCESS);
 }
 
+void test(int q)
+{
+	
+	printf("%d\n", q);
+}
+
+t_quote_type	msh_isquoted(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '"')
+			return (doubleq);
+		else if (str[i] == '\'')
+			return (singleq);
+		i++;
+	}
+	return (nil);
+}
+
 int	ft_heredoc(char *delimiter, int *fdin)
 {
 	char	*tmp_name;
 	char	*line;
+	t_quote_type	quoted;
 
+	quoted = msh_isquoted(delimiter);
+	signal(SIGINT, test);
 	tmp_name = "./tmpfiletest";
 	if (*fdin != 0 && close(*fdin) == -1)
 		return (perror("ft_heredoc closing fd failed"), FAILURE);
@@ -78,13 +103,17 @@ int	ft_heredoc(char *delimiter, int *fdin)
 	line = get_next_line(0);
 	while (line)
 	{
-		if (line[0] != '\n' && !ft_strncmp(line, delimiter, strlen(line) - 1))
+		if (ft_strlen(line) > ft_strlen(delimiter) && !ft_strncmp(line, delimiter, ft_strlen(line) - 1))
 			break ;
+		//if (quoted != nil)
+	//		ft_expand_str(());
 		ft_putstr_fd(line, *fdin);
 		free(line);
 		line = NULL;
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
+		if (line == NULL)
+			ft_putstr_fd("heredoc line null\n", 2);
 	}
 	free(line);
 	line = NULL;
@@ -145,12 +174,12 @@ int	ft_parse(t_minishell *msh, char *line)
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
 	if (ft_lala(msh->cmde_lst) == FAILURE)
-		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
+		return (ft_cmdelst_clear(msh->cmde_lst), FAILURE);
 	
 // parcourir les tokens de la cmde (lst de tokens). Des aue tombe sur here doc fait.
 // des aue tombe sur unexpected, cad first token is pipe, ou after token->type >= op
 // on a un autreop, error unexpected token close les bordels et ciao. Attention a
-// faire catch le signal de ctrl + D.
+// faire catch le signal de ctrl + D et ctr+ C.
 //	if (ft_operator_order(lst) == FAILURE)
 //		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
 	return (SUCCESS);

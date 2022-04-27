@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 12:21:39 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:28:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,8 @@ int		ft_tokener(t_token **token_lst, char *line);
 /*__________ CHECK TOKENS ___________*/
 int		ft_quotes_check(t_token *lst);
 void	ft_set_operator_type(t_token *elem); //sais pas ou la mettre
-int		ft_operator_order(t_token *lst);
-int		ft_check_tokens(t_token *lst);
-
-
 int		remove_quote(t_token *lst);
-char	*ft_replacestr_i(int i, char *dst, const char *t_replace, const char *replace_w);
+int		ft_check_tokens(t_token *lst);
 
 /*__________ DEBUG ___________*/
 void	ft_print_tokenlst(t_token *lst);

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 12:04:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:32:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ void	ft_char_type(t_token_type *type, char c)
 		*type = op;
 	else if (ft_isblank(c))
 		*type = blank;
-//	else if (c == '\'')
-//		*type = squoted;
-//	else if (c == '"')
-//		*type = dquoted;
 	else
 		*type = word;
 }

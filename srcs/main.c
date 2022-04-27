@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 12:57:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:59:00 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ char	**ft_varlst_tochar(t_var *varlst)
 	if (!varlst)
 		return (NULL);
 	nbvar = ft_varlst_size_empty(varlst);
-	printf("%d, %d\n", ft_varlst_size(varlst) , ft_varlst_size_empty(varlst));
 	env = malloc(sizeof(char *) * (nbvar + 1));
 	if (!env)
 		return (NULL);
@@ -168,7 +167,6 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		child.envp = ft_varlst_tochar(msh->vars);
 		if (!child.envp)
 			ft_exit_child(child, msh, cmde);
-		printf("%s\n", child.envp[0]);
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
 			ft_exit_child(child, msh, cmde);
@@ -222,6 +220,9 @@ int	minishell_loop(t_minishell *msh)
 	t_cmde	*curr_cmde;
 	while (msh->loop)
 	{
+		signal(SIGINT, &signal_handler);
+		signal(SIGQUIT, &signal_handler);
+		signal(SIGTSTP, &signal_handler);
 		line = readline(C_BLUE"minishell-"VERSION C_RESET"$ ");
 		if (line == NULL)
 		{
@@ -268,9 +269,6 @@ int	main(int ac, char **av, char **envp)
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (1);
-	signal(SIGINT, &signal_handler);
-	signal(SIGQUIT, &signal_handler);
-	signal(SIGTSTP, &signal_handler);
 	printf("Welcome to my minishell.\n");
 	minishell_loop(&msh);
 	printf("Bye.\n");
