@@ -237,7 +237,7 @@ int	minishell_loop(t_minishell *msh)
 				while (curr_cmde)
 				{
 					ft_expansion(curr_cmde, msh->vars);
-					if (ft_tokenlst_iteri(curr_cmde->cmde_line, &remove_quote) == FAILURE)
+					if (ft_tokenlst_iteri_s(curr_cmde->cmde_line, &remove_quote) == FAILURE)
 						return (FAILURE); //NON
 					if (ft_exec(msh, curr_cmde) == FAILURE)
 						return (free(line), clear_history(), FAILURE);

@@ -36,6 +36,7 @@ void	ft_tokenlst_pop(t_token **lst, int i);
 
 /*__________ TOKEN LST UTILS ___________*/
 int		ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *));
+int		ft_tokenlst_iteri_s(t_token *lst, int (*f)(char *));
 int		ft_tokenlst_size(t_token *lst);
 
 /*__________ UTILS ___________*/
@@ -53,7 +54,7 @@ int		ft_tokener(t_token **token_lst, char *line);
 /*__________ CHECK TOKENS ___________*/
 int		ft_quotes_check(t_token *lst);
 void	ft_set_operator_type(t_token *elem); //sais pas ou la mettre
-int		remove_quote(t_token *lst);
+int		remove_quote(char *s);
 int		ft_check_tokens(t_token *lst);
 
 /*__________ DEBUG ___________*/
