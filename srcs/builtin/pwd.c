@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 15:05:59 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 18:13:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 15:47:56 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_pwd(int fdout)
 {
 	char	*pwd;
 
+	errno = 0;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
