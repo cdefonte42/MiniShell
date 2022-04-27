@@ -264,6 +264,8 @@ int	minishell_loop(t_minishell *msh)
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
+			else
+				return (free(line), clear_history(), FAILURE);
 		}
 		if (line && *line)
 			add_history (line);
@@ -284,9 +286,10 @@ int	main(int ac, char **av, char **envp)
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
-		return (1);
+		return (ft_msh_clear(&msh), 1);
 	printf("Welcome to my minishell.\n");
-	minishell_loop(&msh);
+	if (minishell_loop(&msh) == FAILURE)
+		return (ft_msh_clear(&msh), 1);
 	printf("Bye.\n");
 	ft_msh_clear(&msh);
 	return (g_status);

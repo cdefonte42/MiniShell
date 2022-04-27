@@ -48,7 +48,7 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 {
 	t_cmde	*new_cmde;
 	t_token	*cmde_line;
-	
+
 	while (token_lst)
 	{
 		cmde_line = ft_extract_cmdeline(&token_lst);
@@ -56,7 +56,7 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 		{
 			new_cmde = ft_cmdelst_new(cmde_line);
 			if (!new_cmde)
-				return (ft_cmdelst_clear(*alst), ft_tokenlst_free(cmde_line), FAILURE);
+				return (ft_cmdelst_clear(*alst), FAILURE);
 			ft_cmdelst_addback(alst, new_cmde);
 		}
 	}
@@ -175,9 +175,9 @@ int	ft_parse(t_minishell *msh, char *line)
 	if (ft_check_tokens(token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
-		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
+		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_lala(msh->cmde_lst) == FAILURE)
-		return (ft_cmdelst_clear(msh->cmde_lst), FAILURE);
+		return (ft_tokenlst_free(token_lst), FAILURE);
 	
 // parcourir les tokens de la cmde (lst de tokens). Des aue tombe sur here doc fait.
 // des aue tombe sur unexpected, cad first token is pipe, ou after token->type >= op
