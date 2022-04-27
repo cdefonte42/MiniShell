@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:24:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:28:21 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**ft_lst_to_char(t_token *lst)
 
 int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 {
-	char	**raw_cmde;
+	char	**raw_cmd;
 	int		ret_stat;
 
 	ret_stat = 0;
@@ -71,21 +71,35 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
 		return (FAILURE);
-	raw_cmde = ft_lst_to_char(cmde->cmde_line);
-	if (!raw_cmde)
+	raw_cmd = ft_lst_to_char(cmde->cmde_line);
+	if (!raw_cmd)
 		return (FAILURE);
-	if ((ft_strcmp(raw_cmde[0], "cd") == 0))
-		ret_stat = ft_cd(&(msh->vars), raw_cmde);
-	else if ((ft_strcmp(raw_cmde[0], "pwd") == 0))
-		ret_stat = ft_pwd(cmde->pipefd[w_end]);
-	else if ((ft_strcmp(raw_cmde[0], "export") == 0))
-		ret_stat = ft_export(&(msh->vars), raw_cmde, cmde->pipefd[w_end]);
-	else if ((ft_strcmp(raw_cmde[0], "unset") == 0))
-		ret_stat = ft_unset(&(msh->vars), raw_cmde);
-	else if ((ft_strcmp(raw_cmde[0], "echo") == 0))
-		ret_stat = minishell_echo(msh, raw_cmde, cmde->pipefd[w_end]);
-	free(raw_cmde);
-	raw_cmde = NULL;
+	if ((ft_strcmp(raw_cmd[0], "exit") == 0))
+	{
+		if (raw_cmd[1] != NULL)
+		{
+			if (raw_cmd[2])
+				return (ft_error("too many arguments", NULL), 2);
+			if (ft_stris(raw_cmd[1], ft_isdigit))
+				ret_stat = ft_atoi(raw_cmd[1]);
+			else
+				return (ft_error("numeric argument required", NULL), 2);
+		}
+		ft_putendl_fd("exit", 1);
+		msh->loop = 0;
+	}
+	else if ((ft_strcmp(raw_cmd[0], "cd") == 0))
+		ret_stat = ft_cd(&(msh->vars), raw_cmd);
+	else if ((ft_strcmp(raw_cmd[0], "pwd") == 0))
+		ret_stat = ft_pwd(cmde->pipefd[out]);
+	else if ((ft_strcmp(raw_cmd[0], "export") == 0))
+		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[out]);
+	else if ((ft_strcmp(raw_cmd[0], "unset") == 0))
+		ret_stat = ft_unset(&(msh->vars), raw_cmd);
+	else if ((ft_strcmp(raw_cmd[0], "echo") == 0))
+		ret_stat = minishell_echo(msh, raw_cmd, cmde->pipefd[out]);
+	free(raw_cmd);
+	raw_cmd = NULL;
 	return (ret_stat);
 }
 

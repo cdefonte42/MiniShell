@@ -20,7 +20,7 @@ LIBFT		=	libft/libft.a
 CC			=	cc
 
 #CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
-CFLAGS		=	-Werror -Wall -Wextra -g3
+CFLAGS		=	-Werror -Wall -Wextra -g
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/main.c \
@@ -74,6 +74,10 @@ run			:	debug all
 				valgrind --suppressions=.ignore_leaks --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --verbose --log-file=valgrind-out.txt ./minishell
 fun			: all
 	nm -uAl $(NAME)
+
+malloc_test: $(OBJS) $(LIBFT)
+				pwd
+				$(CC) $(CFLAGS) -fsanitize=undefined -rdynamic -o $@ ${OBJS} -I$(HEADER) -Ilibft -Llibft -lft -lreadline -L. -lmallocator
 
 re			:	fclean all
 
