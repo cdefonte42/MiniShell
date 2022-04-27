@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 16:39:16 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/27 15:54:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,20 +89,20 @@ int	ft_cd(t_var **var_lst, char **directory)
 	curpath = NULL;
 	oldpwd = getcwd(NULL, 0);
 	if (oldpwd == NULL)
-		return (perror("getcwp oldpwd debut ft_cd"), FAILURE);
+		return (perror("getcwp oldpwd debut ft_cd"), 1);
 	if (ft_parse_dir(&curpath, directory[1], *var_lst) == FAILURE)
 		return (free(oldpwd), FAILURE);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
-		return (free(oldpwd), perror("supp PATH_MAX"), FAILURE);
+		return (free(oldpwd), perror("supp PATH_MAX"), 1);
 	if (curpath && chdir(curpath) != 0)
-		return (free(oldpwd), ft_perror("cd", directory[1]), FAILURE);
+		return (free(oldpwd), ft_perror("cd", directory[1]), 1);
 	free(curpath);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
-		return (free(oldpwd), perror("getcwp pwd ft_cd"), FAILURE);
+		return (free(oldpwd), perror("getcwp pwd ft_cd"), 1);
 	ft_maj_varenvstr(*var_lst, "PWD", pwd);
 	ft_maj_varenvstr(*var_lst, "OLDPWD", oldpwd);
-	return (SUCCESS);
+	return (0);
 }
 //
 //int	minishell_get_env(t_var **vars, char **envp)
