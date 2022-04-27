@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 14:55:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 15:33:45 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,9 @@ void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
 	ft_msh_clear(msh);
 	ft_free_tabtab(child.envp);
 	if (errno == 13)
-		exit(127);
-	else if (errno == 2 || errno == 36)
 		exit(126);
+	else if (errno == 2 || errno == 36)
+		exit(127);
 	else if (errno == 5)
 		exit(254);
 	exit(EXIT_FAILURE);
@@ -194,9 +194,8 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 			return (perror("ft_fork failed ds ft_exec"), FAILURE);
 	}
 	else
-		ft_exec_bin(msh, cmde); //ATTENTION nedd return status MAIS pas utiliser FAILURE ni SUCCESS
-//		if (ft_exec_bin(msh, cmde) == FAILURE)
-//			return (FAILURE);
+		g_status = ft_exec_bin(msh, cmde);
+	printf("G_STATUS=%d\n", g_status);
 	return (SUCCESS);
 }
 
@@ -241,7 +240,7 @@ int	minishell_loop(t_minishell *msh)
 						return (FAILURE); //NON
 					if (ft_exec(msh, curr_cmde) == FAILURE)
 						return (free(line), clear_history(), FAILURE);
-					if (curr_cmde->next == NULL)
+					if (curr_cmde->next == NULL && curr_cmde->pid != -1)
 					{
 						waitpid(curr_cmde->pid, &g_status, 0);
 						g_status = (g_status & 0xff00) >> 8;
