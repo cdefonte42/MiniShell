@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/28 13:02:20 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:48:15 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	ft_redir(t_cmde *cmde)
 					if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
 						return (FAILURE);
 				if (head_token->type == heredoc)
-					if (ft_open(&(cmde->pipefd[r_end]), "tmpfiletest", O_RDONLY, 00644) == FAILURE)
+					if (ft_open(&(cmde->pipefd[r_end]), HEREDOC_FILE, O_RDONLY, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/27 14:01:18 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:49:22 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define VERSION "0.1"
 # define FAILURE 0
 # define SUCCESS 1
+# define HEREDOC_FILE "heredoc_tmp"
 # ifndef DEBUG
 #  define DEBUG 0
 # endif

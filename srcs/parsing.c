@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/28 12:55:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:58:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	ft_heredoc(char *delimiter)
 	if (remove_quote(&delimiter) == FAILURE)
 		return (perror("ft_heredoc remove auote failed"), FAILURE);
 	signal(SIGINT, &signal_hd);
-	tmp_name = "./tmpfiletest";
+	tmp_name = HEREDOC_FILE;
 	fd = open(tmp_name, O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (fd == -1)
 		return (perror("ft_heredoc opening fd failed"), free(delimiter), FAILURE);
@@ -155,26 +155,31 @@ int	ft_lala(t_minishell *msh, t_cmde *cmd_lst)
 	t_token			*tokens;
 
 	prev_type = none;
-	//cmd_lst = msh->cmde_lst;
 	if (!cmd_lst || !cmd_lst->cmde_line)
 		return (SUCCESS);
 	tokens = cmd_lst->cmde_line;
 	if (tokens->type == spipe)
 	{
 		ft_error("syntax error near unexpected token", tokens->str);
-		return (FAILURE);
+		g_status = 2;
+		return (SUCCESS);
 	}
 	while (tokens)
 	{
 		if ((tokens->type >= op && prev_type >= op)
 			|| (tokens->type >= op && !tokens->next && !cmd_lst->next))
 		{
-			ft_error("syntax 2error near unexpected token", tokens->str);
-			return (FAILURE);
+			ft_error("syntax error near unexpected token", tokens->str);
+			g_status = 2;
+			return (SUCCESS);
 		}
 		else if (tokens->type == heredoc)
 		{
-			heredoc_fork(msh, tokens->next->str);
+			if (heredoc_fork(msh, tokens->next->str) == FAILURE)
+			{
+				perror("fork heredoc failed should quit msh");
+				return (FAILURE);
+			}
 		}
 		tokens = tokens->next;
 	}
