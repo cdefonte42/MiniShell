@@ -55,7 +55,7 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 		if (!splited[1])
 			return (free(splited[0]), perror("ft_init_envlst failed"), FAILURE);
 		if (!new_var(msh, splited))
-			return (FAILURE);
+			return (free(splited[0]), free(splited[1]), FAILURE);
 		i++;
 	}
 	return (SUCCESS);

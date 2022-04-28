@@ -157,7 +157,7 @@ int	ft_get_keynval(char **key, char **value, int *mode, char *token)
 	}
 	*key = ft_substr(token, 0, key_len);
 	if (!*key)
-		return (free(value), perror("substr export"), FAILURE);
+		return (free(*value), perror("substr export"), FAILURE);
 	return (SUCCESS);
 }
 
@@ -179,9 +179,12 @@ int	ft_loop_export(t_var **var_lst, char *token)
 		return (free(key), free(value), ft_put_error(token), FAILURE);
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists && ft_new_var(var_lst, key, value, envvar) == FAILURE)
-		return (free(key), free(value), FAILURE);
+		return (free(key), free(value), perror("export newvar"), FAILURE);
 	else if (var_exists && value != NULL && add_mode == 1)
-		ft_cat_var(var_exists, key, value);
+	{
+		if (ft_cat_var(var_exists, key, value) == FAILURE)
+			return (free(key), free(value), perror("export catvar"), FAILURE);
+	}
 	else if (var_exists && value != NULL && add_mode == 0)
 		ft_set_var(var_exists, key, value, envvar);
 	return (SUCCESS);
@@ -202,7 +205,7 @@ int	ft_export(t_var **var_lst, char **argv, int fdout)
 	while (argv[i])
 	{
 		if (ft_loop_export(var_lst, argv[i]) == FAILURE)
-			ret_stat = 1;
+			return (-1);
 		i++;
 	}
 	return (ret_stat);
