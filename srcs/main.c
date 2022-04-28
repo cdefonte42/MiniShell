@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:28:21 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:30:07 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	else if ((ft_strcmp(raw_cmd[0], "cd") == 0))
 		ret_stat = ft_cd(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "pwd") == 0))
-		ret_stat = ft_pwd(cmde->pipefd[out]);
+		ret_stat = ft_pwd(cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "export") == 0))
-		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[out]);
+		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "echo") == 0))
-		ret_stat = minishell_echo(msh, raw_cmd, cmde->pipefd[out]);
+		ret_stat = minishell_echo(msh, raw_cmd, cmde->pipefd[w_end]);
 	free(raw_cmd);
 	raw_cmd = NULL;
 	return (ret_stat);
@@ -234,9 +234,9 @@ int	ft_wait_cmde(pid_t pid, int option)
 	if (w == -1)
 		return (perror("waipid failed"), -1);
 	if (WIFEXITED(status) && status != 0)
-		return (printf("pid %d exited with %d code\n", pid, WEXITSTATUS(status)), WEXITSTATUS(status));
+		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status) && status != 0)
-		return (printf("pid %d sigaled with %d code\n", pid, WTERMSIG(status)), WTERMSIG(status) + 128);
+		return (WTERMSIG(status) + 128);
 	return (0);
 }
 
