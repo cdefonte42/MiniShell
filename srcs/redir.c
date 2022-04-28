@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:24:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/28 13:02:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 
 int	ft_token_isredir(t_token_type type)
 {
-	if (type == redirin || type == redirout || type == redirapp)
+	if (type == redirin || type == redirout 
+		|| type == redirapp || type == heredoc)
 		return (1);
 	return (0);
 }
@@ -77,6 +78,9 @@ int	ft_redir(t_cmde *cmde)
 						return (FAILURE);			
 				if (head_token->type == redirapp)
 					if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
+						return (FAILURE);
+				if (head_token->type == heredoc)
+					if (ft_open(&(cmde->pipefd[r_end]), "tmpfiletest", O_RDONLY, 00644) == FAILURE)
 						return (FAILURE);
 			}
 		}

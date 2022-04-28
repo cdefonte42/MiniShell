@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:25:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/28 12:55:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "minishell.h"
 #include "libft.h"
 #include <stdio.h>
+
+extern int g_status;
 
 /* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
 token_lst jusqu'a l'operator control '|' COMPRIS (permet de realiser le pipe
@@ -63,10 +65,11 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 	return (SUCCESS);
 }
 
-void test(int q)
+void signal_hd(int q)
 {
-	
-	printf("%d\n", q);
+	(void) q;
+	close(0);
+	g_status = 130;
 }
 
 int	msh_isquoted(char *str)
@@ -85,31 +88,30 @@ int	msh_isquoted(char *str)
 	return (nil);
 }
 
-int	ft_heredoc(char *delimiter, int *fdin)
+int	ft_heredoc(char *delimiter)
 {
 	char	*tmp_name;
 	char	*line;
+	int		fd;
 	t_quote_type	quoted;
 
 	quoted = msh_isquoted(delimiter);
 	if (remove_quote(&delimiter) == FAILURE)
 		return (perror("ft_heredoc remove auote failed"), FAILURE);
-	signal(SIGINT, test);
+	signal(SIGINT, &signal_hd);
 	tmp_name = "./tmpfiletest";
-	if (*fdin != 0 && close(*fdin) == -1)
-		return (perror("ft_heredoc closing fd failed"), FAILURE);
-	*fdin = open(tmp_name, O_CREAT | O_WRONLY | O_TRUNC, 00644);
-	if (*fdin == -1)
-		return (perror("ft_heredoc opening fd failed"), FAILURE);
+	fd = open(tmp_name, O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	if (fd == -1)
+		return (perror("ft_heredoc opening fd failed"), free(delimiter), FAILURE);
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
-	while (line)
+	while (line && g_status != 130)
 	{
 		if (ft_strlen(line) > ft_strlen(delimiter) && !ft_strncmp(line, delimiter, ft_strlen(line) - 1))
 			break ;
 //		if (quoted != nil)
 //			ft_expand_str(());
-		ft_putstr_fd(line, *fdin);
+		ft_putstr_fd(line, fd);
 		free(line);
 		line = NULL;
 		ft_putstr_fd("> ", 1);
@@ -119,17 +121,41 @@ int	ft_heredoc(char *delimiter, int *fdin)
 	}
 	free(line);
 	line = NULL;
-	close(*fdin);
-	*fdin = open(tmp_name, O_RDONLY);
+	if (close(fd) == -1)
+		perror("ft_heredoc close fd failed");
 	return (SUCCESS);
 }
 
-int	ft_lala(t_cmde *cmd_lst)
+int	heredoc_fork(t_minishell *msh, char *delimiter)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+		return (FAILURE);
+	if (pid == 0)
+	{
+		if (ft_heredoc(delimiter) == FAILURE)
+			exit(12);
+		ft_msh_clear(msh);
+		exit(g_status);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		g_status = (status & 0x00FF)>> 8;
+	}
+	return (SUCCESS);
+}
+
+int	ft_lala(t_minishell *msh, t_cmde *cmd_lst)
 {
 	t_token_type	prev_type;
 	t_token			*tokens;
 
 	prev_type = none;
+	//cmd_lst = msh->cmde_lst;
 	if (!cmd_lst || !cmd_lst->cmde_line)
 		return (SUCCESS);
 	tokens = cmd_lst->cmde_line;
@@ -148,13 +174,11 @@ int	ft_lala(t_cmde *cmd_lst)
 		}
 		else if (tokens->type == heredoc)
 		{
-			//if (heredoc_fork())
-			if (ft_heredoc(tokens->next->str, &(cmd_lst->pipefd[r_end])) == FAILURE)
-				return (FAILURE);
+			heredoc_fork(msh, tokens->next->str);
 		}
 		tokens = tokens->next;
 	}
-	return (ft_lala(cmd_lst->next));
+	return (ft_lala(msh, cmd_lst->next));
 }
 
 int	ft_parse(t_minishell *msh, char *line)
@@ -176,15 +200,8 @@ int	ft_parse(t_minishell *msh, char *line)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
-	if (ft_lala(msh->cmde_lst) == FAILURE)
+	if (ft_lala(msh, msh->cmde_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
-	
-// parcourir les tokens de la cmde (lst de tokens). Des aue tombe sur here doc fait.
-// des aue tombe sur unexpected, cad first token is pipe, ou after token->type >= op
-// on a un autreop, error unexpected token close les bordels et ciao. Attention a
-// faire catch le signal de ctrl + D et ctr+ C.
-//	if (ft_operator_order(lst) == FAILURE)
-//		return (ft_tokenlst_free(token_lst), ft_cmdelst_clear(msh->cmde_lst), FAILURE);
 	return (SUCCESS);
 }
 
