@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include "export.h"
 
-extern int g_status;
+extern int	g_status;
 
 static int	get_start(t_token *token, int start, t_quote_type *iq)
 {
@@ -80,21 +80,21 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 			return (SUCCESS);
 		value = ft_strdup(getval);
 		if (!value)
-			return (FAILURE);
+			return (free(dolls), FAILURE);
 		if (msh_isquoted(value))
 		{
 			tmp = value;
 			value = ft_strsjoin("\"", tmp, "\"");
 			free(tmp);
 			if (!value)
-				return (FAILURE);
+				return (free(dolls), free(value), FAILURE);
 		}
 	}
 	else
 	{
 		value = ft_itoa(g_status);
 		if (!value)
-			return (FAILURE);
+			return (free(dolls), FAILURE);
 	}
 	newstr = ft_replacestr_i(start, token->str, dolls, value);
 	free(value);
