@@ -70,10 +70,10 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
-		return (FAILURE);
+		return (-1);
 	raw_cmd = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmd)
-		return (FAILURE);
+		return (-1);
 	if ((ft_strcmp(raw_cmd[0], "exit") == 0))
 	{
 		if (raw_cmd[1] != NULL)
@@ -207,6 +207,8 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 	}
 	else
 		g_status = ft_exec_bin(msh, cmde);
+	if (g_status == -1)
+		return (FAILURE);
 	return (SUCCESS);
 }
 
@@ -283,6 +285,8 @@ int	minishell_loop(t_minishell *msh)
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
+			else
+				return (free(line), clear_history(), FAILURE);
 		}
 		if (line && *line)
 			add_history (line);
@@ -303,9 +307,10 @@ int	main(int ac, char **av, char **envp)
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
-		return (1);
+		return (ft_msh_clear(&msh), 1);
 	printf("Welcome to my minishell.\n");
-	minishell_loop(&msh);
+	if (minishell_loop(&msh) == FAILURE)
+		return (ft_msh_clear(&msh), 1);
 	printf("Bye.\n");
 	ft_msh_clear(&msh);
 	return (g_status);
