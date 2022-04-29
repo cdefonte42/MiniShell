@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 12:30:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:23:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	remove_quote(char **s)
 		if (str[i] == '"' && inquote != singleq)
 		{
 			inquote = inquote ^ doubleq;
-			newstr = ft_replacestr_i(i, str, "\"", NULL);
+			newstr = ft_replacestri(i, str, "\"", NULL);
 			if (!newstr)
 				return (perror("remove_quote"), FAILURE);
 			free(str);
@@ -78,7 +78,7 @@ int	remove_quote(char **s)
 		else if (str[i] == '\'' && inquote != doubleq)
 		{
 			inquote = inquote ^ singleq;
-			newstr = ft_replacestr_i(i, str, "\'", NULL);
+			newstr = ft_replacestri(i, str, "\'", NULL);
 			if (!newstr)
 				return (perror("remove_quote"), FAILURE);
 			free(str);

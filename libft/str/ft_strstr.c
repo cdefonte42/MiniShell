@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 10:28:36 by mbraets           #+#    #+#             */
-/*   Updated: 2022/03/18 11:27:28 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/29 17:00:18 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 char	*ft_strstr(const char *haystack, const char *needle)
 {
-	size_t needle_len; /* Length of NEEDLE.  */
-	size_t haystack_len; /* Known minimum length of HAYSTACK.  */
+	size_t	needle_len;
+	size_t	haystack_len;
 
 	if (needle[0] == '\0')
-		return (char *) haystack;
-
+		return ((char *)haystack);
 	haystack = ft_strchr(haystack, needle[0]);
 	if (haystack == NULL || needle[1] == '\0')
 		return ((char *) haystack);

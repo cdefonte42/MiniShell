@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 10:32:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:34:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ int	ft_delimit_token(char *line, t_token_type *token_type)
 	inquote = 0;
 	while (*token_type != op && line && line[len])
 	{
-		if (line[len] == '"' && (inquote != singleq || inquote == 0))
+		if (line[len] == '"' && (inquote != singleq || inquote == nil))
 			inquote = inquote ^ doubleq;
-		else if (line[len] == '\'' && (inquote != doubleq || inquote == 0))
+		else if (line[len] == '\'' && (inquote != doubleq || inquote == nil))
 			inquote = inquote ^ singleq;
 		if (ft_ismetachar(line[len]) && !inquote)
 			return (len);

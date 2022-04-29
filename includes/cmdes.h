@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 11:16:33 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:06:56 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 enum e_fd_type {r_end = 0, w_end = 1};
 
 typedef struct s_cmde {
-	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
-	int				pipefd[2]; //0=read(in) 1=write(out)
+	t_token			*cmde_line;
+	int				pipefd[2];
 	pid_t			pid;
 	char			*hdfile;
 	struct s_cmde	*prev;

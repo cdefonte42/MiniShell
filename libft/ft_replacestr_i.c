@@ -6,13 +6,13 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:21:48 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 10:23:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:57:14 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_replacestr_i(int i, char *dst, const char *t_rep, const char *rep_w)
+char	*ft_replacestri(int i, char *dst, const char *t_rep, const char *rep_w)
 {
 	int		t_rep_len;
 	int		len_final;

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 12:38:44 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:29:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ t_token	*ft_tokenlst_new(char *str, int type)
 		return (NULL);
 	new_token->str = str;
 	new_token->type = type;
-	new_token->qtype = nil;
 	new_token->next = NULL;
 	return (new_token);
 }

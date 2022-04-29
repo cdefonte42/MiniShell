@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 10:49:41 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/27 10:23:38 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:56:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*ft_strdup_until_i(const char *src, size_t stop);
 char	*ft_strdup_until_c(const char *src, char stop);
 
 char	*ft_replacestr(char *dst, const char *t_replace, const char *replace_w);
-char	*ft_replacestr_i(int i, char *dst, const char *t_rep, const char *rep_w);
+char	*ft_replacestri(int i, char *dst, const char *t_rep, const char *rep_w);
 char	*ft_strsjoin(char const *s1, char const *s2, char const *s3);
 
 #endif

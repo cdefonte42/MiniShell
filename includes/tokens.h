@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 14:00:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:30:35 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ heredoc, spipe}	t_token_type;
 typedef struct s_token {
 	char			*str;
 	t_token_type	type;
-	t_quote_type	qtype;
 	struct s_token	*next;
 }	t_token;
 
@@ -38,6 +37,7 @@ void	ft_tokenlst_pop(t_token **lst, int i);
 int		ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *));
 int		ft_tokenlst_iteri_s(t_token *lst, int (*f)(char **));
 int		ft_tokenlst_size(t_token *lst);
+void	ft_remove_empty_token(t_token **token_lst);
 
 /*__________ UTILS ___________*/
 int		ft_iscontrol_operator(char c);

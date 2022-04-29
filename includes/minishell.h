@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/28 14:49:22 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:30:26 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
 
-//typedef enum e_quote_type {doubleq = 1, singleq = 2} t_quote_type;
-typedef enum e_var_type {envvar, shellvar} t_var_type;
+typedef enum e_var_type {envvar, shellvar}	t_var_type;
 
 typedef struct s_var {
 	char			*key;
@@ -85,21 +84,16 @@ typedef struct s_child {
 // Free
 void	ft_msh_clear(t_minishell *msh);
 void	minishell_free_rawcmd(t_minishell *msh);
-
-
-/* A FAIRE pour etre propre : un .h avec que les fcts utilities sur les structures
-t_var, et comme ca les bin include ce point h et ici on met que les proto des fcts
-principales des bins */
 int		minishell_echo(t_minishell *msh, char **av, int fdout);
 int		ft_cd(t_var **var_lst, char **directory);
-int		ft_pwd(int fdout); //devrait avoir meme proto que tous les bin
+int		ft_pwd(int fdout);
 int		ft_try_cdpath(char **curpath, char *directory, t_var *cdpath);
 int		ft_ismetachar(char c);
 int		ft_isoperator(char c);
 int		ft_islast_chstr_ch(char *str, char c);
 
 /*________ EXPANSION __________*/
-int		ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type inquote);
+int		ft_expand_token(t_token *token, t_var *var_lst, int start, int inquote);
 int		ft_expansion(t_cmde *cmde_elem, t_var *vars_lst);
 
 /*________ REDIRECTION __________*/
@@ -108,7 +102,7 @@ int		ft_redir(t_cmde *cmde);
 int		ft_dup(t_cmde *cmde);
 
 /*________ MSH __________*/
-int	ft_init_envlst(t_minishell *msh, char **envp);
+int		ft_init_envlst(t_minishell *msh, char **envp);
 
 /*________ UTILS __________*/
 int		ft_isname(char *str);

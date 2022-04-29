@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/27 14:59:24 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 17:40:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,14 @@
 
 extern int	g_status;
 
-static int	get_start(t_token *token, int start, t_quote_type *iq)
+static int	get_start(t_token *token, int start, int *qtype)
 {
-	while (token->str[start] && (*iq == singleq || token->str[start] != '$'))
+	while (token->str[start] && (*qtype == singleq || token->str[start] != '$'))
 	{
-		if (token->str[start] == '"' && (*iq != singleq || *iq == 0))
-		{
-			*iq = *iq ^ doubleq;
-			token->qtype = doubleq;
-		}
-		else if (token->str[start] == '\'' && (*iq != doubleq || *iq == 0))
-		{
-			*iq = *iq ^ singleq;
-			token->qtype = singleq;
-		}
+		if (token->str[start] == '"' && (*qtype != singleq || *qtype == 0))
+			*qtype = *qtype ^ doubleq;
+		else if (token->str[start] == '\'' && (*qtype != doubleq || *qtype == 0))
+			*qtype = *qtype ^ singleq;
 		start++;
 	}
 	return (start);
@@ -49,9 +43,9 @@ static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 	{
 		value = ft_itoa(g_status);
 		if (!value)
-			return (FAILURE);
+			return (free(dolls), FAILURE);
 	}
-	newstr = ft_replacestr_i(start, token->str, dolls, value);
+	newstr = ft_replacestri(start, token->str, dolls, value);
 	if (dolls[len - 1] == '?')
 		free(value);
 	free(dolls);
@@ -96,7 +90,7 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 		if (!value)
 			return (free(dolls), FAILURE);
 	}
-	newstr = ft_replacestr_i(start, token->str, dolls, value);
+	newstr = ft_replacestri(start, token->str, dolls, value);
 	free(value);
 	free(dolls);
 	if (!newstr)
@@ -106,54 +100,29 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 	return (SUCCESS);
 }
 
-int	ft_expand_token(t_token *token, t_var *vars_lst, int start, t_quote_type iq)
+int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 {
 	int		len;
 
 	len = 2;
 	if (!token || !token->str || !token->str[start])
 		return (SUCCESS);
-	start = get_start(token, start, &iq);
+	start = get_start(token, start, &qtype);
 	if (!token->str[start])
 		return (SUCCESS);
 	if ((token->str[start] == '$' && !(ft_fcisname(token->str[start + 1]) ||\
 	token->str[start + 1] == '?')))
-		return (ft_expand_token(token, vars_lst, start + 1, iq));
+		return (ft_expand_token(token, var_lst, start + 1, qtype));
 	while (token->str[start + len - 1] != '?' &&\
 	ft_cisname(token->str[start + len]))
 		len++;
-	if (iq == doubleq && replace(token, vars_lst, start, len) == FAILURE)
+	if (qtype == doubleq && replace(token, var_lst, start, len) == FAILURE)
 		return (FAILURE);
-	else if (iq == nil && replace_bis(token, vars_lst, start, len) == FAILURE)
+	else if (qtype == nil && replace_bis(token, var_lst, start, len) == FAILURE)
 		return (FAILURE);
-	return (ft_expand_token(token, vars_lst, start, iq));
+	return (ft_expand_token(token, var_lst, start, qtype));
 }
 
-/*Remove de la token_lst les elements dont la str est NULL ou str[0] == NULL */
-void	ft_remove_empty_token(t_token **token_lst)
-{
-	t_token	*head;
-	int		i;
-
-	head = *token_lst;
-	i = 0;
-	while (head)
-	{
-		if (head->str == NULL || head->str[0] == 0)
-		{
-			ft_tokenlst_pop(token_lst, i);
-			head = *token_lst;
-			i = 0;
-		}
-		else
-		{
-			i++;
-			head = head->next;
-		}
-	}
-}
-
-/* L'expansion est faite APRES les pipes ET APRES les redirections */
 int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 {
 	t_token	*head_token;
