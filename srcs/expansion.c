@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/29 17:40:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 18:07:41 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,6 @@
 #include "export.h"
 
 extern int	g_status;
-
-static int	get_start(t_token *token, int start, int *qtype)
-{
-	while (token->str[start] && (*qtype == singleq || token->str[start] != '$'))
-	{
-		if (token->str[start] == '"' && (*qtype != singleq || *qtype == 0))
-			*qtype = *qtype ^ doubleq;
-		else if (token->str[start] == '\'' && (*qtype != doubleq || *qtype == 0))
-			*qtype = *qtype ^ singleq;
-		start++;
-	}
-	return (start);
-}
 
 static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 {
@@ -91,7 +78,8 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 			return (free(dolls), FAILURE);
 	}
 	newstr = ft_replacestri(start, token->str, dolls, value);
-	free(value);
+	if (dolls[len - 1] == '?')
+		free(value);
 	free(dolls);
 	if (!newstr)
 		return (FAILURE);
@@ -123,13 +111,13 @@ int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 	return (ft_expand_token(token, var_lst, start, qtype));
 }
 
-int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
+int	ft_expansion(t_cmde *cmd, t_var *vars_lst)
 {
 	t_token	*head_token;
 
-	if (!cmde_elem || !cmde_elem->cmde_line)
+	if (!cmd || !cmd->cmde_line)
 		return (SUCCESS);
-	head_token = cmde_elem->cmde_line;
+	head_token = cmd->cmde_line;
 	while (head_token)
 	{
 		if (head_token->type == word && ft_strchr(head_token->str, '$'))
@@ -139,6 +127,6 @@ int	ft_expansion(t_cmde *cmde_elem, t_var *vars_lst)
 		}
 		head_token = head_token->next;
 	}
-	ft_remove_empty_token(&cmde_elem->cmde_line);
+	ft_remove_empty_token(&cmd->cmde_line);
 	return (SUCCESS);
 }

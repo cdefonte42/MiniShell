@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/29 17:30:26 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 18:04:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ int		ft_isoperator(char c);
 int		ft_islast_chstr_ch(char *str, char c);
 
 /*________ EXPANSION __________*/
-int		ft_expand_token(t_token *token, t_var *var_lst, int start, int inquote);
 int		ft_expansion(t_cmde *cmde_elem, t_var *vars_lst);
+int		get_start(t_token *token, int start, int *qtype);
 
 /*________ REDIRECTION __________*/
 int		ft_pipe_cmdes(t_cmde *c1, t_cmde *c2);

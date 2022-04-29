@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/27 17:46:52 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/04/29 18:08:13 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ srcs/free.c \
 srcs/pathname.c \
 srcs/redir.c \
 srcs/init_msh.c \
+srcs/expansion_utils.c \
 srcs/expansion.c
 
 OBJS		=	$(SRCS:.c=.o)
