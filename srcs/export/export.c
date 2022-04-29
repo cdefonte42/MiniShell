@@ -13,6 +13,8 @@
 // #include "minishell.h"
 #include "export.h"
 
+extern int	g_status;
+
 /* Print le message d'erreur specifique a 'cd'. Peut etre change en return int
 pour return exit status = 128 + errno */
 static void	ft_put_error(char *token)
@@ -24,6 +26,7 @@ static void	ft_put_error(char *token)
 		ft_putstr_fd(token, 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
 	}
+	g_status = 2;
 }
 
 /* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
@@ -176,7 +179,7 @@ int	ft_loop_export(t_var **var_lst, char *token)
 	if (*key == '_' && *(key + 1) == 0)
 		return (free(value), free(key), SUCCESS);
 	if (!ft_isname(key))
-		return (free(key), free(value), ft_put_error(token), FAILURE);
+		return (free(key), free(value), ft_put_error(token), SUCCESS);
 	var_exists = var_getfromkey(*var_lst, key);
 	if (!var_exists && ft_new_var(var_lst, key, value, envvar) == FAILURE)
 		return (free(key), free(value), perror("export newvar"), FAILURE);
@@ -193,10 +196,8 @@ int	ft_loop_export(t_var **var_lst, char *token)
 int	ft_export(t_var **var_lst, char **argv, int fdout)
 {
 	int		i;
-	int		ret_stat;
 
 	i = 1;
-	ret_stat = 0;
 	if (!argv || !*argv || !argv[1])
 	{
 		ft_put_export(*var_lst, fdout);
@@ -205,10 +206,10 @@ int	ft_export(t_var **var_lst, char **argv, int fdout)
 	while (argv[i])
 	{
 		if (ft_loop_export(var_lst, argv[i]) == FAILURE)
-			return (-1);
+			return (perror("Loop export fail"), -1);
 		i++;
 	}
-	return (ret_stat);
+	return (g_status);
 }
 
 // void	ft_print_lst(t_var *lst)

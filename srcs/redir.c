@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/28 14:48:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 12:13:51 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,19 @@ int	ft_open(int *fd, char *pathname, int flags, int mode)
 	return (SUCCESS);
 
 }
+
+int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
+{
+	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
+		perror("closing fd failed ft_open");
+	*fd = open(pathname, flags, mode);
+	if (*fd == -1)
+		return (FAILURE);
+	if (unlink(pathname) == -1)
+		return (perror("unlink heredoc"), FAILURE);
+	return (SUCCESS);
+}
+
 int	ft_redir(t_cmde *cmde)
 {
 	t_token *head_token;
@@ -72,16 +85,16 @@ int	ft_redir(t_cmde *cmde)
 			{
 				if (head_token->type == redirin)
 					if (ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0) == FAILURE)
-						return (FAILURE);
+						return (ft_perror(file, NULL), FAILURE);
 				if (head_token->type == redirout)
 					if (ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644) == FAILURE)
-						return (FAILURE);			
+						return (ft_perror(file, NULL), FAILURE);		
 				if (head_token->type == redirapp)
 					if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
-						return (FAILURE);
+						return (ft_perror(file, NULL), FAILURE);
 				if (head_token->type == heredoc)
-					if (ft_open(&(cmde->pipefd[r_end]), HEREDOC_FILE, O_RDONLY, 00644) == FAILURE)
-						return (FAILURE);
+					if (ft_open_hd(&(cmde->pipefd[r_end]), cmde->hdfile, O_RDONLY, 00644) == FAILURE)
+						return (ft_perror(cmde->hdfile, NULL), FAILURE);
 			}
 		}
 		head_token = head_token->next;

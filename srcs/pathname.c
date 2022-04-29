@@ -67,7 +67,9 @@ char    *check_permission(t_minishell *msh, char *cmd)
             return (NULL);
     }
     else if (!cmd || *cmd == 0)
+    {
         return (errno = 2, NULL);
+    }
     else
         return (get_cmd(msh, cmd));
     return (NULL);

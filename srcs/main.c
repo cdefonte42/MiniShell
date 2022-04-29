@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:30:07 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 14:41:29 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,12 +131,15 @@ char	**ft_varlst_tochar(t_var *varlst)
 	return (env);
 }
 
-void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde)
+void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde, bool error)
 {
-	if (errno != 2)
-		ft_perror(cmde->cmde_line->str, NULL);
-	else
-		ft_error(cmde->cmde_line->str, "command not found");
+	if (error)
+	{
+		if (errno != 2)
+			ft_perror(cmde->cmde_line->str, NULL);
+		else
+			ft_error(cmde->cmde_line->str, "command not found");
+	}
 	free(child.argv);
 	free(child.pathname);
 	ft_msh_clear(msh);
@@ -162,9 +165,9 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	if (cmde->pid == 0)
 	{
 		if (ft_redir(cmde) == FAILURE)
-			ft_exit_child(child, msh, cmde);
+			ft_exit_child(child, msh, cmde, false);
 		if (ft_dup(cmde) == FAILURE)
-			ft_exit_child(child, msh, cmde);
+			ft_exit_child(child, msh, cmde, true);
 		if (ft_isbin(cmde->cmde_line->str))
 		{
 			g_status = ft_exec_bin(msh, cmde);
@@ -173,18 +176,17 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		}
 		child.argv = ft_lst_to_char(cmde->cmde_line);
 		if (!child.argv)
-			ft_exit_child(child, msh, cmde);
+			ft_exit_child(child, msh, cmde, true);
 		child.envp = ft_varlst_tochar(msh->vars);
 		if (!child.envp)
-			ft_exit_child(child, msh, cmde);
+			ft_exit_child(child, msh, cmde, true);
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
-			ft_exit_child(child, msh, cmde);
+			ft_exit_child(child, msh, cmde, true);
 		if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
 			perror("_2_mope closing in ds fork");
-		if (execve(child.pathname, child.argv, child.envp) == -1)
-			perror("execve failed\n");
-		ft_exit_child(child, msh, cmde);
+		execve(child.pathname, child.argv, child.envp);
+		ft_exit_child(child, msh, cmde, true);
 		exit(FAILURE);
 	}
 	if (cmde->pipefd[w_end] != 1 && close(cmde->pipefd[w_end]) == -1)
@@ -304,6 +306,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	printf("________MSH PID = %d__________\n", getpid());
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)

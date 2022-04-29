@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 18:23:40 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 11:16:33 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_cmde {
 	t_token			*cmde_line; //contient TOUS les tokens until pipe inclus
 	int				pipefd[2]; //0=read(in) 1=write(out)
 	pid_t			pid;
+	char			*hdfile;
 	struct s_cmde	*prev;
 	struct s_cmde	*next;
 }	t_cmde;

@@ -6,12 +6,14 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:16:14 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/22 12:32:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 14:43:02 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
+
+extern int g_status;
 
 void	minishell_free_rawcmd(t_minishell *msh)
 {
@@ -32,6 +34,7 @@ void	minishell_free_rawcmd(t_minishell *msh)
 /* Free tous les elements et leur CONTENU */
 void	ft_msh_clear(t_minishell *msh)
 {
+	printf("clearing msh in %d with g_status = %d\n", getpid(), g_status);
 	if (msh->vars)
 		ft_varlst_clear(msh->vars);
 	if (msh->cmde_lst)

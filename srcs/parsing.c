@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/28 14:58:23 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 14:48:25 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,16 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 	return (SUCCESS);
 }
 
-void signal_hd(int q)
+void signal_hd(int sig)
+{
+	g_status = 128 + sig;
+	if (sig == SIGINT)
+		close(0);
+}
+
+void ignore_sig(int q)
 {
 	(void) q;
-	close(0);
-	g_status = 130;
 }
 
 int	msh_isquoted(char *str)
@@ -88,21 +93,20 @@ int	msh_isquoted(char *str)
 	return (nil);
 }
 
-int	ft_heredoc(char *delimiter)
+int	ft_heredoc(t_cmde *cmde, char *delimiter)
 {
-	char	*tmp_name;
 	char	*line;
 	int		fd;
 	t_quote_type	quoted;
 
+	signal(SIGINT, &signal_hd);
+	signal(SIGQUIT, &signal_hd);
 	quoted = msh_isquoted(delimiter);
 	if (remove_quote(&delimiter) == FAILURE)
-		return (perror("ft_heredoc remove auote failed"), FAILURE);
-	signal(SIGINT, &signal_hd);
-	tmp_name = HEREDOC_FILE;
-	fd = open(tmp_name, O_CREAT | O_WRONLY | O_TRUNC, 00644);
+		return (perror("ft_heredoc remove auote failed"), -1);
+	fd = open(cmde->hdfile, O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (fd == -1)
-		return (perror("ft_heredoc opening fd failed"), free(delimiter), FAILURE);
+		return (perror("ft_heredoc opening fd failed"), free(delimiter), 1);
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
 	while (line && g_status != 130)
@@ -116,17 +120,17 @@ int	ft_heredoc(char *delimiter)
 		line = NULL;
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
-		if (line == NULL)
+		if (line == NULL && g_status != 130)
 			ft_putstr_fd("heredoc line null\n", 2);
 	}
 	free(line);
 	line = NULL;
 	if (close(fd) == -1)
 		perror("ft_heredoc close fd failed");
-	return (SUCCESS);
+	return (g_status);
 }
 
-int	heredoc_fork(t_minishell *msh, char *delimiter)
+int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter)
 {
 	pid_t	pid;
 	int		status;
@@ -134,18 +138,48 @@ int	heredoc_fork(t_minishell *msh, char *delimiter)
 	pid = fork();
 	if (pid == -1)
 		return (FAILURE);
+	signal(SIGINT, &ignore_sig);
 	if (pid == 0)
 	{
-		if (ft_heredoc(delimiter) == FAILURE)
-			exit(12);
+		if (ft_heredoc(cmde, delimiter) == -1)
+			g_status = 12;
 		ft_msh_clear(msh);
 		exit(g_status);
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
-		g_status = (status & 0x00FF)>> 8;
+		if (WIFEXITED(status))
+		{
+			g_status = WEXITSTATUS(status);
+			printf("exited with g_status = %d\n", g_status);
+		}
+		else if (WIFSIGNALED(status))
+			printf("signaled with g_status = %d\n", g_status);
+		if (g_status == 12)
+			return (FAILURE);
+			//g_status = WTERMSIG(status) + 128;
 	}
+	return (SUCCESS);
+}
+
+int	rand_hdname(t_cmde *cmd_lst)
+{
+	unsigned long	ptr;
+	char			*tmppath;
+	char			*tmp;
+
+	tmppath = "/tmp/";
+	ptr = (unsigned long) cmd_lst;
+	if (cmd_lst->hdfile)
+		return (SUCCESS);
+	tmp = ft_itoa(ptr);
+	if (!tmp)
+		return (FAILURE);
+	cmd_lst->hdfile = ft_strjoin(tmppath, tmp);
+	free(tmp);
+	if (!cmd_lst->hdfile)
+		return (FAILURE);
 	return (SUCCESS);
 }
 
@@ -175,7 +209,9 @@ int	ft_lala(t_minishell *msh, t_cmde *cmd_lst)
 		}
 		else if (tokens->type == heredoc)
 		{
-			if (heredoc_fork(msh, tokens->next->str) == FAILURE)
+			if (rand_hdname(cmd_lst) == FAILURE)
+				return (FAILURE);
+			if (heredoc_fork(msh, cmd_lst, tokens->next->str) == FAILURE)
 			{
 				perror("fork heredoc failed should quit msh");
 				return (FAILURE);
