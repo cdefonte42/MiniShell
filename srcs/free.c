@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:16:14 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/29 14:43:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:11:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,17 @@ void	minishell_free_rawcmd(t_minishell *msh)
 /* Free tous les elements et leur CONTENU */
 void	ft_msh_clear(t_minishell *msh)
 {
-	printf("clearing msh in %d with g_status = %d\n", getpid(), g_status);
+	t_cmde	*cmde;
+
+	cmde = msh->cmde_lst;
+	while (cmde)
+	{
+		if (cmde->pipefd[0] != 0 && close(cmde->pipefd[0]) == -1)
+			perror("mshclear closin r_end pipe failed");
+		if (cmde->pipefd[1] != 1 && close(cmde->pipefd[1]) == -1)
+			perror("mshclear closin w_end pipe failed");
+		cmde = cmde->next;
+	}
 	if (msh->vars)
 		ft_varlst_clear(msh->vars);
 	if (msh->cmde_lst)

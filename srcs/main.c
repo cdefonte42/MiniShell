@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 14:41:29 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:27:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,25 @@ char	**ft_lst_to_char(t_token *lst)
 	return (argv);
 }
 
+int	set_g_status(void)
+{
+	if (errno == 12 || errno == 5)
+		return (-1);
+	else
+		return (1);
+}
+
 int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 {
 	char	**raw_cmd;
 	int		ret_stat;
 
 	ret_stat = 0;
+	errno = 0;
 	if (!cmde || !cmde->cmde_line)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
-		return (-1);
+		return (set_g_status());
 	raw_cmd = ft_lst_to_char(cmde->cmde_line);
 	if (!raw_cmd)
 		return (-1);
@@ -131,7 +140,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 	return (env);
 }
 
-void	ft_exit_child(t_child	child, t_minishell *msh, t_cmde *cmde, bool error)
+void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool error)
 {
 	if (error)
 	{

@@ -6,12 +6,14 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 12:13:51 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:30:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
+
+extern int g_status;
 
 /* Cree un pipe et set both curr cmde et next cmde 's pipes */
 int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
@@ -47,17 +49,18 @@ int	ft_open(int *fd, char *pathname, int flags, int mode)
 {
 	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
 		perror("closing fd failed ft_open");
+	errno = 0;
 	*fd = open(pathname, flags, mode);
 	if (*fd == -1)
 		return (FAILURE);
 	return (SUCCESS);
-
 }
 
 int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
 {
 	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
 		perror("closing fd failed ft_open");
+	errno = 0;
 	*fd = open(pathname, flags, mode);
 	if (*fd == -1)
 		return (FAILURE);
@@ -104,9 +107,9 @@ int	ft_redir(t_cmde *cmde)
 
 int	ft_dup(t_cmde *cmde)
 {
-	if (dup2(cmde->pipefd[r_end], 0) == -1)
+	if (cmde->pipefd[0] != 0 && dup2(cmde->pipefd[r_end], 0) == -1)
 		return (perror("ft_dup to in failed"), FAILURE);
-	if (dup2(cmde->pipefd[w_end], 1) == -1)
+	if (cmde->pipefd[1] != 1 && dup2(cmde->pipefd[w_end], 1) == -1)
 		return (perror("ft_dup to out failed"), FAILURE);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 14:48:25 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:12:22 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,15 +150,9 @@ int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			g_status = WEXITSTATUS(status);
-			printf("exited with g_status = %d\n", g_status);
-		}
-		else if (WIFSIGNALED(status))
-			printf("signaled with g_status = %d\n", g_status);
 		if (g_status == 12)
 			return (FAILURE);
-			//g_status = WTERMSIG(status) + 128;
 	}
 	return (SUCCESS);
 }

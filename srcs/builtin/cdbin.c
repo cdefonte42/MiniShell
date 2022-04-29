@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/27 15:54:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:26:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ curpath a envoyer a chdir apres appel de ft_cd_home. Attention peut renvoyer 0
 et curpath = NULL, ca veut pas dire pb.
 Retourne -1 en cas d'erreur de malloc. */
 /*________ STEPS 1 and 2 __________*/
-int	ft_cd_home(char **curpath)
+int	ft_cd_home(t_var *var_lst, char **curpath)
 {
 	char	*home;
 
-	home = getenv("HOME");
+	home = var_getvaluefromkey(var_lst, "HOME");
 	if (home == NULL)
-		return (ft_putstr_fd("HOME not set", 2), FAILURE);
+		return (ft_putstr_fd("HOME not set\n", 2), FAILURE);
 	else if (*home == 0)
 		return (SUCCESS);
 	*curpath = ft_strdup(home);
@@ -62,7 +62,7 @@ int	ft_parse_dir(char **curpath, char *directory, t_var *lst)
 
 	if (directory == NULL)
 	{
-		if (ft_cd_home(curpath) == FAILURE)
+		if (ft_cd_home(lst, curpath) == FAILURE)
 			return (FAILURE);
 	}
 	else if (*directory == '/' || *directory == '.' )
@@ -89,9 +89,9 @@ int	ft_cd(t_var **var_lst, char **directory)
 	curpath = NULL;
 	oldpwd = getcwd(NULL, 0);
 	if (oldpwd == NULL)
-		return (perror("getcwp oldpwd debut ft_cd"), 1);
+		return (ft_putstr_fd("minishell: cd: ", 2), perror(directory[1]), 1);
 	if (ft_parse_dir(&curpath, directory[1], *var_lst) == FAILURE)
-		return (free(oldpwd), FAILURE);
+		return (free(oldpwd), 1);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
 		return (free(oldpwd), perror("supp PATH_MAX"), 1);
 	if (curpath && chdir(curpath) != 0)
