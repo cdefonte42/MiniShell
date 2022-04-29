@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/29 18:07:41 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/29 19:10:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 {
 	int		len;
+	char	*dolls;
+	char	*value;
 
 	len = 2;
 	if (!token || !token->str || !token->str[start])
@@ -104,6 +106,13 @@ int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 	while (token->str[start + len - 1] != '?' &&\
 	ft_cisname(token->str[start + len]))
 		len++;
+
+	dolls = ft_substr(token->str, start, len);
+	if (!dolls)
+		return (FAILURE);
+	if (ft_srcmp(dolls, "$?") == 0)
+		
+	value = var_getvaluefromkey(vars_lst, dolls + 1);
 	if (qtype == doubleq && replace(token, var_lst, start, len) == FAILURE)
 		return (FAILURE);
 	else if (qtype == nil && replace_bis(token, var_lst, start, len) == FAILURE)
