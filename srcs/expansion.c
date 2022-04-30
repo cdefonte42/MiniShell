@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/30 20:49:07 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 21:45:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,9 @@ int	expand_str(char **str, t_var *var_lst)
 		set_curr_quote((*str)[i], &inquote);
 		if (inquote != singleq && (*str)[i] == '$' && (*str)[i + 1])
 		{
-			if (get_dolls(*str + i, &dolls) == FAILURE)
-				return (FAILURE);
-			if (get_value(dolls, &value, var_lst, inquote) == FAILURE)
-				return (free(dolls), FAILURE);
-			if (exp_replacewith(str, i, dolls, value) == FAILURE)
-				return (free(dolls), free(value), FAILURE);
+			if (get_dolls(*str + i, &dolls) == FAILURE
+				|| get_value(dolls, &value, var_lst, inquote) == FAILURE
+				|| exp_replacewith(str, i, dolls, value) == FAILURE)
 			i += ft_strlen(value);
 			free(dolls);
 			free(value);
@@ -55,7 +52,6 @@ int	msh_split_token(t_token *token)
 
 	if (!token || !token->str || !token->str[0])
 		return (SUCCESS);
-	//splitted = ft_split(token->str, "\s\t\n");
 	splitted = ft_split(token->str, ' ');
 	if (!splitted)
 		return (FAILURE);
