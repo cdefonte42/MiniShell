@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/29 18:07:41 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 15:19:41 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 
 extern int	g_status;
 
-static int	replace(t_token *token, t_var *vars_lst, int start, int len)
+static int	replace(t_token *token, t_var *vars_lst, int *start, int len)
 {
 	char	*dolls;
 	char	*value;
 	char	*newstr;
 
-	dolls = ft_substr(token->str, start, len);
+	dolls = ft_substr(token->str, *start, len);
 	if (!dolls)
 		return (FAILURE);
 	if (dolls[len - 1] != '?')
@@ -32,7 +32,8 @@ static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 		if (!value)
 			return (free(dolls), FAILURE);
 	}
-	newstr = ft_replacestri(start, token->str, dolls, value);
+	newstr = ft_replacestri(*start, token->str, dolls, value);
+	*start += ft_strlen(value);
 	if (dolls[len - 1] == '?')
 		free(value);
 	free(dolls);
@@ -43,7 +44,7 @@ static int	replace(t_token *token, t_var *vars_lst, int start, int len)
 	return (SUCCESS);
 }
 
-static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
+static int	replace_bis(t_token *token, t_var *vars_lst, int *start, int len)
 {
 	char	*dolls;
 	char	*value;
@@ -51,24 +52,27 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 	char	*newstr;
 	char	*getval;
 
-	dolls = ft_substr(token->str, start, len);
+	getval = NULL;
+	value = NULL;
+	dolls = ft_substr(token->str, *start, len);
 	if (!dolls)
 		return (FAILURE);
 	if (dolls[len - 1] != '?')
 	{
 		getval = var_getvaluefromkey(vars_lst, dolls + 1);
-		if (!getval)
-			return (SUCCESS);
-		value = ft_strdup(getval);
-		if (!value)
-			return (free(dolls), FAILURE);
-		if (msh_isquoted(value))
+		if (getval)
 		{
-			tmp = value;
-			value = ft_strsjoin("\"", tmp, "\"");
-			free(tmp);
+			value = ft_strdup(getval);
 			if (!value)
-				return (free(dolls), free(value), FAILURE);
+				return (free(dolls), FAILURE);
+			if (msh_isquoted(value))
+			{
+				tmp = value;
+				value = ft_strsjoin("\"", tmp, "\"");
+				free(tmp);
+				if (!value)
+					return (free(dolls), free(value), FAILURE);
+			}
 		}
 	}
 	else
@@ -77,7 +81,8 @@ static int	replace_bis(t_token *token, t_var *vars_lst, int start, int len)
 		if (!value)
 			return (free(dolls), FAILURE);
 	}
-	newstr = ft_replacestri(start, token->str, dolls, value);
+	newstr = ft_replacestri(*start, token->str, dolls, value);
+	*start += ft_strlen(value);
 	if (dolls[len - 1] == '?')
 		free(value);
 	free(dolls);
@@ -101,12 +106,12 @@ int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 	if ((token->str[start] == '$' && !(ft_fcisname(token->str[start + 1]) || \
 	token->str[start + 1] == '?')))
 		return (ft_expand_token(token, var_lst, start + 1, qtype));
-	while (token->str[start + len - 1] != '?' && \
-	ft_cisname(token->str[start + len]))
+	while (token->str[start + len] && token->str[start + len - 1] != '?' \
+	&& ft_cisname(token->str[start + len]))
 		len++;
-	if (qtype == doubleq && replace(token, var_lst, start, len) == FAILURE)
+	if (qtype == doubleq && replace(token, var_lst, &start, len) == FAILURE)
 		return (FAILURE);
-	else if (qtype == nil && replace_bis(token, var_lst, start, len) == FAILURE)
+	else if (qtype == nil && replace_bis(token, var_lst, &start, len) == FAILURE)
 		return (FAILURE);
 	return (ft_expand_token(token, var_lst, start, qtype));
 }
