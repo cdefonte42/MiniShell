@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:23:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 23:43:47 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,40 +54,37 @@ void	ft_set_operator_type(t_token *elem)
 		elem->type = spipe;
 }
 
-int	remove_quote(char **s)
+int	remove_quote(char **str)
 {
 	int				i;
 	t_quote_type	inquote;
 	char			*newstr;
-	char			*str;
 
 	i = 0;
 	inquote = nil;
-	str = *s;
-	while (str && str[i])
+	while (str && *str && (*str)[i])
 	{
-		if (str[i] == '"' && inquote != singleq)
+		if ((*str)[i] == '"' && inquote != singleq)
 		{
 			inquote = inquote ^ doubleq;
-			newstr = ft_replacestri(i, str, "\"", NULL);
+			newstr = ft_replacestri(i, *str, "\"", NULL);
 			if (!newstr)
 				return (perror("remove_quote"), FAILURE);
-			free(str);
-			str = newstr;
+			free(*str);
+			*str = newstr;
 		}
-		else if (str[i] == '\'' && inquote != doubleq)
+		else if ((*str)[i] == '\'' && inquote != doubleq)
 		{
 			inquote = inquote ^ singleq;
-			newstr = ft_replacestri(i, str, "\'", NULL);
+			newstr = ft_replacestri(i, *str, "\'", NULL);
 			if (!newstr)
 				return (perror("remove_quote"), FAILURE);
-			free(str);
-			str = newstr;
+			free(*str);
+			*str = newstr;
 		}
 		else
 			i++;
 	}
-	*s = str;
 	return (SUCCESS);
 }
 

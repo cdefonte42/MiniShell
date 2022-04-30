@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 15:01:18 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/22 14:37:15 by mbraets          ###   ########.fr       */
+/*   Updated: 2022/04/30 21:48:14 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ int	ft_iscontrol_operator(char c)
 {
 	if (c == '|')
 		return (1);
-/* _______ BONUS OPERATORS _________
-	ATTENTION pb sur le '&' qui tout seul ne devrait pas et OK
-	if (c == '&' || c == ')' || c == '(')
-		return (1);*/
 	return (0);
 }
 
@@ -32,10 +28,6 @@ int	ft_isoperator(char c)
 		return (1);
 	else if (c == '>')
 		return (1);
-/* _______ BONUS OPERATORS _________
-	ATTENTION pb sur le '&' qui tout seul ne devrait pas et OK
-	if (c == '&' || c == ')' || c == '(')
-		return (1);*/
 	return (0);
 }
 
@@ -46,9 +38,6 @@ int	ft_ismetachar(char c)
 {
 	if ((c >= 8 && c <= 13) || c == '|' || c == '<' || c == '>' || c == ' ')
 		return (1);
-/* _______ BONUS METACHARS _________
-	if(c == '(' || c == ')' || c == '&')
-		return (1);*/
 	return (0);
 }
 
@@ -60,10 +49,5 @@ int	ft_formoperator(char c1, char c2)
 		return (1);
 	if (c1 == '<' && c2 == '<')
 		return (1);
-/* _______ BONUS OPERATORS _________
-	if (c1 == '&' && c2 == '&')
-		return (1);
-	if (c1 == '|' && c2 == '|')
-		return (1);*/
 	return (0);
 }

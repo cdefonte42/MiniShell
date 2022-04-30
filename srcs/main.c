@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 16:27:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 21:44:45 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ void	signal_handler(int signalid)
 	if (signalid == SIGINT)
 	{
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
+		//rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 		g_status = 130;
@@ -275,7 +275,7 @@ int	minishell_loop(t_minishell *msh)
 				curr_cmde = msh->cmde_lst;
 				while (curr_cmde)
 				{
-					ft_expansion(curr_cmde, msh->vars);
+					ft_expand_tokens(curr_cmde, msh->vars);
 					if (ft_tokenlst_iteri_s(curr_cmde->cmde_line, &remove_quote) == FAILURE)
 						return (FAILURE); //NON
 					if (ft_exec(msh, curr_cmde) == FAILURE)

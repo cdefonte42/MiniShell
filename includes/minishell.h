@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/30 18:05:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 22:07:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,17 @@ int		msh_isquoted(char *str);
 /*_________ PATHNAME __________*/
 char	*check_permission(t_minishell *msh, char *cmd);
 
+/*_________ HERE UTILS __________*/
+
+int		rand_hdname(t_cmde *cmd_lst);
+int		expand_hdstr(char **str, t_var *var_lst);
+
 /*_________ HERE DOC __________*/
 void	signal_hd(int sig);
 void	ignore_sig(int q);
-int		ft_heredoc_input(char *delimiter, int fd, t_quote_type quoted);
-int		ft_heredoc(t_cmde *cmde, char *delimiter);
+int		ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars);
+int		ft_heredoc(t_var *vars, t_cmde *cmde, char *delimiter);
 int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter);
-int		rand_hdname(t_cmde *cmd_lst);
+
 
 #endif
