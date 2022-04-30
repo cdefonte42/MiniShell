@@ -23,6 +23,7 @@ int	ft_heredoc_input(char *delimiter, int fd, t_quote_type quoted)
 {
 	char			*line;
 
+	(void)quoted;
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
 	while (line && g_status != 130)
