@@ -18,7 +18,7 @@
 #include "libft.h"
 #include <stdio.h>
 
-extern int g_status;
+extern int	g_status;
 
 /* Liste pour UNE commande, tous ses tokens. Cad tous les tokens de la liste 
 token_lst jusqu'a l'operator control '|' COMPRIS (permet de realiser le pipe
@@ -65,18 +65,6 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 	return (SUCCESS);
 }
 
-void signal_hd(int sig)
-{
-	g_status = 128 + sig;
-	if (sig == SIGINT)
-		close(0);
-}
-
-void ignore_sig(int q)
-{
-	(void) q;
-}
-
 int	msh_isquoted(char *str)
 {
 	int	i;
@@ -93,91 +81,7 @@ int	msh_isquoted(char *str)
 	return (nil);
 }
 
-int	ft_heredoc(t_cmde *cmde, char *delimiter)
-{
-	char	*line;
-	int		fd;
-	t_quote_type	quoted;
-
-	signal(SIGINT, &signal_hd);
-	signal(SIGQUIT, &signal_hd);
-	quoted = msh_isquoted(delimiter);
-	if (remove_quote(&delimiter) == FAILURE)
-		return (perror("ft_heredoc remove auote failed"), -1);
-	fd = open(cmde->hdfile, O_CREAT | O_WRONLY | O_TRUNC, 00644);
-	if (fd == -1)
-		return (perror("ft_heredoc opening fd failed"), free(delimiter), 1);
-	ft_putstr_fd("> ", 1);
-	line = get_next_line(0);
-	while (line && g_status != 130)
-	{
-		if (ft_strlen(line) > ft_strlen(delimiter) && !ft_strncmp(line, delimiter, ft_strlen(line) - 1))
-			break ;
-//		if (quoted != nil)
-//			ft_expand_str(());
-		ft_putstr_fd(line, fd);
-		free(line);
-		line = NULL;
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
-		if (line == NULL && g_status != 130)
-			ft_putstr_fd("heredoc line null\n", 2);
-	}
-	free(line);
-	line = NULL;
-	if (close(fd) == -1)
-		perror("ft_heredoc close fd failed");
-	return (g_status);
-}
-
-int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter)
-{
-	pid_t	pid;
-	int		status;
-
-	pid = fork();
-	if (pid == -1)
-		return (FAILURE);
-	signal(SIGINT, &ignore_sig);
-	if (pid == 0)
-	{
-		if (ft_heredoc(cmde, delimiter) == -1)
-			g_status = 12;
-		ft_msh_clear(msh);
-		exit(g_status);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			g_status = WEXITSTATUS(status);
-		if (g_status == 12)
-			return (FAILURE);
-	}
-	return (SUCCESS);
-}
-
-int	rand_hdname(t_cmde *cmd_lst)
-{
-	unsigned long	ptr;
-	char			*tmppath;
-	char			*tmp;
-
-	tmppath = "/tmp/";
-	ptr = (unsigned long) cmd_lst;
-	if (cmd_lst->hdfile)
-		return (SUCCESS);
-	tmp = ft_itoa(ptr);
-	if (!tmp)
-		return (FAILURE);
-	cmd_lst->hdfile = ft_strjoin(tmppath, tmp);
-	free(tmp);
-	if (!cmd_lst->hdfile)
-		return (FAILURE);
-	return (SUCCESS);
-}
-
-int	ft_lala(t_minishell *msh, t_cmde *cmd_lst)
+int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
 {
 	t_token_type	prev_type;
 	t_token			*tokens;
@@ -213,7 +117,7 @@ int	ft_lala(t_minishell *msh, t_cmde *cmd_lst)
 		}
 		tokens = tokens->next;
 	}
-	return (ft_lala(msh, cmd_lst->next));
+	return (token_check(msh, cmd_lst->next));
 }
 
 int	ft_parse(t_minishell *msh, char *line)
@@ -235,12 +139,13 @@ int	ft_parse(t_minishell *msh, char *line)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
-	if (ft_lala(msh, msh->cmde_lst) == FAILURE)
+	if (token_check(msh, msh->cmde_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	return (SUCCESS);
 }
 
-/*__________ DEBUG FCTS ________*/
+/*
+//__________ DEBUG FCTS ________
 
 void	ft_print_rawtokenlst(t_token *token_lst)
 {
@@ -259,3 +164,4 @@ void	ft_print_cmdelst(t_cmde *cmde_lst)
 		printf("___END CMDE LINE ____\n");
 	}
 }
+*/

@@ -43,20 +43,19 @@ void	builtin_exec(t_minishell *msh)
 				g_status = ft_atoi(msh->raw_cmd[1]);
 			else
 				ft_putendl_fd("bash: numeric argument required", 2);
-				
 		}
 		ft_putendl_fd("exit", 1);
 		msh->loop = 0;
 		// fexit(msh);
 	}
 	if ((ft_strcmp(msh->raw_cmd[0], "echo") == 0))
-		msh->status = minishell_echo(msh, msh->raw_cmd);
+		msh->status = minishell_echo(msh, msh->raw_cmd, 0);
 	if ((ft_strcmp(msh->raw_cmd[0], "cd") == 0))
 		msh->status = ft_cd(&msh->vars, msh->raw_cmd);
 	if ((ft_strcmp(msh->raw_cmd[0], "pwd") == 0))
-		msh->status = ft_pwd();
+		msh->status = ft_pwd(0);
 	if ((ft_strcmp(msh->raw_cmd[0], "export") == 0))
-		ft_export(&msh->vars, msh->raw_cmd);
+		ft_export(&msh->vars, msh->raw_cmd, 0);
 	if ((ft_strcmp(msh->raw_cmd[0], "unset") == 0))
 		ft_unset(&msh->vars, msh->raw_cmd);
 }

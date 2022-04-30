@@ -98,10 +98,10 @@ int	ft_expand_token(t_token *token, t_var *var_lst, int start, int qtype)
 	start = get_start(token, start, &qtype);
 	if (!token->str[start])
 		return (SUCCESS);
-	if ((token->str[start] == '$' && !(ft_fcisname(token->str[start + 1]) ||\
+	if ((token->str[start] == '$' && !(ft_fcisname(token->str[start + 1]) || \
 	token->str[start + 1] == '?')))
 		return (ft_expand_token(token, var_lst, start + 1, qtype));
-	while (token->str[start + len - 1] != '?' &&\
+	while (token->str[start + len - 1] != '?' && \
 	ft_cisname(token->str[start + len]))
 		len++;
 	if (qtype == doubleq && replace(token, var_lst, start, len) == FAILURE)

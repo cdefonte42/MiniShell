@@ -115,12 +115,20 @@ int		ft_isbin(char *name);
 void	ft_perror(char *cmd, char *suffix);
 void	ft_error(char *prefix, char *suffix);
 
-/*________ PARSE __________*/
+/*_________ PARSE __________*/
 int		ft_parse(t_minishell *msh, char *line);
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 int		msh_isquoted(char *str);
 
 /*_________ PATHNAME __________*/
 char	*check_permission(t_minishell *msh, char *cmd);
+
+/*_________ HERE DOC __________*/
+void	signal_hd(int sig);
+void	ignore_sig(int q);
+int		ft_heredoc_input(char *delimiter, int fd, t_quote_type quoted);
+int		ft_heredoc(t_cmde *cmde, char *delimiter);
+int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter);
+int		rand_hdname(t_cmde *cmd_lst);
 
 #endif

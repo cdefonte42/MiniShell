@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include "export.h"
 
-extern int g_status;
+extern int	g_status;
 
 void	minishell_free_rawcmd(t_minishell *msh)
 {

@@ -131,7 +131,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 		{
 			env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
 			if (!env[i])
-				return (perror("varlst_tochar failed"), ft_free_tabtab(env), NULL);
+				return (perror("var_tochar failed"), ft_free_tabtab(env), NULL);
 		}
 		i++;
 		varlst = varlst->next;
@@ -257,12 +257,12 @@ int	minishell_loop(t_minishell *msh)
 {
 	char	*line;
 	t_cmde	*curr_cmde;
+
 	while (msh->loop)
 	{
 		signal(SIGINT, &signal_handler);
-		signal(SIGQUIT, &signal_handler);
-		signal(SIGTSTP, &signal_handler);
-		line = readline(C_BLUE"minishell-"VERSION C_RESET"$ ");
+		ft_putstr_fd(C_BLUE"minishell-"VERSION C_RESET"$ ", 2);
+		line = readline(NULL);
 		if (line == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -310,11 +310,13 @@ int	minishell_loop(t_minishell *msh)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_minishell msh;
-	g_status = 0;
+	t_minishell	msh;
 
+	g_status = 0;
 	(void)ac;
 	(void)av;
+	signal(SIGQUIT, &signal_handler);
+	signal(SIGTSTP, &signal_handler);
 	printf("________MSH PID = %d__________\n", getpid());
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;

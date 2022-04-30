@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include "export.h"
 
-extern int g_status;
+extern int	g_status;
 
 /* Cree un pipe et set both curr cmde et next cmde 's pipes */
 int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
@@ -31,7 +31,7 @@ int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
 
 int	ft_token_isredir(t_token_type type)
 {
-	if (type == redirin || type == redirout 
+	if (type == redirin || type == redirout
 		|| type == redirapp || type == heredoc)
 		return (1);
 	return (0);
@@ -71,7 +71,7 @@ int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
 
 int	ft_redir(t_cmde *cmde)
 {
-	t_token *head_token;
+	t_token	*head_token;
 	char	*file;
 
 	if (!cmde || !cmde->cmde_line)
@@ -87,16 +87,16 @@ int	ft_redir(t_cmde *cmde)
 			else
 			{
 				if (head_token->type == redirin)
-					if (ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0) == FAILURE)
+					if (!ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0))
 						return (ft_perror(file, NULL), FAILURE);
 				if (head_token->type == redirout)
-					if (ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644) == FAILURE)
-						return (ft_perror(file, NULL), FAILURE);		
+					if (!ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644))
+						return (ft_perror(file, NULL), FAILURE);
 				if (head_token->type == redirapp)
-					if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
+					if (!ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644))
 						return (ft_perror(file, NULL), FAILURE);
 				if (head_token->type == heredoc)
-					if (ft_open_hd(&(cmde->pipefd[r_end]), cmde->hdfile, O_RDONLY, 00644) == FAILURE)
+					if (!ft_open_hd(&(cmde->pipefd[0]), cmde->hdfile, 0, 00644))
 						return (ft_perror(cmde->hdfile, NULL), FAILURE);
 			}
 		}

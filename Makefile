@@ -40,12 +40,14 @@ srcs/builtin/pwd.c \
 srcs/parsing.c \
 srcs/grammar.c \
 srcs/utils.c \
+srcs/utils_is.c \
 srcs/free.c \
 srcs/pathname.c \
 srcs/redir.c \
 srcs/init_msh.c \
 srcs/expansion_utils.c \
-srcs/expansion.c
+srcs/expansion.c \
+srcs/heredoc.c
 
 OBJS		=	$(SRCS:.c=.o)
 

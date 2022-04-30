@@ -92,7 +92,7 @@ int	ft_try_cdpath(char **curpath, char *directory, t_var *cdpath)
 			return (FAILURE);
 		while (splited_cdpath && splited_cdpath[i])
 		{
-			if (ft_concat_cdpath(curpath, directory, splited_cdpath[i]) == FAILURE)
+			if (!ft_concat_cdpath(curpath, directory, splited_cdpath[i]))
 				return (FAILURE);
 			if (ft_isadir(*curpath))
 				return (SUCCESS);
