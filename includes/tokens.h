@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:30:35 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:33:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int		ft_tokenlst_iteri(t_token *lst, int (*f)(t_token *));
 int		ft_tokenlst_iteri_s(t_token *lst, int (*f)(char **));
 int		ft_tokenlst_size(t_token *lst);
 void	ft_remove_empty_token(t_token **token_lst);
+void	ft_tokenlst_addafter(t_token *elem, t_token *new);
 
 /*__________ UTILS ___________*/
 int		ft_iscontrol_operator(char c);

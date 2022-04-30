@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:21:47 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/04/30 20:33:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	ft_remove_empty_token(t_token **token_lst)
 	{
 		if (head->str == NULL || head->str[0] == 0)
 		{
+
 			ft_tokenlst_pop(token_lst, i);
 			head = *token_lst;
 			i = 0;
@@ -70,4 +71,15 @@ void	ft_remove_empty_token(t_token **token_lst)
 			head = head->next;
 		}
 	}
+}
+
+/* Rajoute l'element 'new' apres l'elemen 'elem'. ATTENTION elem doit etre non
+NULL */
+void	ft_tokenlst_addafter(t_token *elem, t_token *new)
+{
+	t_token *next;
+
+	next = elem->next;
+	elem->next = new;
+	new->next = next;
 }
