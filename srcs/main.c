@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 12:19:47 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 12:46:51 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,8 +261,7 @@ int	minishell_loop(t_minishell *msh)
 	while (msh->loop)
 	{
 		signal(SIGINT, &signal_handler);
-		ft_putstr_fd(C_BLUE"minishell-"VERSION C_RESET"$ ", 2);
-		line = readline(NULL);
+		line = readline("minishell-$ ");
 		if (line == NULL)
 		{
 			ft_putendl_fd("exit", 1);
