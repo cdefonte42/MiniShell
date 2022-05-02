@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 16:30:06 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 11:18:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,29 @@ app		= O_APPEND | O_CREAT | O_WRONLY = 01011 (MAC) OU 02101 (LINUX)
 
 int	ft_open(int *fd, char *pathname, int flags, int mode)
 {
+	int	new_fd;
+
 	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
 		perror("closing fd failed ft_open");
 	errno = 0;
-	*fd = open(pathname, flags, mode);
-	if (*fd == -1)
+	new_fd = open(pathname, flags, mode);
+	if (new_fd == -1)
 		return (FAILURE);
+	*fd = new_fd;
 	return (SUCCESS);
 }
 
 int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
 {
+	int	new_fd;
+
 	if (*fd != 1 && *fd != 0 && close(*fd) == -1)
 		perror("closing fd failed ft_open");
 	errno = 0;
-	*fd = open(pathname, flags, mode);
-	if (*fd == -1)
+	new_fd = open(pathname, flags, mode);
+	if (new_fd == -1)
 		return (FAILURE);
+	*fd = new_fd;
 	if (unlink(pathname) == -1)
 		return (perror("unlink heredoc"), FAILURE);
 	return (SUCCESS);
