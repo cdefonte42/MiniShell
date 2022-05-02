@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/30 22:07:13 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 11:14:09 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,17 +121,12 @@ int		ft_isbin(char *name);
 void	ft_perror(char *cmd, char *suffix);
 void	ft_error(char *prefix, char *suffix);
 
-/*_________ PARSE __________*/
-int		ft_parse(t_minishell *msh, char *line);
-void	ft_print_cmdelst(t_cmde *cmde_lst);
-int		msh_isquoted(char *str);
-
 /*_________ PATHNAME __________*/
 char	*check_permission(t_minishell *msh, char *cmd);
 
 /*_________ HERE UTILS __________*/
-
 int		rand_hdname(t_cmde *cmd_lst);
+int		get_value_hd(char *dolls, char **value, t_var *var_lst);
 int		expand_hdstr(char **str, t_var *var_lst);
 
 /*_________ HERE DOC __________*/
@@ -141,5 +136,9 @@ int		ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars);
 int		ft_heredoc(t_var *vars, t_cmde *cmde, char *delimiter);
 int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter);
 
+/*_________ PARSE __________*/
+int		ft_parse(t_minishell *msh, char *line);
+void	ft_print_cmdelst(t_cmde *cmde_lst);
+int		msh_isquoted(char *str);
 
 #endif
