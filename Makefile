@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/04/29 18:08:13 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/05/02 11:14:44 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ LIBFT		=	libft/libft.a
 
 CC			=	cc
 
-#CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
-CFLAGS		=	-Werror -Wall -Wextra -g
+CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
+#CFLAGS		=	-Werror -Wall -Wextra -g
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/main.c \
@@ -45,9 +45,10 @@ srcs/free.c \
 srcs/pathname.c \
 srcs/redir.c \
 srcs/init_msh.c \
-srcs/expansion_utils.c \
 srcs/expansion.c \
-srcs/heredoc.c
+srcs/expansion_utils.c \
+srcs/heredoc.c \
+srcs/heredoc_utils.c
 
 OBJS		=	$(SRCS:.c=.o)
 
