@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 12:23:24 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 13:12:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
 	{
 		ft_error("syntax error near unexpected token", tokens->str);
 		g_status = 2;
-		return (SUCCESS);
+		return (FAILURE);
 	}
 	while (tokens)
 	{
@@ -103,7 +103,7 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
 		{
 			ft_error("syntax error near unexpected token", tokens->str);
 			g_status = 2;
-			return (SUCCESS);
+			return (FAILURE);
 		}
 		else if (tokens->type == heredoc)
 		{
@@ -143,7 +143,7 @@ int	ft_parse(t_minishell *msh, char *line)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	}
 	if (token_check(msh, msh->cmde_lst) == FAILURE)
-		return (ft_tokenlst_free(token_lst), FAILURE);
+		return (FAILURE);
 	return (SUCCESS);
 }
 
