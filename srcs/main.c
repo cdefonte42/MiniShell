@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 11:07:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 12:19:47 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,7 +296,7 @@ int	minishell_loop(t_minishell *msh)
 				ft_cmdelst_clear(msh->cmde_lst);
 				msh->cmde_lst = NULL;
 			}
-			else
+			else if (g_status == -1)
 				return (free(line), clear_history(), FAILURE);
 		}
 		if (line && *line)

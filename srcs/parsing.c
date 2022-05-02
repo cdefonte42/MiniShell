@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 11:30:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 12:23:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,18 +127,21 @@ int	ft_parse(t_minishell *msh, char *line)
 	token_lst = NULL;
 	msh->cmde_lst = NULL;
 	if (*line == 0)
-	{
-		msh->cmde_lst = NULL;
 		return (SUCCESS);
-	}
 	if (ft_tokener(&token_lst, line) == FAILURE)
+	{
+		g_status = -1;
 		return (FAILURE);
+	}
 	else if (!token_lst)
 		return (printf("Raw token list empty\n"), SUCCESS);
 	if (ft_check_tokens(token_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	if (ft_fill_cmdelst(&(msh->cmde_lst), token_lst) == FAILURE)
+	{
+		g_status = -1;
 		return (ft_tokenlst_free(token_lst), FAILURE);
+	}
 	if (token_check(msh, msh->cmde_lst) == FAILURE)
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	return (SUCCESS);
