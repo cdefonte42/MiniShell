@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/30 21:45:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 16:13:33 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	msh_split_token(t_token *token)
 		token = token->next;
 		i++;
 	}
+	free(splitted);
 	return (SUCCESS);
 }
 
@@ -95,5 +96,6 @@ int	ft_expand_tokens(t_cmde *cmd, t_var *vars_lst)
 	if (fst_token == 2 && msh_split_token(cmd->cmde_line) == FAILURE)
 		return (FAILURE);
 	ft_remove_empty_token(&cmd->cmde_line);
+	fill_cmde_name(cmd);
 	return (SUCCESS);
 }

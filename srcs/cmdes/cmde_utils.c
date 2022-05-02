@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:28:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 15:05:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 16:02:51 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,19 @@
 
 extern int	g_status;
 
-void	fill_cmde_name(t_cmde *cmd_lst)
+void	fill_cmde_name(t_cmde *cmd)
 {
 	t_cmde *lst;
 	t_token	*cmd_tokens;
 
-	lst = cmd_lst;
-	while (lst)
+	lst = cmd;
+	cmd_tokens = lst->cmde_line;
+	while (cmd_tokens && lst->name_token == NULL)
 	{
-		cmd_tokens = lst->cmde_line;
-		while (cmd_tokens && lst->name == NULL)
-		{
-			if (cmd_tokens->type >= op && cmd_tokens->next)
-				cmd_tokens = cmd_tokens->next->next;
-			else
-				lst->name = cmd_tokens->str;
-		}
-		lst = lst->next;
+		if (cmd_tokens->type >= op && cmd_tokens->next)
+			cmd_tokens = cmd_tokens->next->next;
+		else
+			lst->name_token = cmd_tokens;
 	}
 }
 
@@ -68,6 +64,7 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 {
 	t_cmde	*new_cmde;
 	t_token	*cmde_line;
+	t_cmde	*lst;
 
 	while (token_lst)
 	{
@@ -80,6 +77,11 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 			ft_cmdelst_addback(alst, new_cmde);
 		}
 	}
-	fill_cmde_name(*alst);
+	lst = *alst;
+	while (lst)
+	{
+		fill_cmde_name(lst);
+		lst = lst->next;
+	}
 	return (SUCCESS);
 }

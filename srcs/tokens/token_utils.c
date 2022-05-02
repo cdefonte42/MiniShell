@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/30 20:33:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 15:54:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	ft_remove_empty_token(t_token **token_lst)
 	{
 		if (head->str == NULL || head->str[0] == 0)
 		{
-
 			ft_tokenlst_pop(token_lst, i);
 			head = *token_lst;
 			i = 0;
