@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 14:21:32 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 14:50:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,9 +145,9 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool error)
 	if (error)
 	{
 		if (errno != 2)
-			ft_perror(cmde->cmde_line->str, NULL);
+			ft_perror(cmde->name, NULL);
 		else
-			ft_error(cmde->cmde_line->str, "command not found");
+			ft_error(cmde->name, "command not found");
 	}
 	free(child.argv);
 	free(child.pathname);
@@ -177,7 +177,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			ft_exit_child(child, msh, cmde, false);
 		if (ft_dup(cmde) == FAILURE)
 			ft_exit_child(child, msh, cmde, true);
-		if (ft_isbin(cmde->cmde_line->str))
+		if (ft_isbin(cmde->name))
 		{
 			g_status = ft_exec_bin(msh, cmde);
 			ft_msh_clear(msh);
@@ -209,7 +209,7 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
 	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
-	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->cmde_line->str))
+	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->name))
 	{
 		if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
 			return (FAILURE);

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 15:27:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 14:45:02 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	ft_isbin(char *name)
 	bin[5] = "env";
 	bin[6] = "exit";
 	i = 0;
+	if (!name || !*name)
+		return (0);
 	while (i < 7)
 	{
 		if (ft_strcmp(name, bin[i]) == 0)

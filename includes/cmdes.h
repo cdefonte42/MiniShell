@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 19:59:42 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:06:56 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 14:38:00 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ enum e_fd_type {r_end = 0, w_end = 1};
 
 typedef struct s_cmde {
 	t_token			*cmde_line;
+	char			*name;
 	int				pipefd[2];
 	pid_t			pid;
 	char			*hdfile;
@@ -36,5 +37,8 @@ void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new);
 t_cmde	*ft_cmdelst_last(t_cmde *lst);
 void	ft_cmdelst_clear(t_cmde *lst);
 int		ft_cmdelst_size(t_cmde *lst);
+
+/*__________ T_CMDE LISTES UTILS*/
+int		ft_fill_cmdelst(t_cmde **alst, t_token *token_lst);
 
 #endif

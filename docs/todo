@@ -1,6 +1,5 @@
 istty on stderr and change prompt to stderr
 changer tous les comde->cmde_line->str en cmde->name; => peut etre modifier la structure t_cmde?? Avec une liste de word tokens (1=cmde name suite = args) et une liste de redir tokens.
-faire expansion dans contenu heredoc si quoted or not
 return status
 
 
