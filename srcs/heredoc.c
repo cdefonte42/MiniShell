@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 11:35:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 16:20:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 		if (line == NULL && g_status != 130)
-			ft_putstr_fd("heredoc line null\n", 2);
+			ft_error("warning: here-document delimited by \
+en-of-file. Wanted", delimiter);
 	}
 	free(line);
 	line = NULL;
