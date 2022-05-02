@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/02 11:14:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 11:31:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,8 @@ int		expand_hdstr(char **str, t_var *var_lst);
 void	signal_hd(int sig);
 void	ignore_sig(int q);
 int		ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars);
-int		ft_heredoc(t_var *vars, t_cmde *cmde, char *delimiter);
-int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char *delimiter);
+int		ft_heredoc(t_var *vars, t_cmde *cmde, char **delimiter);
+int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter);
 
 /*_________ PARSE __________*/
 int		ft_parse(t_minishell *msh, char *line);

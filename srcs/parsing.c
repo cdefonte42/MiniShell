@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 16:12:22 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/02 11:30:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
 		{
 			if (rand_hdname(cmd_lst) == FAILURE)
 				return (FAILURE);
-			if (heredoc_fork(msh, cmd_lst, tokens->next->str) == FAILURE)
+			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
 			{
 				perror("fork heredoc failed should quit msh");
 				return (FAILURE);
