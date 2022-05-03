@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:57:37 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/30 23:29:42 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:39:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "minishell.h"
 #include "libft.h"
 
-extern int g_status;
+extern int	g_status;
 
 int	rand_hdname(t_cmde *cmd_lst)
 {

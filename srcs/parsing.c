@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 14:28:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:48:46 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	msh_isquoted(char *str)
 	return (nil);
 }
 
-int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
+int	token_check(t_minishell *msh, t_cmde *cmd_lst)
 {
 	t_token_type	prev_type;
 	t_token			*tokens;
@@ -62,11 +62,11 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst) // rename from lala tmp name
 		else if (tokens->type == heredoc)
 		{
 			if (rand_hdname(cmd_lst) == FAILURE)
-				return (FAILURE);
+				return (g_status = -1, FAILURE);
 			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
 			{
 				perror("fork heredoc failed should quit msh");
-				return (FAILURE);
+				return (g_status = -1, FAILURE);
 			}
 		}
 		tokens = tokens->next;

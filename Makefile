@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/05/03 11:11:29 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/05/03 14:38:51 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ srcs/utils_is.c \
 srcs/free.c \
 srcs/pathname.c \
 srcs/redir.c \
+srcs/redir_utils.c \
 srcs/init_msh.c \
 srcs/expansion.c \
 srcs/expansion_utils.c \

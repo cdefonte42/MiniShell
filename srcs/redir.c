@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 14:52:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:43:42 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,6 @@
 
 extern int	g_status;
 
-/* Cree un pipe et set both curr cmde et next cmde 's pipes */
-int	ft_pipe_cmdes(t_cmde *c1, t_cmde *c2)
-{
-	int	pipefd[2];
-
-	if (!c1 || !c2)
-		return (SUCCESS);
-	if (pipe(pipefd) == -1)
-		return (perror("Pipe failed ft_pipe_cmdes"), FAILURE);
-	c1->pipefd[w_end] = pipefd[w_end];
-	c2->pipefd[r_end] = pipefd[r_end];
-	return (SUCCESS);
-}
-
 int	ft_token_isredir(t_token_type type)
 {
 	if (type == redirin || type == redirout
@@ -36,6 +22,7 @@ int	ft_token_isredir(t_token_type type)
 		return (1);
 	return (0);
 }
+
 /*
 heredoc = , O_CREAT | O_WRONLY | O_TRUNC, 00644		=> Pour readline
 heredoc = O_RDONLY, 00644							=> pour le lire
@@ -44,7 +31,6 @@ out		= , O_WRONLY | O_CREAT | O_TRUNC = 01101
 in		= , O_RDONLY
 app		= O_APPEND | O_CREAT | O_WRONLY = 01011 (MAC) OU 02101 (LINUX)
 */
-
 int	ft_open(int *fd, char *pathname, int flags, int mode)
 {
 	int	new_fd;
@@ -75,6 +61,23 @@ int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
 	return (SUCCESS);
 }
 
+int	switch_redir(t_cmde *cmde, char *file, int type)
+{
+	if (type == redirin)
+		if (!ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0))
+			return (ft_perror(file, NULL), FAILURE);
+	if (type == redirout)
+		if (!ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644))
+			return (ft_perror(file, NULL), FAILURE);
+	if (type == redirapp)
+		if (!ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644))
+			return (ft_perror(file, NULL), FAILURE);
+	if (type == heredoc)
+		if (!ft_open_hd(&(cmde->pipefd[r_end]), cmde->hdfile, 0, 00644))
+			return (ft_perror(cmde->hdfile, NULL), FAILURE);
+	return (SUCCESS);
+}
+
 int	ft_redir(t_cmde *cmde)
 {
 	t_token	*head_token;
@@ -90,32 +93,10 @@ int	ft_redir(t_cmde *cmde)
 			file = head_token->next->str;
 			if (file && *file == 0)
 				return (ft_error(file, "ambiguous redirect\n"), FAILURE);
-			else
-			{
-				if (head_token->type == redirin)
-					if (!ft_open(&(cmde->pipefd[r_end]), file, O_RDONLY, 0))
-						return (ft_perror(file, NULL), FAILURE);
-				if (head_token->type == redirout)
-					if (!ft_open(&(cmde->pipefd[w_end]), file, 01101, 00644))
-						return (ft_perror(file, NULL), FAILURE);
-				if (head_token->type == redirapp)
-					if (!ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644))
-						return (ft_perror(file, NULL), FAILURE);
-				if (head_token->type == heredoc)
-					if (!ft_open_hd(&(cmde->pipefd[0]), cmde->hdfile, 0, 00644))
-						return (ft_perror(cmde->hdfile, NULL), FAILURE);
-			}
+			else if (switch_redir(cmde, file, head_token->type) == FAILURE)
+				return (FAILURE);
 		}
 		head_token = head_token->next;
 	}
-	return (SUCCESS);
-}
-
-int	ft_dup(t_cmde *cmde)
-{
-	if (cmde->pipefd[0] != 0 && dup2(cmde->pipefd[r_end], 0) == -1)
-		return (perror("ft_dup to in failed"), FAILURE);
-	if (cmde->pipefd[1] != 1 && dup2(cmde->pipefd[w_end], 1) == -1)
-		return (perror("ft_dup to out failed"), FAILURE);
 	return (SUCCESS);
 }

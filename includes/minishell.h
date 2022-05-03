@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/03 11:17:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:39:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	set_curr_quote(char c, int *qtype);
 int		ft_pipe_cmdes(t_cmde *c1, t_cmde *c2);
 int		ft_redir(t_cmde *cmde);
 int		ft_dup(t_cmde *cmde);
+int		ft_open_hd(int *fd, char *pathname, int flags, int mode);
 
 /*________ MSH __________*/
 int		ft_init_envlst(t_minishell *msh, char **envp);
