@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 15:44:00 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:19:33 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		ret_stat = ft_pwd(cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "export") == 0))
 		ret_stat = ft_export(&(msh->vars), raw_cmd, cmde->pipefd[w_end]);
+	else if ((ft_strcmp(raw_cmd[0], "env") == 0))
+		ret_stat = bd_env(msh->vars, raw_cmd, cmde->pipefd[w_end]);
 	else if ((ft_strcmp(raw_cmd[0], "unset") == 0))
 		ret_stat = ft_unset(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "echo") == 0))

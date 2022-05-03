@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/05/02 16:11:26 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/05/03 11:11:29 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ srcs/export/export.c \
 srcs/export/export_utils.c \
 srcs/unset/unset.c \
 srcs/builtin/echo.c \
+srcs/builtin/bd_env.c \
 srcs/builtin/cdbin.c \
 srcs/builtin/cd_cdpath.c \
 srcs/builtin/pwd.c \

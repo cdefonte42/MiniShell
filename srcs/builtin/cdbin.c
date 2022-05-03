@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 16:26:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 10:03:20 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ int	ft_cd(t_var **var_lst, char **directory)
 	if (ft_parse_dir(&curpath, directory[1], *var_lst) == FAILURE)
 		return (free(oldpwd), 1);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
-		return (free(oldpwd), perror("supp PATH_MAX"), 1);
+		return (free(oldpwd), free(curpath), perror("supp PATH_MAX"), 1);
 	if (curpath && chdir(curpath) != 0)
-		return (free(oldpwd), ft_perror("cd", directory[1]), 1);
+		return (free(oldpwd), free(curpath), ft_perror("cd", directory[1]), 1);
 	free(curpath);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)

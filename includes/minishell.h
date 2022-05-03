@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/02 11:31:30 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:17:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,8 @@ int		heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter);
 int		ft_parse(t_minishell *msh, char *line);
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 int		msh_isquoted(char *str);
+
+/*_________ PARSE __________*/
+int		bd_env(t_var *var_lst, char ** cmde, int fd);
 
 #endif
