@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 13:08:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 14:32:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ void	signal_hd(int sig)
 		//ft_putstr_fd("SIGINT catched heredoc\n", 2);
 		close(0);
 	}
-}
-
-void	ignore_sig(int q)
-{
-	(void) q;
 }
 
 int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
