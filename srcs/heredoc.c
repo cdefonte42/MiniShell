@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/03 10:14:04 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 13:08:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	signal_hd(int sig)
 {
 	g_status = 128 + sig;
 	if (sig == SIGINT)
+	{
+		//ft_putstr_fd("SIGINT catched heredoc\n", 2);
 		close(0);
+	}
 }
 
 void	ignore_sig(int q)
@@ -36,13 +39,15 @@ int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
+	if (!line)
+		ft_putstr_fd("\n", 2);
 	while (line && g_status != 130)
 	{
 		if (ft_strlen(line) > ft_strlen(delimiter) && \
 		!ft_strncmp(line, delimiter, ft_strlen(line) - 1))
 			break ;
 		if (quoted == nil && expand_hdstr(&line, vars) == FAILURE)
-			return (free(line), FAILURE);
+			return (free(line), perror("expand_hdstr failed"), FAILURE);
 		ft_putstr_fd(line, fd);
 		free(line);
 		line = NULL;
@@ -63,7 +68,7 @@ int	ft_heredoc(t_var *vars, t_cmde *cmde, char **delimiter)
 	t_quote_type	quoted;
 
 	signal(SIGINT, &signal_hd);
-	signal(SIGQUIT, &signal_hd);
+	signal(SIGQUIT, SIG_IGN);
 	quoted = msh_isquoted(*delimiter);
 	if (remove_quote(delimiter) == FAILURE)
 		return (perror("ft_heredoc remove auote failed"), -1);

@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/04 12:08:15 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:30:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ typedef struct s_child {
 	char	**envp;
 	char	*pathname;
 }	t_child;
+
+/*_________ UTILS ___________*/
+void	set_curr_quote(char c, int *qtype);
 
 // Free
 void	ft_msh_clear(t_minishell *msh);

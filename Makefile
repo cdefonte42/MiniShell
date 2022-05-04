@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/05/04 12:04:46 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/05/04 12:11:50 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,9 @@ srcs/tokens/token_debug.c \
 srcs/var_lst/var_lst.c \
 srcs/cmdes/cmde_lst.c \
 srcs/cmdes/cmde_utils.c \
-srcs/export/export.c \
-srcs/export/put_export.c \
-srcs/export/export_utils.c \
+srcs/builtin/export.c \
+srcs/builtin/put_export.c \
+srcs/builtin/export_utils.c \
 srcs/builtin/unset.c \
 srcs/builtin/echo.c \
 srcs/builtin/bd_env.c \

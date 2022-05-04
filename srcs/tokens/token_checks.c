@@ -6,10 +6,11 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:42:30 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/30 23:43:47 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:32:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "tokens.h"
 #include "libft.h"
 #include <stdio.h>
@@ -56,27 +57,22 @@ void	ft_set_operator_type(t_token *elem)
 
 int	remove_quote(char **str)
 {
-	int				i;
-	t_quote_type	inquote;
-	char			*newstr;
+	int		i;
+	int		inquote;
+	char	*newstr;
 
 	i = 0;
 	inquote = nil;
 	while (str && *str && (*str)[i])
 	{
-		if ((*str)[i] == '"' && inquote != singleq)
+		set_curr_quote((*str)[i], &inquote);
+		if (((*str)[i] == '"' && inquote != singleq)
+		|| ((*str)[i] == '\'' && inquote != doubleq))
 		{
-			inquote = inquote ^ doubleq;
-			newstr = ft_replacestri(i, *str, "\"", NULL);
-			if (!newstr)
-				return (perror("remove_quote"), FAILURE);
-			free(*str);
-			*str = newstr;
-		}
-		else if ((*str)[i] == '\'' && inquote != doubleq)
-		{
-			inquote = inquote ^ singleq;
-			newstr = ft_replacestri(i, *str, "\'", NULL);
+			if ((*str)[i] == '"')
+				newstr = ft_replacestri(i, *str, "\"", NULL);
+			else if ((*str)[i] == '\'')
+				newstr = ft_replacestri(i, *str, "\'", NULL);
 			if (!newstr)
 				return (perror("remove_quote"), FAILURE);
 			free(*str);

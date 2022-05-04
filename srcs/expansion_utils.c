@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 18:02:37 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/30 18:05:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:30:53 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,6 @@
 #include "export.h"
 
 extern int	g_status;
-
-/* Modifie la valeur de qtype en fonction de si le charactere present est une 
-quote et quel type. */
-void	set_curr_quote(char c, int *qtype)
-{
-	if (c == '"' && (*qtype != singleq || *qtype == 0))
-		*qtype = *qtype ^ doubleq;
-	else if (c == '\'' && (*qtype != doubleq || *qtype == 0))
-		*qtype = *qtype ^ singleq;
-}
 
 /* Remplace dans src 't_rep', a partir dee l'index start, 
 par la chaine rep_w. Retourne FAILURE en cas de malloc error. Si src = $prout 

@@ -6,13 +6,23 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 14:45:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:30:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "tokens.h"
 #include "cmdes.h"
+
+/* Modifie la valeur de qtype en fonction de si le charactere present est une 
+quote et quel type. */
+void	set_curr_quote(char c, int *qtype)
+{
+	if (c == '"' && *qtype != singleq)
+		*qtype = *qtype ^ doubleq;
+	else if (c == '\'' && *qtype != doubleq)
+		*qtype = *qtype ^ singleq;
+}
 
 void	ft_free_tabtab(char **tab)
 {
