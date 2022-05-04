@@ -6,11 +6,11 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/23 17:28:03 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:03:00 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
+#include "vars_lst.h"
 #include "export.h"
 
 extern int	g_status;
@@ -27,115 +27,6 @@ static void	ft_put_error(char *token)
 		ft_putstr_fd("': not a valid identifier\n", 2);
 	}
 	g_status = 2;
-}
-
-/* Ajoute l'element de strucutre t_var 'new' a la fin de la liste 'alst' */
-void	var_add_back(t_var **alst, t_var *new)
-{
-	t_var	*last;
-
-	if (alst == NULL || new == NULL)
-		return ;
-	if (*alst == NULL)
-	{
-		*alst = new;
-		return ;
-	}
-	last = *alst;
-	while (last->next)
-		last = last->next;
-	last->next = new;
-}
-
-/* Cree et ajoute une nouvel element a la fin de la list var_lst.
-Les arguments key et value doivent avoir ete declare dans la heap avant appel.
-Retorune 1 en cas d'erreur de malloc, et free key et value. */
-int	ft_new_var(t_var **var_lst, char *key, char *value, int type)
-{
-	t_var	*new_var;
-
-	new_var = ft_calloc(1, sizeof(t_var));
-	if (!new_var)
-		return (FAILURE);
-	new_var->key = key;
-	new_var->value = value;
-	new_var->type = type;
-	var_add_back(var_lst, new_var);
-	return (SUCCESS);
-}
-
-/* Free les valeurs actuelles de key et value de l'elem var. Remplace par ceux
-passes en param (doivent etre alloues). */
-void	ft_set_var(t_var *var, char *key, char *value, int type)
-{
-	free(var->key);
-	free(var->value);
-	var->key = key;
-	var->value = value;
-	var->type = type;
-}
-
-/* Concatenation de la current value de l'element 'var' ayant pour key valeur
-'key', avec le prama 'value'. Return FAILURE si erreur de mallo.*/
-int	ft_cat_var(t_var *var, char *key, char *value)
-{
-	char	*newvalue;
-	int		len_new;
-	int		len_old;
-
-	len_new = ft_strlen(value);
-	len_old = 0;
-	if (var->value)
-		len_old = ft_strlen(var->value);
-	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old + 1)))
-		return (FAILURE);
-	if (var->value)
-		ft_strlcpy(newvalue, var->value, len_old + 1);
-	ft_strlcat(newvalue, value, len_old + len_new + 1);
-	free(var->value);
-	free(value);
-	free(key);
-	var->value = newvalue;
-	return (SUCCESS);
-}
-
-/* Print un element t_var selon le modele de export sans arg */
-void	ft_print_export(t_var *lst, int fdout)
-{
-	if (!lst || lst->type)
-		return ;
-	if (lst->type == shellvar)
-		return ;
-	ft_putstr_fd("export ", fdout);
-	ft_putstr_fd(lst->key, fdout);
-	if (lst->value)
-	{
-		ft_putstr_fd("=\"", fdout);
-		ft_putstr_fd(lst->value, fdout);
-		ft_putstr_fd("\"", fdout);
-		
-	}
-	ft_putstr_fd("\n", fdout);
-}
-
-/* Print les var d'env (et pas shell var) de la liste var_lst au format 
-d'export cad ds ordre alpha*/
-int	ft_put_export(t_var *var_lst, int fdout)
-{
-	t_var	*curr_kmin;
-	int		end;
-
-	end = ft_varlst_size(var_lst);
-	if (!var_lst)
-		return (0);
-	curr_kmin = ft_get_minkey(var_lst);
-	while (end--)
-	{
-		if (curr_kmin->type == envvar)
-			ft_print_export(curr_kmin, fdout);
-		curr_kmin = ft_get_minkey_prev(var_lst, curr_kmin);
-	}
-	return (0);
 }
 
 int	ft_get_keynval(char **key, char **value, int *mode, char *token)
@@ -211,30 +102,3 @@ int	ft_export(t_var **var_lst, char **argv, int fdout)
 	}
 	return (g_status);
 }
-
-// void	ft_print_lst(t_var *lst)
-// {
-// 	if (!lst)
-// 		return ;
-// 	while (lst)
-// 	{
-// 		printf("name=%s value=%s\n", lst->key, lst->value);
-// 		lst = lst->next;
-// 	}
-// }
-//
-//
-// int	main(void)
-// {
-// 	t_var	*var;
-//
-// 	var = NULL;
-// 	ft_export(&var, "B=LALALALA");
-// 	ft_export(&var, "C=poulet");
-// 	ft_export(&var, "A=nieh");
-// 	ft_export(&var, "D=""");
-// 	ft_export(&var, "E=");
-// 	ft_export(&var, NULL);
-// 	ft_varlst_clear(var);
-// 	return (0);
-// }

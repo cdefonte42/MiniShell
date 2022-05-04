@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/03 14:39:49 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:08:15 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # define C_RESET "\033[0m"
 # define C_BLUE "\033[0;34m"
 # define VERSION "0.1"
-# define FAILURE 0
-# define SUCCESS 1
 # define HEREDOC_FILE "heredoc_tmp"
 # ifndef DEBUG
 #  define DEBUG 0
@@ -28,7 +26,9 @@
 # include <stdbool.h>
 
 # include "tokens.h"
+# include "vars_lst.h"
 # include "cmdes.h"
+# include "export.h"
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -57,15 +57,6 @@ strerror, perror, isatty, ttyname, ttyslot, ioctl,
 getenv, tcsetattr, tcgetattr, tgetent, tgetflag,
 tgetnum, tgetstr, tgoto, tputs
 */
-
-typedef enum e_var_type {envvar, shellvar}	t_var_type;
-
-typedef struct s_var {
-	char			*key;
-	char			*value;
-	t_var_type		type;
-	struct s_var	*next;
-}	t_var;
 
 typedef struct s_minishell {
 	char			**raw_cmd;
@@ -142,7 +133,8 @@ int		ft_parse(t_minishell *msh, char *line);
 void	ft_print_cmdelst(t_cmde *cmde_lst);
 int		msh_isquoted(char *str);
 
-/*_________ PARSE __________*/
+/*_________ BUILTINS __________*/
 int		bd_env(t_var *var_lst, char ** cmde, int fd);
+int		ft_unset(t_var **lst, char **argv);
 
 #endif

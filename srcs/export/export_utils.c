@@ -6,28 +6,13 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 12:14:35 by mbraets           #+#    #+#             */
-/*   Updated: 2022/04/26 10:54:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 11:52:40 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "export.h"
-
-/* Retourne le nombre d'elements dans la liste 'var_lst' */
-int	ft_varlst_size(t_var *var_lst)
-{
-	t_var	*head;
-	int		i;
-
-	i = 0;
-	head = var_lst;
-	while (head)
-	{
-		head = head->next;
-		++i;
-	}
-	return (i);
-}
+#include "vars_lst.h"
 
 /* Retourne le nombre d'elements dans la liste 'var_lst' dont les values sont
 NON NULLES*/
@@ -75,79 +60,26 @@ char	*var_getvaluefromkey(t_var *var_list, char *key)
 	return (head->value);
 }
 
-/*
-
-	IMPORTANT !!!!!!!!!!!!!!!!!!!!!!!
-	For get_minkey_prev and get_minkey check the TYPE
-		DONT PRINT THE SHELL VARIABLE
-		
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-*/
-
-
-/* Retourne l'element de la liste var_lst qui a la plus petite valeur ASCII 
-pour son element de struct t_var 'key' */
-t_var	*ft_get_minkey(t_var *var_lst)
+/* Concatenation de la current value de l'element 'var' ayant pour key valeur
+'key', avec le prama 'value'. Return FAILURE si erreur de mallo.*/
+int	ft_cat_var(t_var *var, char *key, char *value)
 {
-	t_var	*min;
+	char	*newvalue;
+	int		len_new;
+	int		len_old;
 
-	if (!var_lst)
-		return (NULL);
-	min = var_lst;
-	while (var_lst)
-	{
-		if (ft_strcmp(min->key, var_lst->key) > 0)
-			min = var_lst;
-		var_lst = var_lst->next;
-	}
-	return (min);
-}
-
-t_var	*ft_get_maxkey(t_var *var_lst)
-{
-	t_var	*max;
-
-	if (!var_lst)
-		return (NULL);
-	max = var_lst;
-	while (var_lst)
-	{
-		if (ft_strcmp(max->key, var_lst->key) < 0)
-			max = var_lst;
-		var_lst = var_lst->next;
-	}
-	return (max);
-}
-
-t_var	*ft_get_minkey_prev(t_var *var_lst, t_var *prev)
-{
-	t_var	*min;
-
-	if (!var_lst)
-		return (NULL);
-	min = ft_get_maxkey(var_lst);
-	while (var_lst)
-	{
-		if (ft_strcmp(prev->key, var_lst->key) < 0)
-			if (ft_strcmp(min->key, var_lst->key) > 0)
-				min = var_lst;
-		var_lst = var_lst->next;
-	}
-	return (min);
-}
-
-/* Free tous les elements de struct t_var et la liste */
-void	ft_varlst_clear(t_var *lst)
-{
-	t_var	*tmp;
-
-	while (lst)
-	{
-		tmp = lst;
-		lst = lst->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
+	len_new = ft_strlen(value);
+	len_old = 0;
+	if (var->value)
+		len_old = ft_strlen(var->value);
+	if (ft_palloc(&newvalue, sizeof(char) * (len_new + len_old + 1)))
+		return (FAILURE);
+	if (var->value)
+		ft_strlcpy(newvalue, var->value, len_old + 1);
+	ft_strlcat(newvalue, value, len_old + len_new + 1);
+	free(var->value);
+	free(value);
+	free(key);
+	var->value = newvalue;
+	return (SUCCESS);
 }

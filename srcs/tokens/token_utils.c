@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 15:54:49 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 10:38:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	ft_remove_empty_token(t_token **token_lst)
 NULL */
 void	ft_tokenlst_addafter(t_token *elem, t_token *new)
 {
-	t_token *next;
+	t_token	*next;
 
 	next = elem->next;
 	elem->next = new;

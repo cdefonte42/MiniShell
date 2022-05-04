@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 15:45:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:09:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 {
 	t_cmde	*new_cmde;
-	
+
 	new_cmde = NULL;
 	new_cmde = malloc(sizeof(t_cmde));
 	if (!new_cmde)
@@ -28,9 +28,9 @@ t_cmde	*ft_cmdelst_new(t_token *cmde_line)
 	new_cmde->pipefd[r_end] = 0;
 	new_cmde->pipefd[w_end] = 1;
 	new_cmde->pid = -1;
-	new_cmde->hdfile = NULL;	
-	new_cmde->prev = NULL;	
-	new_cmde->next = NULL;	
+	new_cmde->hdfile = NULL;
+	new_cmde->prev = NULL;
+	new_cmde->next = NULL;
 	return (new_cmde);
 }
 
@@ -40,7 +40,7 @@ t_cmde	*ft_cmdelst_last(t_cmde *lst)
 		return (NULL);
 	while (lst->next != NULL)
 		lst = lst->next;
-	return (lst);	
+	return (lst);
 }
 
 void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new)
@@ -59,7 +59,7 @@ void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new)
 	new->prev = last;
 }
 
-/* Free le CONTENU et les ELEMENTS de la liste de cmdes 'lst'*/ 
+/* Free le CONTENU et les ELEMENTS de la liste de cmdes 'lst'*/
 void	ft_cmdelst_clear(t_cmde *lst)
 {
 	t_cmde	*last;

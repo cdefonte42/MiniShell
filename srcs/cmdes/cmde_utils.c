@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:28:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/02 16:02:51 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:09:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ extern int	g_status;
 
 void	fill_cmde_name(t_cmde *cmd)
 {
-	t_cmde *lst;
+	t_cmde	*lst;
 	t_token	*cmd_tokens;
 
 	lst = cmd;
