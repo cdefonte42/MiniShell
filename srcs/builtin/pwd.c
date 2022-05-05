@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 15:05:59 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 15:56:20 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 12:29:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ cannot access parent directories: ");
 	ft_putstr_fd(pwd, fdout);
 	ft_putstr_fd("\n", fdout);
 	free(pwd);
+	pwd = NULL;
 	return (0);
 }

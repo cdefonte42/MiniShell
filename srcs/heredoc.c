@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 12:21:30 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 13:03:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,7 @@ void	signal_hd(int sig)
 {
 	g_status = 128 + sig;
 	if (sig == SIGINT)
-	{
-		//ft_putstr_fd("SIGINT catched heredoc\n", 2);
 		close(0);
-	}
-}
-
-void	ignore_sig(int q)
-{
-	(void) q;
 }
 
 int	isprelastchr(char c, char *str)
@@ -108,12 +100,9 @@ int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter)
 		ft_msh_clear(msh);
 		exit(g_status);
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			ret_stat = WEXITSTATUS(status);
-	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		ret_stat = WEXITSTATUS(status);
 	if (ret_stat == 12)
 		return (-1);
 	return (ret_stat);
