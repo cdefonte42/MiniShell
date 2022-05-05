@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 12:10:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 12:21:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,38 +50,20 @@ int	isprelastchr(char c, char *str)
 int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 {
 	char			*line;
-	char			*nl;
-	char			*tmp;
 
-	ft_putstr_fd("> ", 1);
-	line = get_next_line(0);
-	if (!line)
-		ft_putstr_fd("\n", 2);
-	while (line && g_status != 130)
+	line = readline("> ");
+	while (line && g_status != 130 && ft_strcmp(line, delimiter) != 0)
 	{
-		if (ft_strlen(line) > ft_strlen(delimiter) && \
-		!ft_strncmp(line, delimiter, ft_strlen(line) - 1))
-			break ;
 		if (quoted == nil && expand_hdstr(&line, vars) == FAILURE)
 			return (free(line), g_status = 12, FAILURE);
 		ft_putstr_fd(line, fd);
+		ft_putstr_fd("\n", fd);
 		free(line);
 		line = NULL;
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
+		line = readline("> ");
 		if (line == NULL && g_status != 130)
 			ft_error("warning: here-document delimited by \
 en-of-file. Wanted", delimiter);
-		else if (!isprelastchr('\n', line))
-		{
-			tmp = line;
-			nl = get_next_line(0);
-			while (nl == NULL)
-				nl = get_next_line(0);
-			line = ft_strjoin(tmp, nl);
-			free(tmp);
-			free(nl);
-		}
 	}
 	free(line);
 	line = NULL;
