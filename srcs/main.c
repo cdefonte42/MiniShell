@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 11:10:02 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:45:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,8 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool error)
 	}
 	free(child.argv);
 	free(child.pathname);
-	ft_msh_clear(msh);
 	ft_free_tabtab(child.envp);
+	ft_msh_clear(msh);
 	if (errno == 13)
 		exit(126);
 	else if (errno == 2 || errno == 36)
@@ -193,7 +193,10 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 			ft_exit_child(child, msh, cmde, true);
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
+		{
+			ft_putstr_fd("NNNNNNNNNNNNNNNNNNN\n", 2);
 			ft_exit_child(child, msh, cmde, true);
+		}
 		if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
 			perror("_2_mope closing in ds fork");
 		execve(child.pathname, child.argv, child.envp);
