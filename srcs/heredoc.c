@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 13:03:48 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:34:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	signal_hd(int sig)
 {
 	g_status = 128 + sig;
 	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 0);
 		close(0);
+	}
 }
 
 int	isprelastchr(char c, char *str)
