@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 14:45:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 15:25:01 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,17 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	return (ret_stat);
 }
 
+void	print_env(char **env)
+{
+	int	i = 0;
+
+	while (env && env[i])
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
+}
+
 char	**ft_varlst_tochar(t_var *varlst)
 {
 	char	**env;
@@ -123,6 +134,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 	if (!varlst)
 		return (NULL);
 	nbvar = ft_varlst_size_empty(varlst);
+	printf("NB_VAR = %d\n", nbvar);
 	env = malloc(sizeof(char *) * (nbvar + 1));
 	if (!env)
 		return (NULL);
@@ -139,6 +151,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 		varlst = varlst->next;
 	}
 	env[i] = NULL;
+	print_env(env);
 	return (env);
 }
 
