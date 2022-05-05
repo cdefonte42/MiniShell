@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 11:18:57 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 11:40:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter)
 	signal(SIGINT, SIG_IGN);
 	if (pid == 0)
 	{
+		g_status = 0;
 		if (ft_heredoc(msh->vars, cmde, delimiter) == -1)
 			g_status = 12;
 		ft_msh_clear(msh);
