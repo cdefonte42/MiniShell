@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 11:40:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 12:10:46 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,25 @@ void	ignore_sig(int q)
 	(void) q;
 }
 
+int	isprelastchr(char c, char *str)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	if (!str)
+		return (0);
+	len = ft_strlen(str);
+	if (len > 0 && str[len - 1] == c)
+		return (1);
+	return (0);
+}
+
 int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 {
 	char			*line;
+	char			*nl;
+	char			*tmp;
 
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
@@ -47,7 +63,7 @@ int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 		!ft_strncmp(line, delimiter, ft_strlen(line) - 1))
 			break ;
 		if (quoted == nil && expand_hdstr(&line, vars) == FAILURE)
-			return (free(line), perror("expand_hdstr failed"), FAILURE);
+			return (free(line), g_status = 12, FAILURE);
 		ft_putstr_fd(line, fd);
 		free(line);
 		line = NULL;
@@ -56,6 +72,16 @@ int	ft_heredoc_input(char *delimiter, int fd, int quoted, t_var *vars)
 		if (line == NULL && g_status != 130)
 			ft_error("warning: here-document delimited by \
 en-of-file. Wanted", delimiter);
+		else if (!isprelastchr('\n', line))
+		{
+			tmp = line;
+			nl = get_next_line(0);
+			while (nl == NULL)
+				nl = get_next_line(0);
+			line = ft_strjoin(tmp, nl);
+			free(tmp);
+			free(nl);
+		}
 	}
 	free(line);
 	line = NULL;
