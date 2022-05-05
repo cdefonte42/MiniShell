@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/03 14:48:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 10:55:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,33 @@ int	msh_isquoted(char *str)
 	return (nil);
 }
 
-int	token_check(t_minishell *msh, t_cmde *cmd_lst)
+int	search_all_heredoc(t_minishell *msh, t_cmde *cmd_lst)
+{
+	t_token			*tokens;
+
+	if (!cmd_lst || !cmd_lst->cmde_line)
+		return (SUCCESS);
+	tokens = cmd_lst->cmde_line;
+	while (tokens)
+	{
+		if (tokens->type == heredoc)
+		{
+			if (rand_hdname(cmd_lst) == FAILURE)
+				return (g_status = -1, FAILURE);
+			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
+			{
+				perror("fork heredoc failed should quit msh");
+				return (g_status = -1, FAILURE);
+			}
+		}
+		tokens = tokens->next;
+	}
+	if (g_status != 130)
+		return (search_all_heredoc(msh, cmd_lst->next));
+	return (SUCCESS);
+}
+
+int	token_check_order(t_minishell *msh, t_cmde *cmd_lst)
 {
 	t_token_type	prev_type;
 	t_token			*tokens;
@@ -59,19 +85,9 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst)
 			g_status = 2;
 			return (FAILURE);
 		}
-		else if (tokens->type == heredoc)
-		{
-			if (rand_hdname(cmd_lst) == FAILURE)
-				return (g_status = -1, FAILURE);
-			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
-			{
-				perror("fork heredoc failed should quit msh");
-				return (g_status = -1, FAILURE);
-			}
-		}
 		tokens = tokens->next;
 	}
-	return (token_check(msh, cmd_lst->next));
+	return (token_check_order(msh, cmd_lst->next));
 }
 
 int	ft_parse(t_minishell *msh, char *line)
@@ -96,7 +112,9 @@ int	ft_parse(t_minishell *msh, char *line)
 		g_status = -1;
 		return (ft_tokenlst_free(token_lst), FAILURE);
 	}
-	if (token_check(msh, msh->cmde_lst) == FAILURE)
+	if (token_check_order(msh, msh->cmde_lst) == FAILURE)
+		return (FAILURE);
+	if (search_all_heredoc(msh, msh->cmde_lst) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
