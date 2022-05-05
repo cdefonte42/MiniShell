@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 14:37:48 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 10:45:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	ft_open_hd(int *fd, char *pathname, int flags, int mode)
 	return (SUCCESS);
 }
 
-void	signal_hd(int sig)
+void	signal_hdtest(int sig)
 {
 	g_status = 128 + sig;
 	if (sig == SIGINT)
@@ -70,13 +70,46 @@ void	signal_hd(int sig)
 	}
 }
 
-int	ft_heredoc(t_cmde *cmde)
+int	ft_testhd(t_cmde *cmde, char *delimiter, int quoted, t_var *vars)
 {
 	//if (!ft_open_hd(&(cmde->pipefd[r_end]), cmde->hdfile, 0, 00644) == FAILURE)
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, &signal_hd);
-	if (
+	int		hd_pipe[2];
+	char			*line;
 
+	(void)quoted;
+	(void)vars;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &signal_hdtest);
+	if (pipe(hd_pipe) == -1)
+		return (FAILURE);
+	ft_putstr_fd("> ", 1);
+	line = get_next_line(0);
+	if (!line)
+		ft_putstr_fd("\n", 2);
+	while (line && g_status != 130)
+	{
+		if (ft_strlen(line) > ft_strlen(delimiter) && \
+		!ft_strncmp(line, delimiter, ft_strlen(line) - 1))
+			break ;
+		if (quoted == nil && expand_hdstr(&line, vars) == FAILURE)
+			return (free(line), perror("expand_hdstr failed"), FAILURE);
+		ft_putstr_fd(line, hd_pipe[w_end]);
+		free(line);
+		line = NULL;
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0);
+		if (line == NULL && g_status != 130)
+			ft_error("warning: here-document delimited by \
+en-of-file. Wanted", delimiter);
+	}
+	if (close(hd_pipe[w_end]) == -1)
+		perror("closing h_pipe w_end failed\n");
+	free(line);
+	line = NULL;
+	if (cmde->pipefd[r_end] != 0 && close(cmde->pipefd[r_end]) == -1)
+		perror("closin pipefd r_end cmde faied\n");
+	cmde->pipefd[r_end] = hd_pipe[r_end];
+	return (SUCCESS);
 }
 
 int	switch_redir(t_cmde *cmde, char *file, int type)
@@ -91,7 +124,7 @@ int	switch_redir(t_cmde *cmde, char *file, int type)
 		if (ft_open(&(cmde->pipefd[w_end]), file, 02101, 00644) == FAILURE)
 			return (ft_perror(file, NULL), FAILURE);
 	if (type == heredoc)
-		if (ft_heredoc(cmde) == FAILURE)
+		if (ft_testhd(cmde, file, 0, NULL) == FAILURE)
 			return (ft_perror(cmde->hdfile, NULL), FAILURE);
 	return (SUCCESS);
 }

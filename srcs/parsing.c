@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/03 14:48:46 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 10:21:30 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,6 @@ int	token_check(t_minishell *msh, t_cmde *cmd_lst)
 			ft_error("syntax error near unexpected token", tokens->str);
 			g_status = 2;
 			return (FAILURE);
-		}
-		else if (tokens->type == heredoc)
-		{
-			if (rand_hdname(cmd_lst) == FAILURE)
-				return (g_status = -1, FAILURE);
-			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
-			{
-				perror("fork heredoc failed should quit msh");
-				return (g_status = -1, FAILURE);
-			}
 		}
 		tokens = tokens->next;
 	}
