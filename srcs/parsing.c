@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 10:55:24 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 11:21:43 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	search_all_heredoc(t_minishell *msh, t_cmde *cmd_lst)
 {
 	t_token			*tokens;
 
+	if (g_status == -1)
+		return (FAILURE);
 	if (!cmd_lst || !cmd_lst->cmde_line)
 		return (SUCCESS);
 	tokens = cmd_lst->cmde_line;
@@ -48,17 +50,13 @@ int	search_all_heredoc(t_minishell *msh, t_cmde *cmd_lst)
 		{
 			if (rand_hdname(cmd_lst) == FAILURE)
 				return (g_status = -1, FAILURE);
-			if (heredoc_fork(msh, cmd_lst, &(tokens->next->str)) == FAILURE)
-			{
-				perror("fork heredoc failed should quit msh");
-				return (g_status = -1, FAILURE);
-			}
+			g_status = heredoc_fork(msh, cmd_lst, &(tokens->next->str));
+			if (g_status != 0)
+				return (FAILURE);
 		}
 		tokens = tokens->next;
 	}
-	if (g_status != 130)
-		return (search_all_heredoc(msh, cmd_lst->next));
-	return (SUCCESS);
+	return (search_all_heredoc(msh, cmd_lst->next));
 }
 
 int	token_check_order(t_minishell *msh, t_cmde *cmd_lst)

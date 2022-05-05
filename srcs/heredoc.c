@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 13:08:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/05 11:18:57 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,12 @@ int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter)
 {
 	pid_t	pid;
 	int		status;
+	int		ret_stat;
 
+	ret_stat = 0;
 	pid = fork();
 	if (pid == -1)
-		return (FAILURE);
+		return (-1);
 	signal(SIGINT, SIG_IGN);
 	if (pid == 0)
 	{
@@ -101,9 +103,9 @@ int	heredoc_fork(t_minishell *msh, t_cmde *cmde, char **delimiter)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-			g_status = WEXITSTATUS(status);
-		if (g_status == 12)
-			return (FAILURE);
+			ret_stat = WEXITSTATUS(status);
 	}
-	return (SUCCESS);
+	if (ret_stat == 12)
+		return (-1);
+	return (ret_stat);
 }
