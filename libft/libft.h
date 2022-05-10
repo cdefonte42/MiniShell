@@ -82,6 +82,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 // Custom
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_stris(char *s, int (*f)(int));
+size_t	ft_sli(const char *s);
 
 // Malloc
 char	*ft_strdup_until_i(const char *src, size_t stop);

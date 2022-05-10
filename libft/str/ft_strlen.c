@@ -21,3 +21,17 @@ size_t	ft_strlen(const char *s)
 		n++;
 	return (n);
 }
+
+size_t	ft_sli(const char *s)
+{
+	size_t	n;
+
+	if (*s == '-' || *s == '+')
+		s++;
+	while (*s == '0')
+		s++;
+	n = 0;
+	while (s[n] != '\0')
+		n++;
+	return (n);
+}
