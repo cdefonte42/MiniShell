@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 15:25:01 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 10:03:36 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
 		{
-			ft_putstr_fd("NNNNNNNNNNNNNNNNNNN\n", 2);
+			ft_putstr_fd("MAIN NO CHILD PATHNAME\n", 2);
 			ft_exit_child(child, msh, cmde, true);
 		}
 		if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
