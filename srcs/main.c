@@ -134,24 +134,23 @@ char	**ft_varlst_tochar(t_var *varlst)
 	if (!varlst)
 		return (NULL);
 	nbvar = ft_varlst_size_empty(varlst);
-	printf("NB_VAR = %d\n", nbvar);
-	env = malloc(sizeof(char *) * (nbvar + 1));
+	env = ft_calloc(sizeof(char *), (nbvar + 1));
 	if (!env)
 		return (NULL);
 	i = 0;
-	while (i < nbvar)
+	while (varlst || i < nbvar)
 	{
 		if (varlst->value)
 		{
 			env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
 			if (!env[i])
 				return (perror("var_tochar failed"), ft_free_tabtab(env), NULL);
+			printf("%s %s %s\n", env[i], varlst->key, varlst->value);
+			i++;
 		}
-		i++;
 		varlst = varlst->next;
 	}
 	env[i] = NULL;
-	print_env(env);
 	return (env);
 }
 
