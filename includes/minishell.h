@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/10 12:41:29 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 16:22:24 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,22 @@ int		msh_isquoted(char *str);
 int		search_all_heredoc(t_minishell *mst, t_cmde *cmd_lst);
 
 /*_________ BUILTINS __________*/
-int		bd_env(t_var *var_lst, char ** cmde, int fd);
+int		bd_env(t_var *var_lst, char **cmde, int fd);
 int		ft_unset(t_var **lst, char **argv);
 int		ft_exitbin(t_minishell *msh, char **cmd);
+
+/*_________ FORK UTILS __________*/
+char	**ft_lst_to_char(t_token *lst);
+int		ft_count_tokens_type(t_token *lst, t_token_type type);
+char	**ft_varlst_tochar(t_var *varlst);
+int		ft_wait_cmde(pid_t pid, int option);
+
+/*_________ EXEC BIN __________*/
+int		ft_exec_bin(t_minishell *msh, t_cmde *cmde);
+
+/*_________ FORK __________*/
+void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool err);
+int		ft_fork(t_minishell *msh, t_cmde *cmde);
+int		ft_exec(t_minishell *msh, t_cmde *cmde);
 
 #endif

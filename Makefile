@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/05/10 12:44:59 by cdefonte         ###   ########.fr        #
+#    Updated: 2022/05/10 16:23:38 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,7 @@ LIBFT		=	libft/libft.a
 
 CC			=	cc
 
-#CFLAGS		=	-Werror -Wall -Wextra -g3
-CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
-#CFLAGS		=	-Werror -Wall -Wextra
+CFLAGS		=	-Werror -Wall -Wextra
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
 SRCS		=	srcs/main.c \
@@ -49,6 +47,9 @@ srcs/utils.c \
 srcs/utils_is.c \
 srcs/free.c \
 srcs/pathname.c \
+srcs/fork.c \
+srcs/fork_utils.c \
+srcs/exec_bin.c \
 srcs/redir.c \
 srcs/redir_utils.c \
 srcs/init_msh.c \
