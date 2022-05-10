@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:31:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/26 12:54:29 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 10:03:55 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,20 @@ static char	*get_cmd(t_minishell *msh, char *cmd)
 
 char	*check_permission(t_minishell *msh, char *cmd)
 {
+	char	*paths;
+
+	paths = var_getvaluefromkey(msh->vars, "PATH");
+	if (!paths)
+		return (errno = 2, NULL);
 	if ((*cmd == '.' || *cmd == '/'))
 	{
-		if (access(cmd, 0) == 0)
-		{
-			if (access(cmd, R_OK | X_OK) == 0)
-				return (ft_strdup(cmd));
-			else
-				return (NULL);
-		}
+		if (access(cmd, 0) == 0 && access(cmd, R_OK | X_OK) == 0)
+			return (ft_strdup(cmd));
 		else
 			return (NULL);
 	}
 	else if (!cmd || *cmd == 0)
-	{
 		return (errno = 2, NULL);
-	}
 	else
 		return (get_cmd(msh, cmd));
 	return (NULL);
