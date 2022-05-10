@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 17:45:23 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/05 13:01:56 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:42:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ int	ft_init_envlst(t_minishell *msh, char **envp)
 
 	i = 0;
 	ft_memset(splited, 0, sizeof(char *) * 2);
-	if (!envp)
-		return (FAILURE);
-	if (!*envp && msh_init_envi(msh) == FAILURE)
+	if (!envp || (!*envp && msh_init_envi(msh) == FAILURE))
 		return (FAILURE);
 	while (envp && *envp && envp[i])
 	{

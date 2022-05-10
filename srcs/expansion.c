@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/02 16:13:33 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:23:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,39 @@
 
 extern int	g_status;
 
+static int	expand_add(char *dolls, char *value)
+{
+	int	i;
+
+	i = 0;
+	if (!dolls && (!value || !*value))
+		i += 1;
+	i += ft_strlen(value);
+	return (i);
+}
+
 int	expand_str(char **str, t_var *var_lst)
 {
 	int		i;
 	int		inquote;
-	char	*dolls;
-	char	*value;
+	char	*kval[2];
 
 	i = 0;
 	inquote = nil;
 	while (str && *str && (*str)[i])
 	{
-		dolls = NULL;
-		value = NULL;
+		kval[0] = NULL;
+		kval[1] = NULL;
 		set_curr_quote((*str)[i], &inquote);
 		if (inquote != singleq && (*str)[i] == '$' && (*str)[i + 1])
 		{
-			if (get_dolls(*str + i, &dolls) == FAILURE
-				|| get_value(dolls, &value, var_lst, inquote) == FAILURE
-				|| exp_replacewith(str, i, dolls, value) == FAILURE)
-				return (free(dolls), free(value), FAILURE);
-			i += ft_strlen(value);
-			free(dolls);
-			free(value);
+			if (get_dolls(*str + i, &kval[0]) == FAILURE
+				|| get_value(kval[0], &kval[1], var_lst, inquote) == FAILURE
+				|| exp_replacewith(str, i, kval[0], kval[1]) == FAILURE)
+				return (free(kval[0]), free(kval[1]), FAILURE);
+			i += expand_add(kval[0], kval[1]);
+			free(kval[0]);
+			free(kval[1]);
 		}
 		else
 			i++;

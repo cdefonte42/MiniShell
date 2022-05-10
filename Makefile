@@ -6,7 +6,7 @@
 #    By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 12:15:17 by cdefonte          #+#    #+#              #
-#    Updated: 2022/05/10 10:39:32 by marvin           ###   ########.fr        #
+#    Updated: 2022/05/10 12:44:59 by cdefonte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ LIBFT		=	libft/libft.a
 
 CC			=	cc
 
-CFLAGS		=	-Werror -Wall -Wextra -g3
-#CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
+#CFLAGS		=	-Werror -Wall -Wextra -g3
+CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
 #CFLAGS		=	-Werror -Wall -Wextra
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 
@@ -37,6 +37,7 @@ srcs/builtin/export.c \
 srcs/builtin/put_export.c \
 srcs/builtin/export_utils.c \
 srcs/builtin/unset.c \
+srcs/builtin/exit_bin.c \
 srcs/builtin/echo.c \
 srcs/builtin/bd_env.c \
 srcs/builtin/cdbin.c \

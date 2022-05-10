@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:57:37 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/03 14:39:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:10:35 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	expand_hdstr(char **str, t_var *var_lst)
 				|| get_value_hd(dolls, &value, var_lst) == FAILURE
 				|| exp_replacewith(str, i, dolls, value) == FAILURE)
 				return (free(dolls), free(value), FAILURE);
+			if (!dolls && (!value || !*value))
+				i += 1;
 			i += ft_strlen(value);
 			free(dolls);
 			free(value);

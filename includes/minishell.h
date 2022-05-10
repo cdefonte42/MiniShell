@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 10:28:17 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/05 11:04:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:41:29 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,6 @@ int		search_all_heredoc(t_minishell *mst, t_cmde *cmd_lst);
 /*_________ BUILTINS __________*/
 int		bd_env(t_var *var_lst, char ** cmde, int fd);
 int		ft_unset(t_var **lst, char **argv);
+int		ft_exitbin(t_minishell *msh, char **cmd);
 
 #endif

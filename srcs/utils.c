@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 10:03:20 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 10:40:56 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:11:07 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ void	ft_free_tabtab(char **tab)
 	i = 0;
 	while (tab && tab[i])
 	{
-		//fprintf(stderr, "envp[%d] = %s\n", i, tab[i]);
-		if (tab[i])
-			free(tab[i]);
-		//tab[i] = NULL;
+		free(tab[i]);
+		tab[i] = NULL;
 		i++;
 	}
 	if (tab)

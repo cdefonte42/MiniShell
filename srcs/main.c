@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 10:03:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:43:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,7 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 	if (!raw_cmd)
 		return (-1);
 	if ((ft_strcmp(raw_cmd[0], "exit") == 0))
-	{
-		if (raw_cmd[1] != NULL)
-		{
-			if (raw_cmd[2])
-				return (ft_error("too many arguments", NULL), 2);
-			if (ft_stris(raw_cmd[1], ft_isdigit))
-				ret_stat = ft_atoi(raw_cmd[1]);
-			else
-				return (ft_error("numeric argument required", NULL), 2);
-		}
-		ft_putendl_fd("exit", 1);
-		msh->loop = 0;
-	}
+		ret_stat = ft_exitbin(msh, raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "cd") == 0))
 		ret_stat = ft_cd(&(msh->vars), raw_cmd);
 	else if ((ft_strcmp(raw_cmd[0], "pwd") == 0))
@@ -335,7 +323,6 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	signal(SIGQUIT, &signal_handler);
 	signal(SIGTSTP, &signal_handler);
-	printf("________MSH PID = %d__________\n", getpid());
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
