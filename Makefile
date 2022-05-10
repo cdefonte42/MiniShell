@@ -19,7 +19,8 @@ LIBFT		=	libft/libft.a
 
 CC			=	cc
 
-CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
+CFLAGS		=	-Werror -Wall -Wextra -g3
+#CFLAGS		=	-Werror -Wall -Wextra -g3 -fsanitize=address
 #CFLAGS		=	-Werror -Wall -Wextra
 LIBFLAGS	=	-I$(HEADER) -Ilibft -Llibft -lft -lreadline
 

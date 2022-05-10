@@ -74,6 +74,7 @@ int	expand_hdstr(char **str, t_var *var_lst)
 			if (get_dolls(*str + i, &dolls) == FAILURE
 				|| get_value_hd(dolls, &value, var_lst) == FAILURE
 				|| exp_replacewith(str, i, dolls, value) == FAILURE)
+				return (free(dolls), free(value), FAILURE);
 			i += ft_strlen(value);
 			free(dolls);
 			free(value);

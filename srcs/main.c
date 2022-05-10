@@ -145,7 +145,7 @@ char	**ft_varlst_tochar(t_var *varlst)
 			env[i] = ft_strsjoin(varlst->key, "=", varlst->value);
 			if (!env[i])
 				return (perror("var_tochar failed"), ft_free_tabtab(env), NULL);
-			printf("%s %s %s\n", env[i], varlst->key, varlst->value);
+			// printf("%s %s %s\n", env[i], varlst->key, varlst->value);
 			i++;
 		}
 		varlst = varlst->next;
@@ -206,7 +206,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 		child.pathname = check_permission(msh, child.argv[0]);
 		if (!child.pathname)
 		{
-			ft_putstr_fd("MAIN NO CHILD PATHNAME\n", 2);
+			// ft_putstr_fd("MAIN NO CHILD PATHNAME\n", 2);
 			ft_exit_child(child, msh, cmde, true);
 		}
 		if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
