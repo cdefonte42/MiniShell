@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:31:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 10:03:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:20:08 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*get_cmd(t_minishell *msh, char *cmd)
 		command = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(command, 0) == 0)
-			return (command);
+			return (ft_free_tabtab(paths), command);
 		free(command);
 		i++;
 	}
