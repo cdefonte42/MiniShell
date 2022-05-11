@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:28:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 12:09:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:46:23 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_fill_cmdelst(t_cmde **alst, t_token *token_lst)
 		{
 			new_cmde = ft_cmdelst_new(cmde_line);
 			if (!new_cmde)
-				return (ft_cmdelst_clear(*alst), FAILURE);
+				return (ft_cmdelst_clear(alst), FAILURE);
 			ft_cmdelst_addback(alst, new_cmde);
 		}
 	}

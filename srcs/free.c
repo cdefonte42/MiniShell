@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 19:16:14 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/10 14:27:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:45:48 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@ void	ft_msh_clear(t_minishell *msh)
 	if (msh->vars)
 		ft_varlst_clear(msh->vars);
 	if (msh->cmde_lst)
-		ft_cmdelst_clear(msh->cmde_lst);
+		ft_cmdelst_clear(&msh->cmde_lst);
 	errno = err;
 }

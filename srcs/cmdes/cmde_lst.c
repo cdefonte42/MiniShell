@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 12:09:28 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:44:58 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,14 @@ void	ft_cmdelst_addback(t_cmde **alst, t_cmde *new)
 }
 
 /* Free le CONTENU et les ELEMENTS de la liste de cmdes 'lst'*/
-void	ft_cmdelst_clear(t_cmde *lst)
+void	ft_cmdelst_clear(t_cmde **lst)
 {
 	t_cmde	*last;
 
-	last = lst;
-	while (lst)
+	while (lst && *lst)
 	{
-		last = lst;
-		lst = lst->next;
+		last = *lst;
+		*lst = (*lst)->next;
 		ft_tokenlst_free(last->cmde_line);
 		free(last->hdfile);
 		last->hdfile = NULL;
