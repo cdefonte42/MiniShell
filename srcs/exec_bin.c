@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:53:12 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 16:09:53 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 11:43:59 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,14 @@ int	ft_exec_bin(t_minishell *msh, t_cmde *cmde)
 		return (ret_stat);
 	if (ft_redir(cmde) == FAILURE)
 		return (set_g_status());
-	raw_cmd = ft_lst_to_char(cmde->cmde_line);
-	if (!raw_cmd)
-		return (-1);
-	ret_stat = launch_bin(msh, cmde, raw_cmd);
-	free(raw_cmd);
-	raw_cmd = NULL;
+	if (cmde->name_token)
+	{
+		raw_cmd = ft_lst_to_char(cmde->cmde_line);
+		if (!raw_cmd)
+			return (-1);
+		ret_stat = launch_bin(msh, cmde, raw_cmd);
+		free(raw_cmd);
+		raw_cmd = NULL;
+	}
 	return (ret_stat);
 }

@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:09:52 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 11:30:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 12:25:22 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ void	put_env(t_var *lst, int fd)
 {
 	while (lst)
 	{
-		if (lst->key)
+		if (lst->key && lst->value)
+		{
 			ft_putstr_fd(lst->key, fd);
-		ft_putstr_fd("=", fd);
-		if (lst->value)
+			ft_putstr_fd("=", fd);
 			ft_putstr_fd(lst->value, fd);
-		ft_putstr_fd("\n", fd);
+			ft_putstr_fd("\n", fd);
+		}
 		lst = lst->next;
 	}
 }

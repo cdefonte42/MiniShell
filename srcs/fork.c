@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:50:33 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 11:41:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 12:21:12 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ void	pre_fork(t_minishell *msh, t_cmde *cmde, t_child *child)
 		ft_exit_child(*child, msh, cmde, false);
 	if (ft_dup(cmde) == FAILURE)
 		ft_exit_child(*child, msh, cmde, true);
-	if (ft_isbin(cmde->name_token->str))
+	if ((cmde->name_token && ft_isbin(cmde->name_token->str)) 
+		|| !cmde->name_token)
 	{
-		g_status = ft_exec_bin(msh, cmde);
+		if (cmde->name_token)
+			g_status = ft_exec_bin(msh, cmde);
 		ft_msh_clear(msh);
 		exit(g_status);
 	}
