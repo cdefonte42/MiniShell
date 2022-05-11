@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:50:33 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 16:22:16 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 11:41:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
 	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
-	if ((cmde->next || cmde->prev) || !ft_isbin(cmde->name_token->str))
+	if ((cmde->next || cmde->prev) || !cmde->name_token || !ft_isbin(cmde->name_token->str))
 	{
 		if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
 			return (FAILURE);
