@@ -58,6 +58,4 @@ void	ft_set_operator_type(t_token *elem); //sais pas ou la mettre
 int		remove_quote(char **s);
 int		ft_check_tokens(t_token *lst);
 
-/*__________ DEBUG ___________*/
-void	ft_print_tokenlst(t_token *lst);
 #endif
