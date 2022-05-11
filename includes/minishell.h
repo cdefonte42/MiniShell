@@ -118,6 +118,7 @@ void	ft_error(char *prefix, char *suffix);
 
 /*_________ PATHNAME __________*/
 char	*check_permission(t_minishell *msh, char *cmd);
+int		is_dir(const char *path);
 
 /*_________ HERE UTILS __________*/
 int		rand_hdname(t_cmde *cmd_lst);

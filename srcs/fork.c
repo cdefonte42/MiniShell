@@ -60,6 +60,8 @@ void	pre_fork(t_minishell *msh, t_cmde *cmde, t_child *child)
 	child->pathname = check_permission(msh, child->argv[0]);
 	if (!child->pathname)
 		ft_exit_child(*child, msh, cmde, true);
+	if (is_dir(child->pathname))
+		ft_exit_child(*child, msh, cmde, true);
 	if (cmde->next && close(cmde->next->pipefd[r_end]) == -1)
 		perror("_2_mope closing in ds fork");
 }
