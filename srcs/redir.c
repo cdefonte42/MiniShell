@@ -92,9 +92,9 @@ int	ft_redir(t_cmde *cmde)
 		{
 			file = head_token->next->str;
 			if (file && *file == 0)
-				return (ft_error(file, "ambiguous redirect\n"), FAILURE);
+				return (ft_error(file, "ambiguous redirect\n"), errno = 0, 0);
 			else if (switch_redir(cmde, file, head_token->type) == FAILURE)
-				return (FAILURE);
+				return (errno = 0, FAILURE);
 		}
 		head_token = head_token->next;
 	}

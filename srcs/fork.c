@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:50:33 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 12:21:12 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 15:28:05 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool err)
 	free(child.pathname);
 	ft_free_tabtab(child.envp);
 	ft_msh_clear(msh);
-	if (errno == 13)
+		if (errno == 13)
 		exit(126);
 	else if (errno == 2 || errno == 36)
 		exit(127);
@@ -45,7 +45,7 @@ void	pre_fork(t_minishell *msh, t_cmde *cmde, t_child *child)
 		ft_exit_child(*child, msh, cmde, false);
 	if (ft_dup(cmde) == FAILURE)
 		ft_exit_child(*child, msh, cmde, true);
-	if ((cmde->name_token && ft_isbin(cmde->name_token->str)) 
+	if ((cmde->name_token && ft_isbin(cmde->name_token->str))
 		|| !cmde->name_token)
 	{
 		if (cmde->name_token)
@@ -95,7 +95,8 @@ int	ft_exec(t_minishell *msh, t_cmde *cmde)
 {
 	if (!cmde || !cmde->cmde_line)
 		return (SUCCESS);
-	if ((cmde->next || cmde->prev) || !cmde->name_token || !ft_isbin(cmde->name_token->str))
+	if ((cmde->next || cmde->prev)
+		|| !cmde->name_token || !ft_isbin(cmde->name_token->str))
 	{
 		if (ft_pipe_cmdes(cmde, cmde->next) == FAILURE)
 			return (FAILURE);
