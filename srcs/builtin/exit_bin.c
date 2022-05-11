@@ -12,11 +12,13 @@
 
 #include "minishell.h"
 
+extern int	g_status;
+
 int	ft_exitbin(t_minishell *msh, char **cmd)
 {
 	int	ret_stat;
 
-	ret_stat = 0;
+	ret_stat = g_status;
 	if (cmd[1] != NULL)
 	{
 		if (cmd[2])

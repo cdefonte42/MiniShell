@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 18:45:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 16:45:43 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 17:55:13 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,8 @@ int	main(int ac, char **av, char **envp)
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
 		return (ft_msh_clear(&msh), 1);
-	printf("Welcome to my minishell.\n");
 	if (minishell_loop(&msh) == FAILURE)
 		return (ft_msh_clear(&msh), 1);
-	printf("Bye.\n");
 	ft_msh_clear(&msh);
 	return (g_status);
 }

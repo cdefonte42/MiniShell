@@ -116,25 +116,3 @@ int	ft_parse(t_minishell *msh, char *line)
 		return (FAILURE);
 	return (SUCCESS);
 }
-
-/*
-//__________ DEBUG FCTS ________
-
-void	ft_print_rawtokenlst(t_token *token_lst)
-{
-	printf("___RAW TOKENs LISTE__\n");
-	for (t_token *head = token_lst; head != NULL; head = head->next)
-		printf("%s; type=%d\n", head->str, head->type);
-}
-
-void	ft_print_cmdelst(t_cmde *cmde_lst)
-{
-	for (t_cmde *head = cmde_lst; head; head = head->next)
-	{
-		printf("___CMDE LINE ____\n");
-		for (t_token *tokens = head->cmde_line; tokens; tokens = tokens->next)
-			printf("%s\n", tokens->str);
-		printf("___END CMDE LINE ____\n");
-	}
-}
-*/

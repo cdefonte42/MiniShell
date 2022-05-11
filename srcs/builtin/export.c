@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 10:04:56 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 12:03:00 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 17:53:04 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	ft_put_error(char *token)
 		ft_putstr_fd(token, 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
 	}
-	g_status = 2;
+	g_status = 1;
 }
 
 int	ft_get_keynval(char **key, char **value, int *mode, char *token)
@@ -37,7 +37,7 @@ int	ft_get_keynval(char **key, char **value, int *mode, char *token)
 	while (token[key_len] && token[key_len] != '=')
 		key_len++;
 	if (key_len == 0)
-		return (ft_put_error(token), FAILURE);
+		return (SUCCESS);
 	if (token[key_len] == '=')
 	{
 		*value = ft_strdup(token + key_len + 1);
@@ -67,7 +67,7 @@ int	ft_loop_export(t_var **var_lst, char *token)
 	value = NULL;
 	if (ft_get_keynval(&key, &value, &add_mode, token) == FAILURE)
 		return (FAILURE);
-	if (*key == '_' && *(key + 1) == 0)
+	if (key && *key == '_' && *(key + 1) == 0)
 		return (free(value), free(key), SUCCESS);
 	if (!ft_isname(key))
 		return (free(key), free(value), ft_put_error(token), SUCCESS);

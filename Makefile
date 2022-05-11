@@ -28,7 +28,6 @@ srcs/tokens/token_checks.c \
 srcs/tokens/token_cuts.c \
 srcs/tokens/token_lst.c \
 srcs/tokens/token_utils.c \
-srcs/tokens/token_debug.c \
 srcs/var_lst/var_lst.c \
 srcs/cmdes/cmde_lst.c \
 srcs/cmdes/cmde_utils.c \
@@ -80,10 +79,7 @@ fclean		:	clean
 				rm -f $(NAME)
 				make fclean -C ./libft
 
-debug		:
-				$(eval CFLAGS+=-DDEBUG)
-
-run			:	debug all
+run			:	all
 				valgrind --suppressions=.ignore_leaks --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --verbose --log-file=valgrind-out.txt ./minishell
 fun			: all
 	nm -uAl $(NAME)
