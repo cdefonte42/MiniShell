@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 14:11:46 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/03 10:03:20 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 15:26:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_cd_home(t_var *var_lst, char **curpath)
 
 	home = var_getvaluefromkey(var_lst, "HOME");
 	if (home == NULL)
-		return (ft_putstr_fd("HOME not set\n", 2), FAILURE);
+		return (ft_error("cd", "HOME not set"), FAILURE);
 	else if (*home == 0)
 		return (SUCCESS);
 	*curpath = ft_strdup(home);
@@ -50,7 +50,11 @@ void	ft_maj_varenvstr(t_var *var_lst, char *varname, char *strtoput)
 		return ;
 	var = var_getfromkey(var_lst, varname);
 	if (!var)
+	{
+		free(strtoput);
+		strtoput = NULL;
 		return ;
+	}
 	free(var->value);
 	var->value = strtoput;
 }
@@ -87,9 +91,10 @@ int	ft_cd(t_var **var_lst, char **directory)
 	char	*pwd;
 
 	curpath = NULL;
+	errno = 0;
 	oldpwd = getcwd(NULL, 0);
-	if (oldpwd == NULL)
-		return (ft_putstr_fd("minishell: cd: ", 2), perror(directory[1]), 1);
+	if (oldpwd == NULL && errno == 12)
+		return (perror("minishell: cd: getcwd: malloc error"), -1);
 	if (ft_parse_dir(&curpath, directory[1], *var_lst) == FAILURE)
 		return (free(oldpwd), 1);
 	if (curpath && ft_strlen(curpath) + 1 > PATH_MAX)
@@ -98,8 +103,8 @@ int	ft_cd(t_var **var_lst, char **directory)
 		return (free(oldpwd), free(curpath), ft_perror("cd", directory[1]), 1);
 	free(curpath);
 	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
-		return (free(oldpwd), perror("getcwp pwd ft_cd"), 1);
+	if (pwd == NULL && errno == 12)
+		return (free(oldpwd), perror("minishell: cd: getcwd:malloc error"), -1);
 	ft_maj_varenvstr(*var_lst, "PWD", pwd);
 	ft_maj_varenvstr(*var_lst, "OLDPWD", oldpwd);
 	return (0);
