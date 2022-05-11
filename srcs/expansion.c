@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 14:10:15 by mbraets           #+#    #+#             */
-/*   Updated: 2022/05/10 12:23:50 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/11 14:50:06 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	expand_add(char *dolls, char *value)
 	int	i;
 
 	i = 0;
-	if (ft_strlen(value) == 0 || (!dolls && (!value || !*value)))
+	if ((!dolls && (!value || !*value)))
 		i += 1;
 	i += ft_strlen(value);
 	return (i);
