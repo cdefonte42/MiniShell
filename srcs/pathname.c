@@ -52,6 +52,20 @@ static char	*get_cmd(t_minishell *msh, char *cmd)
 	return (NULL);
 }
 
+int	is_dir(const char *path)
+{
+	struct stat	statbuf;
+	int			isdir;
+
+	ft_memset(&statbuf, 0, sizeof(statbuf));
+	if (stat(path, &statbuf) != 0)
+		return (0);
+	isdir = S_ISDIR(statbuf.st_mode);
+	if (isdir)
+		errno = 21;
+	return (isdir);
+}
+
 char	*check_permission(t_minishell *msh, char *cmd)
 {
 	char	*paths;
@@ -61,6 +75,8 @@ char	*check_permission(t_minishell *msh, char *cmd)
 		return (errno = 2, NULL);
 	if ((*cmd == '.' || *cmd == '/'))
 	{
+		if (is_dir(cmd))
+			return (NULL);
 		if (access(cmd, 0) == 0 && access(cmd, R_OK | X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
