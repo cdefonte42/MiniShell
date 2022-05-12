@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/12 18:37:59 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/12 18:43:17 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,13 @@ t_token	*ft_create_token(char *line, int start, int len, int type)
 	return (new_token);
 }
 
+static void	inc_start(int *start, int len)
+{
+	(*start) += len;
+	if (len == 0)
+		(*start)++;
+}
+
 /* Parse la string line et decoup selon les regles de token reco. 
 Permet d'obtenir une RAW liste of tokens. */
 int	ft_tokener(t_token **token_lst, char *line)
@@ -94,9 +101,7 @@ int	ft_tokener(t_token **token_lst, char *line)
 			}
 			ft_tokenlst_addback(token_lst, new_token);
 		}
-		start += len;
-		if (len == 0)
-			start++;
+		inc_start(&start, len);
 	}
 	return (SUCCESS);
 }
