@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:45:12 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/08 15:40:21 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/12 09:53:54 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -85,6 +85,7 @@ int	ft_try_cdpath(char **curpath, char *directory, t_var *cdpath)
 	int		i;
 
 	i = 0;
+	splited_cdpath = NULL;
 	if (cdpath && cdpath->value)
 	{
 		splited_cdpath = ft_split(cdpath->value, ':');
@@ -93,12 +94,13 @@ int	ft_try_cdpath(char **curpath, char *directory, t_var *cdpath)
 		while (splited_cdpath && splited_cdpath[i])
 		{
 			if (!ft_concat_cdpath(curpath, directory, splited_cdpath[i]))
-				return (FAILURE);
+				return (perror("try_cdpath concat failed"), FAILURE);
 			if (ft_isadir(*curpath))
-				return (SUCCESS);
+				return (ft_free_tabtab(splited_cdpath), SUCCESS);
 			i++;
 		}
 	}
+	ft_free_tabtab(splited_cdpath);
 	*curpath = ft_strjoin("./", directory);
 	if (!*curpath)
 		return (FAILURE);
