@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 11:51:24 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:34:27 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/12 18:37:59 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ int	ft_tokener(t_token **token_lst, char *line)
 			ft_tokenlst_addback(token_lst, new_token);
 		}
 		start += len;
+		if (len == 0)
+			start++;
 	}
 	return (SUCCESS);
 }
