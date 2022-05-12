@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:50:33 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 15:28:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/12 10:06:11 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool err)
 	free(child.pathname);
 	ft_free_tabtab(child.envp);
 	ft_msh_clear(msh);
-		if (errno == 13)
+	if (errno == 13)
 		exit(126);
 	else if (errno == 2 || errno == 36)
 		exit(127);
