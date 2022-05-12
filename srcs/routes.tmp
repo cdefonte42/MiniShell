@@ -1,0 +1,21 @@
+0x8aa289:malloc 0x8ab1e2:ft_strdup_until_i 0x8ad1e0:ft_init_envlst 0x8b235a:main #72
+0x8aa289:malloc 0x8ab1e2:ft_strdup_until_i 0x8ad177:ft_init_envlst 0x8b235a:main #72
+0x8aa289:malloc 0x8abf2a:ft_calloc 0x8b1542:ft_new_var 0x8ad32c:<static_function> 0x8ad137:ft_init_envlst 0x8b235a:main #72
+0x8aa289:malloc 0x8b1a7f:ft_tokenlst_new 0x8b1c27:ft_create_token 0x8b1afd:ft_tokener 0x8af3bb:ft_parse 0x8b247f:minishell_loop 0x8b2322:main #62
+0x8aa289:malloc 0x8ab78e:ft_substr 0x8b1bec:ft_create_token 0x8b1afd:ft_tokener 0x8af3bb:ft_parse 0x8b247f:minishell_loop 0x8b2322:main #62
+0x8aa289:malloc 0x8b13ba:ft_cmdelst_new 0x8b0ffc:ft_fill_cmdelst 0x8af347:ft_parse 0x8b247f:minishell_loop 0x8b2322:main #27
+0x8aa289:malloc 0x8abf2a:ft_calloc 0x8ab676:ft_replacestri 0x8b1f62:remove_quote 0x8b1783:ft_tokenlst_iteri_s 0x8b25de:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #6
+0x8aa289:malloc 0x8ae092:ft_lst_to_char 0x8adae7:ft_exec_bin 0x8ae194:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #6
+0x8aa289:malloc 0x8ab2ae:ft_strdup 0x8b0ec4:ft_get_keynval 0x8b0d2c:ft_loop_export 0x8b0aee:ft_export 0x8adc37:launch_bin 0x8adabb:ft_exec_bin 0x8ae194:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #2
+0x8aa289:malloc 0x8ab78e:ft_substr 0x8b0e50:ft_get_keynval 0x8b0d2c:ft_loop_export 0x8b0aee:ft_export 0x8adc37:launch_bin 0x8adabb:ft_exec_bin 0x8ae194:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #2
+0x8aa289:malloc 0x8abf2a:ft_calloc 0x8b1542:ft_new_var 0x8b0c6d:ft_loop_export 0x8b0aee:ft_export 0x8adc37:launch_bin 0x8adabb:ft_exec_bin 0x8ae194:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #2
+0x8aa289:malloc 0x8ab78e:ft_substr 0x8ac991:get_dolls 0x8acf20:<static_function> 0x8ad014:expand_str 0x8acc9e:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #4
+0x8aa289:malloc 0x8ab2ae:ft_strdup 0x8ac87e:get_value 0x8aceff:<static_function> 0x8ad014:expand_str 0x8acc9e:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #3
+0x8aa289:malloc 0x8abf2a:ft_calloc 0x8acb00:exp_replacewith 0x8acedf:<static_function> 0x8ad014:expand_str 0x8acc9e:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #4
+0x8aa289:malloc 0x8abb4a:<static_function> 0x8abcd1:ft_split 0x8ace26:msh_split_token 0x8acc4c:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #1
+0x8aa289:malloc 0x8aba61:<static_function> 0x8abcd1:ft_split 0x8ace26:msh_split_token 0x8acc4c:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #1
+0x8aa289:malloc 0x8abe57:ft_itoa 0x8ac3f0:rand_hdname 0x8af5dc:search_all_heredoc 0x8af2e7:ft_parse 0x8b247f:minishell_loop 0x8b2322:main #2
+0x8aa289:malloc 0x8aafbb:ft_strjoin 0x8ac3c8:rand_hdname 0x8af5dc:search_all_heredoc 0x8af2e7:ft_parse 0x8b247f:minishell_loop 0x8b2322:main #2
+0x8aa289:malloc 0x8abe57:ft_itoa 0x8ac90d:get_value 0x8aceff:<static_function> 0x8ad014:expand_str 0x8acc9e:ft_expand_tokens 0x8b25f4:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #1
+0x8aa289:malloc 0x8ae092:ft_lst_to_char 0x8adae7:ft_exec_bin 0x8ae55f:pre_fork 0x8ae337:ft_fork 0x8ae1ca:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #1
+0x8aa289:malloc 0x8aafbb:ft_strjoin 0x8af7f9:ft_try_cdpath 0x8afce8:ft_parse_dir 0x8afc40:ft_cd 0x8adca9:launch_bin 0x8adabb:ft_exec_bin 0x8ae55f:pre_fork 0x8ae337:ft_fork 0x8ae1ca:ft_exec 0x8b25c8:launch_exec 0x8b246d:minishell_loop 0x8b2322:main #1

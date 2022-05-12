@@ -71,7 +71,8 @@ int	minishell_loop(t_minishell *msh)
 
 	while (msh->loop)
 	{
-		signal(SIGINT, &signal_handler);
+		signal(SIGQUIT, &signal_handler);
+		signal(SIGTSTP, &signal_handler);
 		line = readline("minishell-$ ");
 		if (line != NULL)
 		{
@@ -99,8 +100,6 @@ int	main(int ac, char **av, char **envp)
 	g_status = 0;
 	(void)ac;
 	(void)av;
-	signal(SIGQUIT, &signal_handler);
-	signal(SIGTSTP, &signal_handler);
 	ft_memset(&msh, 0, sizeof(t_minishell));
 	msh.loop = 42;
 	if (ft_init_envlst(&msh, envp) == FAILURE)
