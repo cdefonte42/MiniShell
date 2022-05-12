@@ -79,13 +79,14 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	errno = 0;
 	if (cmde->pid == 0)
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
 		pre_fork(msh, cmde, &child);
 		execve(child.pathname, child.argv, child.envp);
 		ft_exit_child(child, msh, cmde, true);
 		exit(FAILURE);
 	}
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 	if (cmde->pipefd[w_end] != 1 && close(cmde->pipefd[w_end]) == -1)
 		perror("closing pipeout ft_forkout failed");
 	if (cmde->pipefd[r_end] != 0 && close(cmde->pipefd[r_end]) == -1)

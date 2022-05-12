@@ -71,6 +71,7 @@ int	minishell_loop(t_minishell *msh)
 
 	while (msh->loop)
 	{
+		signal(SIGINT, &signal_handler);
 		signal(SIGQUIT, &signal_handler);
 		signal(SIGTSTP, &signal_handler);
 		line = readline("minishell-$ ");
