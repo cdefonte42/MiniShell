@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:45:12 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/12 09:53:54 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/12 11:22:39 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -71,6 +71,18 @@ int	ft_concat_cdpath(char **curpath, char *directory, char *cdpaths)
 	return (SUCCESS);
 }
 
+int	ft_testdir(char **curpath)
+{
+	if (ft_isadir(*curpath))
+		return (1);
+	else
+	{
+		free(*curpath);
+		*curpath = NULL;
+		return (0);
+	}
+}
+
 /* check and test CDPATH ATTENTION CDPATH=:$HOME:$HOME/projects:etc 
 1er ele = empty entry = regarde curr directory. si pas ': totu seul des 
 le debut alors cherche jamais dans le curr dir */
@@ -94,8 +106,9 @@ int	ft_try_cdpath(char **curpath, char *directory, t_var *cdpath)
 		while (splited_cdpath && splited_cdpath[i])
 		{
 			if (!ft_concat_cdpath(curpath, directory, splited_cdpath[i]))
-				return (perror("try_cdpath concat failed"), FAILURE);
-			if (ft_isadir(*curpath))
+				return (perror("try_cdpath concat failed"), \
+ft_free_tabtab(splited_cdpath), FAILURE);
+			if (ft_testdir(curpath))
 				return (ft_free_tabtab(splited_cdpath), SUCCESS);
 			i++;
 		}
