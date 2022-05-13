@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 12:38:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/13 14:58:49 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/13 15:01:32 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_exitbin(t_minishell *msh, char **cmd)
 			ret_stat = ft_atoi(cmd[1]);
 		else
 		{
-			ft_error("numeric argument required", NULL);
+			ft_error(cmd[1], "numeric argument required");
 			ret_stat = 2;
 		}
 	}
