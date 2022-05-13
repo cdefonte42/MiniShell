@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:50:33 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/12 10:06:11 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/13 11:28:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,10 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool err)
 {
 	if (err)
 	{
-		printf("Hi %d\n", errno);
 		if (errno != 3)
 			ft_perror(cmde->name_token->str, NULL);
 		else
 			ft_error(cmde->name_token->str, "command not found");
-		printf("Hey %d\n", errno);
 	}
 	free(child.argv);
 	free(child.pathname);
