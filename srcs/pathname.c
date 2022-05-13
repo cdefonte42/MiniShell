@@ -36,7 +36,7 @@ static char	*get_cmd(t_minishell *msh, char *cmd)
 
 	paths = ft_split_paths(msh);
 	if (!paths)
-		return (NULL);
+		return (errno = 2, NULL);
 	i = 0;
 	while (paths && paths[i])
 	{
@@ -49,7 +49,7 @@ static char	*get_cmd(t_minishell *msh, char *cmd)
 		i++;
 	}
 	ft_free_tabtab(paths);
-	return (NULL);
+	return (errno = 3, NULL);
 }
 
 int	is_dir(const char *path)
@@ -68,22 +68,20 @@ int	is_dir(const char *path)
 
 char	*check_permission(t_minishell *msh, char *cmd)
 {
-	char	*paths;
-
-	paths = var_getvaluefromkey(msh->vars, "PATH");
-	if (!paths)
+	if (!cmd || *cmd == 0)
 		return (errno = 2, NULL);
-	if ((*cmd == '.' || *cmd == '/'))
+	if ((*cmd == '.' || *cmd == '/') || cmd[ft_strlen(cmd) - 1] == '/')
 	{
 		if (is_dir(cmd))
 			return (NULL);
-		if (access(cmd, 0) == 0 && access(cmd, R_OK | X_OK) == 0)
-			return (ft_strdup(cmd));
+		if (access(cmd, 0) == 0)
+		{
+			if (access(cmd, R_OK | X_OK) == 0)
+				return (ft_strdup(cmd));
+		}
 		else
-			return (NULL);
+			return (errno = 2, NULL);
 	}
-	else if (!cmd || *cmd == 0)
-		return (errno = 2, NULL);
 	else
 		return (get_cmd(msh, cmd));
 	return (NULL);

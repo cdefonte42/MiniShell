@@ -21,22 +21,24 @@ void	ft_exit_child(t_child child, t_minishell *msh, t_cmde *cmde, bool err)
 {
 	if (err)
 	{
-		if (errno != 2)
+		printf("Hi %d\n", errno);
+		if (errno != 3)
 			ft_perror(cmde->name_token->str, NULL);
 		else
 			ft_error(cmde->name_token->str, "command not found");
+		printf("Hey %d\n", errno);
 	}
 	free(child.argv);
 	free(child.pathname);
 	ft_free_tabtab(child.envp);
 	ft_msh_clear(msh);
-	if (errno == 13)
+	if (errno == 13 || errno == 21)
 		exit(126);
-	else if (errno == 2 || errno == 36)
+	else if (errno == 2 || errno == 3 || errno == 36)
 		exit(127);
 	else if (errno == 5)
 		exit(254);
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 void	pre_fork(t_minishell *msh, t_cmde *cmde, t_child *child)
@@ -81,7 +83,7 @@ int	ft_fork(t_minishell *msh, t_cmde *cmde)
 	{
 		pre_fork(msh, cmde, &child);
 		execve(child.pathname, child.argv, child.envp);
-		ft_exit_child(child, msh, cmde, true);
+		ft_exit_child(child, msh, cmde, false);
 		exit(FAILURE);
 	}
 	signal(SIGINT, SIG_IGN);
