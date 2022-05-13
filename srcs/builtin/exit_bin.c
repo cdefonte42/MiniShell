@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 12:38:13 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 12:59:19 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/13 14:58:49 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ int	ft_exitbin(t_minishell *msh, char **cmd)
 	if (cmd[1] != NULL)
 	{
 		if (cmd[2])
+		{
+			ft_putstr_fd("exit\n", 1);
 			return (ft_error("too many arguments", NULL), 1);
+		}
 		if (ft_stris(cmd[1], ft_isdigit) && ft_sli(cmd[1]) < 19)
 			ret_stat = ft_atoi(cmd[1]);
 		else
