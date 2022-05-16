@@ -90,10 +90,10 @@ int	ft_redir(t_cmde *cmde)
 	{
 		if (ft_token_isredir(head_token->type))
 		{
-			if (head_token->next == NULL)
+			if (head_token->next == NULL && head_token->type != heredoc)
 				return (ft_error(NULL, "ambiguous redirect\n"), errno = 0, 0);
 			file = head_token->next->str;
-			if (file && *file == 0)
+			if (file && *file == 0 && head_token->type != heredoc)
 				return (ft_error(file, "ambiguous redirect\n"), errno = 0, 0);
 			else if (switch_redir(cmde, file, head_token->type) == FAILURE)
 				return (errno = 0, FAILURE);
