@@ -30,10 +30,8 @@ void	signal_hd(int sig)
 
 int	isprelastchr(char c, char *str)
 {
-	int		i;
 	int		len;
 
-	i = 0;
 	if (!str)
 		return (0);
 	len = ft_strlen(str);
