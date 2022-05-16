@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/16 12:29:05 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:52:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ int	ft_redir(t_cmde *cmde)
 		if (ft_token_isredir(head_token->type))
 		{
 			if (head_token->next == NULL && head_token->type != heredoc)
-				return (ft_error(NULL, "ambiguous redirect\n"), errno = 0, 0);
+				return (ft_error(NULL, "ambiguous redirect"), errno = 0, 0);
 			if (head_token->next)
 				file = head_token->next->str;
 			if (file && !*file && head_token->type != heredoc)
-				return (ft_error(file, "ambiguous redirect\n"), errno = 0, 0);
+				return (ft_error(file, "ambiguous redirect"), errno = 0, 0);
 			else if (switch_redir(cmde, file, head_token->type) == FAILURE)
 				return (errno = 0, FAILURE);
 		}
