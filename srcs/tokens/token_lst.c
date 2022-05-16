@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/04/29 17:29:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:39:37 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,29 +65,20 @@ void	ft_tokenlst_free(t_token *lst)
 	}
 }
 
-void	ft_tokenlst_pop(t_token **lst, int i)
+/* Pops out the element "to_pop" form the list "lst". Need "to_pop"'s previous
+element. (Si y avait eu un prev ptr ds la structure ca aurait ete plus simple)*/
+void	ft_tokenlst_pop(t_token **lst, t_token *to_pop, t_token *prev)
 {
-	t_token	*prev;
-	t_token	*to_rm;
-	int		j;
-
-	j = 0;
-	to_rm = *lst;
-	prev = NULL;
-	while (to_rm && j < i)
-	{
-		prev = to_rm;
-		to_rm = to_rm->next;
-		j++;
-	}
-	if (to_rm == NULL)
+	if (!to_pop || !lst || !*lst)
 		return ;
-	if (prev == NULL)
-		*lst = to_rm->next;
-	else
-		prev->next = to_rm->next;
-	free(to_rm->str);
-	to_rm->str = NULL;
-	free(to_rm);
-	to_rm = NULL;
+	if (prev)
+		prev->next = to_pop->next;
+	else if (!prev)
+	{
+		*lst = to_pop->next;
+	}
+	free(to_pop->str);
+	to_pop->str = NULL;
+	free(to_pop);
+	to_pop=NULL;
 }

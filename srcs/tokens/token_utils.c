@@ -6,7 +6,7 @@
 /*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/04 10:38:36 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:42:34 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,20 @@ int	ft_tokenlst_size(t_token *lst)
 void	ft_remove_empty_token(t_token **token_lst)
 {
 	t_token	*head;
-	int		i;
+	t_token	*prev;
 
 	head = *token_lst;
-	i = 0;
+	prev = NULL;
 	while (head)
 	{
-		if (head->str == NULL || head->str[0] == 0)
+		if ((head->str == NULL || head->str[0] == 0) && prev && prev->type != heredoc)
 		{
-			ft_tokenlst_pop(token_lst, i);
-			head = *token_lst;
-			i = 0;
+			ft_tokenlst_pop(token_lst, head, prev);
+			head = prev->next;
 		}
 		else
 		{
-			i++;
+			prev = head;
 			head = head->next;
 		}
 	}
