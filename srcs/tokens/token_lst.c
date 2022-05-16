@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 20:00:55 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/16 12:39:37 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:56:28 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_tokenlst_free(t_token *lst)
 }
 
 /* Pops out the element "to_pop" form the list "lst". Need "to_pop"'s previous
-element. (Si y avait eu un prev ptr ds la structure ca aurait ete plus simple)*/
+element.(Si y avait eu un prev ptr ds la structure ca aurait ete plus simple)*/
 void	ft_tokenlst_pop(t_token **lst, t_token *to_pop, t_token *prev)
 {
 	if (!to_pop || !lst || !*lst)
@@ -80,5 +80,5 @@ void	ft_tokenlst_pop(t_token **lst, t_token *to_pop, t_token *prev)
 	free(to_pop->str);
 	to_pop->str = NULL;
 	free(to_pop);
-	to_pop=NULL;
+	to_pop = NULL;
 }
