@@ -86,7 +86,7 @@ int	msh_split_token(t_token *token)
 	{
 		new_token = ft_tokenlst_new(splitted[i], word);
 		if (!new_token)
-			return (ft_free_tabtab(splitted), FAILURE);
+			return (free(splitted[1]), free(splitted), FAILURE);
 		ft_tokenlst_addafter(token, new_token);
 		token = token->next;
 		i++;
