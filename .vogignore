@@ -3,5 +3,6 @@
 .github/
 /test/
 /tools/
+ft_mallocator
 .allowed_function
 README.md

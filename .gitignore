@@ -12,3 +12,4 @@ minishell
 test_env
 valgrind-out.txt
 *.swp
+ft_mallocator/
