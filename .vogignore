@@ -3,8 +3,10 @@
 .github/
 /test/
 /tools/
+/docs/
+/hooks/
 ft_mallocator
 .allowed_function
 README.md
-docs
-hooks
+docs/
+hooks/
