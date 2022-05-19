@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 18:30:54 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 16:32:55 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:18:27 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ int	token_check_order(t_minishell *msh, t_cmde *cmd_lst)
 	if (tokens->type == spipe)
 	{
 		ft_error("syntax error near unexpected token", tokens->str);
-		g_status = 2;
-		return (FAILURE);
+		return (g_status = 2, FAILURE);
 	}
 	while (tokens)
 	{
@@ -80,9 +79,9 @@ int	token_check_order(t_minishell *msh, t_cmde *cmd_lst)
 			|| (tokens->type >= op && !tokens->next && !cmd_lst->next))
 		{
 			ft_error("syntax error near unexpected token", tokens->str);
-			g_status = 2;
-			return (FAILURE);
+			return (g_status = 2, FAILURE);
 		}
+		prev_type = tokens->type;
 		tokens = tokens->next;
 	}
 	return (token_check_order(msh, cmd_lst->next));
