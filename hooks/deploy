@@ -1,13 +1,13 @@
 function print_head {
-	echo "\033[0;36m"
-	echo "$1"
-	echo "\033[00m"
+	printf "\033[0;36m"
+	printf "$1"
+	printf "\033[00m\n"
 }
 
 function print_error {
-	echo "\033[31;1m"
-	echo "$1"
-	echo "\033[00m"
+	printf "\033[31;1m"
+	printf "$1"
+	printf "\033[00m\n"
 }
 
 if ! git config remote.vogsphere.url > /dev/null; then
