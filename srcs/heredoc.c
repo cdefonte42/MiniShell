@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:48:29 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 09:53:58 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:45:19 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int	ft_heredoc(t_var *vars, t_cmde *cmde, char **delimiter)
 	if (fd == -1)
 		return (perror("ft_heredoc opening fd failed"), 1);
 	ft_heredoc_input(*delimiter, fd, quoted, vars);
+	if (g_status == 130 && unlink(cmde->hdfile) == -1)
+		perror("heredoc unlink failed");
 	if (close(fd) == -1)
 		perror("ft_heredoc close fd failed");
 	return (g_status);
