@@ -6,3 +6,5 @@
 ft_mallocator
 .allowed_function
 README.md
+docs
+hooks
