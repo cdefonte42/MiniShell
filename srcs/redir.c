@@ -6,7 +6,7 @@
 /*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:59:27 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/16 12:52:34 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:29:50 by cdefonte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,18 @@ int	switch_redir(t_cmde *cmde, char *file, int type)
 	return (SUCCESS);
 }
 
+int	islast_hd(t_token *token)
+{
+	token = token->next;
+	while (token)
+	{
+		if (token->type == heredoc)
+			return (0);
+		token = token->next;
+	}
+	return (1);
+}
+
 int	ft_redir(t_cmde *cmde)
 {
 	t_token	*head_token;
@@ -96,7 +108,7 @@ int	ft_redir(t_cmde *cmde)
 				file = head_token->next->str;
 			if (file && !*file && head_token->type != heredoc)
 				return (ft_error(file, "ambiguous redirect"), errno = 0, 0);
-			else if (switch_redir(cmde, file, head_token->type) == FAILURE)
+			else if (islast_hd(head_token) && switch_redir(cmde, file, head_token->type) == FAILURE)
 				return (errno = 0, FAILURE);
 		}
 		head_token = head_token->next;
