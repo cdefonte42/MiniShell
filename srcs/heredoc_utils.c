@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 21:57:37 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/11 11:51:09 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:31:07 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,15 @@ extern int	g_status;
 int	rand_hdname(t_cmde *cmd_lst)
 {
 	unsigned long	ptr;
-	char			*tmppath;
 	char			*tmp;
 
-	tmppath = "/tmp/";
 	ptr = (unsigned long) cmd_lst;
 	if (cmd_lst->hdfile)
 		return (SUCCESS);
 	tmp = ft_itoa(ptr);
 	if (!tmp)
 		return (FAILURE);
-	cmd_lst->hdfile = ft_strjoin(tmppath, tmp);
+	cmd_lst->hdfile = ft_strjoin("/tmp/", tmp);
 	free(tmp);
 	if (!cmd_lst->hdfile)
 		return (FAILURE);

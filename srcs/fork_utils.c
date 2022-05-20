@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fork_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdefonte <cdefonte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbraets <mbraets@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 15:56:15 by cdefonte          #+#    #+#             */
-/*   Updated: 2022/05/10 16:07:40 by cdefonte         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:59:09 by mbraets          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,13 @@ int	ft_wait_cmde(pid_t pid, int option)
 	if (WIFEXITED(status) && status != 0)
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status) && status != 0)
+	{
+		if (WTERMSIG(status) == SIGSEGV)
+			ft_putstr_fd("Segmentation fault (core dumped)", 2);
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_putstr_fd("Quit (core dumped)", 2);
+		ft_putstr_fd("\n", 2);
 		return (WTERMSIG(status) + 128);
+	}
 	return (0);
 }
